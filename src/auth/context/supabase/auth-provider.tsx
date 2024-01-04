@@ -113,7 +113,7 @@ export function AuthProvider({ children }: Props) {
       username: email,
       password,
     });
-
+    console.log(res.data);
     dispatch({
       type: Types.LOGIN,
       payload: {
@@ -128,7 +128,9 @@ export function AuthProvider({ children }: Props) {
   const register = useCallback(
     async (email: string, password: string, firstName: string, lastName: string) => {
       const res = await axios.post(endpoints.auth.register, {
-        username: email,
+        firstName,
+        lastName,
+        email,
         password,
         rememberMe: true,
       });
@@ -183,7 +185,7 @@ export function AuthProvider({ children }: Props) {
       user: {
         ...state.user,
         role: 'admin',
-        displayName: `${state.user?.username}`,
+        displayName: `${state.user?.userName}`,
       },
       method: 'supabase',
       loading: status === 'loading',
