@@ -114,6 +114,49 @@ export type ApplicationUser = {
   website: Scalars['String']['output'];
 };
 
+export type ApplicationUserEdit = {
+  __typename?: 'ApplicationUserEdit';
+  about: Scalars['String']['output'];
+  addresses: Array<Address>;
+  approved: Scalars['Boolean']['output'];
+  approvedBy?: Maybe<ApplicationUser>;
+  approvedById?: Maybe<Scalars['String']['output']>;
+  approvedUsers: Array<ApplicationUser>;
+  backgroundImage?: Maybe<Array<Scalars['Byte']['output']>>;
+  birthdate?: Maybe<Scalars['DateTime']['output']>;
+  businessName?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  emailConfirmed: Scalars['Boolean']['output'];
+  firstName?: Maybe<Scalars['String']['output']>;
+  fullName: Scalars['String']['output'];
+  gender?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  job: Scalars['String']['output'];
+  knownAs?: Maybe<Scalars['String']['output']>;
+  knownAsResolved?: Maybe<Scalars['String']['output']>;
+  lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  listings: Array<Listing>;
+  location: Scalars['String']['output'];
+  middleName?: Maybe<Scalars['String']['output']>;
+  phoneNumber: Scalars['String']['output'];
+  phoneNumberConfirmed: Scalars['Boolean']['output'];
+  prefix?: Maybe<Scalars['String']['output']>;
+  profileImage?: Maybe<Array<Scalars['Byte']['output']>>;
+  receivedMessages: Array<Message>;
+  registered?: Maybe<Scalars['DateTime']['output']>;
+  sellerApproved: Scalars['Boolean']['output'];
+  sellerApprovedBy?: Maybe<ApplicationUser>;
+  sellerApprovedById?: Maybe<Scalars['String']['output']>;
+  sellerApprovedUsers: Array<ApplicationUser>;
+  sentMessages: Array<Message>;
+  suffix?: Maybe<Scalars['String']['output']>;
+  telegramUsername: Scalars['String']['output'];
+  updated?: Maybe<Scalars['DateTime']['output']>;
+  username: Scalars['String']['output'];
+  website: Scalars['String']['output'];
+};
+
 export type ApplicationUserFilterInput = {
   about?: InputMaybe<StringOperationFilterInput>;
   accessFailedCount?: InputMaybe<IntOperationFilterInput>;
@@ -488,7 +531,7 @@ export type PostalCodeFilterInput = {
 export type Query = {
   __typename?: 'Query';
   assets: Array<Asset>;
-  currentUser: ApplicationUser;
+  currentUserEdit: ApplicationUserEdit;
   dashboardStatistics?: Maybe<DashboardStats>;
   notices: Array<Notice>;
   systemAdmin: Scalars['Boolean']['output'];
@@ -588,10 +631,10 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']['input']>;
 };
 
-export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type CurrentUserEditQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'ApplicationUser', userName?: string | null, fullName: string, about: string } };
+export type CurrentUserEditQuery = { __typename?: 'Query', currentUserEdit: { __typename?: 'ApplicationUserEdit', id: string, username: string, phoneNumber: string, phoneNumberConfirmed: boolean, email: string, emailConfirmed: boolean, birthdate?: any | null, gender?: string | null, firstName?: string | null, middleName?: string | null, lastName?: string | null, knownAs?: string | null, job: string, location: string, registered?: any | null, updated?: any | null, profileImage?: Array<any> | null, backgroundImage?: Array<any> | null, businessName?: string | null, prefix?: string | null, suffix?: string | null, about: string, telegramUsername: string, website: string, lastLogin?: any | null } };
 
 
-export const CurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"about"}}]}}]}}]} as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
+export const CurrentUserEditDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentUserEdit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUserEdit"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumberConfirmed"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"emailConfirmed"}},{"kind":"Field","name":{"kind":"Name","value":"birthdate"}},{"kind":"Field","name":{"kind":"Name","value":"gender"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"knownAs"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"registered"}},{"kind":"Field","name":{"kind":"Name","value":"updated"}},{"kind":"Field","name":{"kind":"Name","value":"profileImage"}},{"kind":"Field","name":{"kind":"Name","value":"backgroundImage"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"prefix"}},{"kind":"Field","name":{"kind":"Name","value":"suffix"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"lastLogin"}}]}}]}}]} as unknown as DocumentNode<CurrentUserEditQuery, CurrentUserEditQueryVariables>;

@@ -74,6 +74,48 @@ type ApplicationUser {
   accessFailedCount: Int!
 }
 
+type ApplicationUserEdit {
+  id: String!
+  username: String!
+  email: String!
+  phoneNumber: String!
+  emailConfirmed: Boolean!
+  phoneNumberConfirmed: Boolean!
+  businessName: String
+  prefix: String
+  firstName: String
+  middleName: String
+  lastName: String
+  suffix: String
+  gender: String
+  birthdate: DateTime
+  knownAsResolved: String
+  knownAs: String
+  fullName: String!
+  registered: DateTime
+  lastLogin: DateTime
+  updated: DateTime
+  approved: Boolean!
+  approvedById: String
+  approvedBy: ApplicationUser
+  sellerApproved: Boolean!
+  sellerApprovedById: String
+  sellerApprovedBy: ApplicationUser
+  approvedUsers: [ApplicationUser!]!
+  sellerApprovedUsers: [ApplicationUser!]!
+  profileImage: [Byte!]
+  backgroundImage: [Byte!]
+  about: String!
+  location: String!
+  job: String!
+  listings: [Listing!]!
+  sentMessages: [Message!]!
+  receivedMessages: [Message!]!
+  addresses: [Address!]!
+  website: String!
+  telegramUsername: String!
+}
+
 type Asset {
   extension: String!
   data: [Byte!]!
@@ -182,13 +224,13 @@ type PostalCode {
 
 type Query {
   assets: [Asset!]!
+  dashboardStatistics: DashboardStats
+  notices: [Notice!]!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   user(id: String!): ApplicationUser
-  currentUser: ApplicationUser!
+  currentUserEdit: ApplicationUserEdit!
   systemAdmin: Boolean!
-  dashboardStatistics: DashboardStats
-  notices: [Notice!]!
 }
 
 type Subscription {

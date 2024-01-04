@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query currentUser {\n    currentUser {\n      userName\n      fullName\n      about\n    }\n  }\n": types.CurrentUserDocument,
+    "\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n": types.CurrentUserEditDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query currentUser {\n    currentUser {\n      userName\n      fullName\n      about\n    }\n  }\n"): (typeof documents)["\n  query currentUser {\n    currentUser {\n      userName\n      fullName\n      about\n    }\n  }\n"];
+export function graphql(source: "\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n"): (typeof documents)["\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

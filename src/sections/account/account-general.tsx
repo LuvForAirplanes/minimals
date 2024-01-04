@@ -15,8 +15,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { fData } from 'src/utils/format-number';
 
 import { countries } from 'src/assets/data';
-import { getCurrentUserQuery } from 'src/lib/queries/currentUser';
-import { CurrentUserQuery, CurrentUserQueryVariables } from 'src/lib/types/graphql';
+import { getCurrentUserEditQuery } from 'src/lib/queries/currentUser';
+import { CurrentUserEditQuery, CurrentUserEditQueryVariables } from 'src/lib/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -30,7 +30,7 @@ export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
 
   const UpdateUserSchema = Yup.object().shape({
-    displayName: Yup.string().required('Name is required'),
+    displayName: Yup.string().required('Name is required').default(''),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     photoURL: Yup.mixed<any>().nullable().required('Avatar is required'),
     phoneNumber: Yup.string().required('Phone number is required'),
@@ -49,13 +49,13 @@ export default function AccountGeneral() {
     resolver: yupResolver(UpdateUserSchema),
   });
 
-  useQuery<CurrentUserQuery, CurrentUserQueryVariables>(getCurrentUserQuery, {
+  useQuery<CurrentUserEditQuery, CurrentUserEditQueryVariables>(getCurrentUserEditQuery, {
     onCompleted: (data) => {
-      const u = data.currentUser;
+      const u = data.currentUserEdit;
       methods.reset({
-        displayName: u.fullName,
+        displayName: u.firstName ?? '',
         about: u.about,
-        username: u.userName ?? '',
+        username: u.username ?? '',
       });
     },
   });
