@@ -11,7 +11,6 @@ import Label from 'src/components/label';
 
 export default function NavUpgrade() {
   const { user } = useAuthContext();
-  console.log(user);
   return (
     <Stack
       sx={{

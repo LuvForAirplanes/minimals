@@ -2,8 +2,8 @@ import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { ApolloProvider } from '@apollo/client';
 
-import { client } from 'src/lib/graphql';
 import { AuthGuard } from 'src/auth/guard';
+import { client } from 'src/graphql/config';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';

@@ -4,6 +4,26 @@ schema {
   subscription: Subscription
 }
 
+type AccountNotificationsEdit {
+  id: String!
+  notifyOnMessage: Boolean!
+}
+
+type AccountProfileEdit {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String
+  phone: String
+  username: String
+  telegramUsername: String!
+  website: String!
+  location: String!
+  job: String!
+  about: String!
+}
+
 type Address {
   attention: String
   completeAddress: String!
@@ -57,6 +77,7 @@ type ApplicationUser {
   addresses: [Address!]!
   website: String!
   telegramUsername: String!
+  notifyOnMessage: Boolean!
   id: String!
   userName: String
   normalizedUserName: String
@@ -72,48 +93,6 @@ type ApplicationUser {
   lockoutEnd: DateTime
   lockoutEnabled: Boolean!
   accessFailedCount: Int!
-}
-
-type ApplicationUserEdit {
-  id: String!
-  username: String!
-  email: String!
-  phoneNumber: String!
-  emailConfirmed: Boolean!
-  phoneNumberConfirmed: Boolean!
-  businessName: String
-  prefix: String
-  firstName: String
-  middleName: String
-  lastName: String
-  suffix: String
-  gender: String
-  birthdate: DateTime
-  knownAsResolved: String
-  knownAs: String
-  fullName: String!
-  registered: DateTime
-  lastLogin: DateTime
-  updated: DateTime
-  approved: Boolean!
-  approvedById: String
-  approvedBy: ApplicationUser
-  sellerApproved: Boolean!
-  sellerApprovedById: String
-  sellerApprovedBy: ApplicationUser
-  approvedUsers: [ApplicationUser!]!
-  sellerApprovedUsers: [ApplicationUser!]!
-  profileImage: [Byte!]
-  backgroundImage: [Byte!]
-  about: String!
-  location: String!
-  job: String!
-  listings: [Listing!]!
-  sentMessages: [Message!]!
-  receivedMessages: [Message!]!
-  addresses: [Address!]!
-  website: String!
-  telegramUsername: String!
 }
 
 type Asset {
@@ -189,6 +168,8 @@ type Message {
 
 type Mutation {
   updateListing: Boolean!
+  currentAccountProfile(profileEdit: AccountProfileEditInput!): AccountProfileEdit!
+  currentAccountNotifications(profileEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
 }
 
 type Notice {
@@ -226,11 +207,10 @@ type Query {
   assets: [Asset!]!
   dashboardStatistics: DashboardStats
   notices: [Notice!]!
+  currentAccountProfile: AccountProfileEdit!
+  currentAccountNotifications: AccountNotificationsEdit!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
-  user(id: String!): ApplicationUser
-  currentUserEdit: ApplicationUserEdit!
-  systemAdmin: Boolean!
 }
 
 type Subscription {
@@ -261,6 +241,26 @@ type UsersEdge {
   cursor: String!
   "The item at the end of the edge."
   node: ApplicationUser!
+}
+
+input AccountNotificationsEditInput {
+  id: String!
+  notifyOnMessage: Boolean!
+}
+
+input AccountProfileEditInput {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String
+  phone: String
+  username: String
+  telegramUsername: String!
+  website: String!
+  location: String!
+  job: String!
+  about: String!
 }
 
 input AddressFilterInput {
@@ -320,6 +320,7 @@ input ApplicationUserFilterInput {
   addresses: ListFilterInputTypeOfAddressFilterInput
   website: StringOperationFilterInput
   telegramUsername: StringOperationFilterInput
+  notifyOnMessage: BooleanOperationFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -363,6 +364,7 @@ input ApplicationUserSortInput {
   job: SortEnumType
   website: SortEnumType
   telegramUsername: SortEnumType
+  notifyOnMessage: SortEnumType
   id: SortEnumType
   userName: SortEnumType
   normalizedUserName: SortEnumType

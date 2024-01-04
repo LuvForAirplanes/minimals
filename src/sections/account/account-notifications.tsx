@@ -16,26 +16,12 @@ import { useSnackbar } from 'src/components/snackbar';
 const NOTIFICATIONS = [
   {
     subheader: 'Activity',
-    caption: 'Donec mi odio, faucibus at, scelerisque quis',
+    caption: 'General notifications through the application.',
     items: [
       {
         id: 'activity_comments',
-        label: 'Email me when someone comments onmy article',
+        label: 'Notify me by SMS when somebody messages me directly.',
       },
-      {
-        id: 'activity_answers',
-        label: 'Email me when someone answers on my form',
-      },
-      { id: 'activityFollows', label: 'Email me hen someone follows me' },
-    ],
-  },
-  {
-    subheader: 'Application',
-    caption: 'Donec mi odio, faucibus at, scelerisque quis',
-    items: [
-      { id: 'application_news', label: 'News and announcements' },
-      { id: 'application_product', label: 'Weekly product updates' },
-      { id: 'application_blog', label: 'Weekly blog digest' },
     ],
   },
 ];
@@ -47,7 +33,7 @@ export default function AccountNotifications() {
 
   const methods = useForm({
     defaultValues: {
-      selected: ['activity_comments', 'application_product'],
+      selected: ['activity_comments'],
     },
   });
 

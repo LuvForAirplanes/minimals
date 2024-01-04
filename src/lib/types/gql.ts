@@ -13,7 +13,12 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n": types.CurrentUserEditDocument,
+    "\n  fragment AccountNotificationEditor on AccountNotificationsEdit {\n    id\n    notifyOnMessage\n  }\n": types.AccountNotificationEditorFragmentDoc,
+    "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.AccountProfileEditorFragmentDoc,
+    "\n  mutation updateCurrentAccountNotifications($profileEdit: AccountNotificationsEditInput!) {\n    currentAccountNotifications(profileEdit: $profileEdit) {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.UpdateCurrentAccountNotificationsDocument,
+    "\n  mutation updateCurrentAccountProfile($profileEdit: AccountProfileEditInput!) {\n    currentAccountProfile(profileEdit: $profileEdit) {\n      ...AccountProfileEditor\n    }\n  }\n  \n": types.UpdateCurrentAccountProfileDocument,
+    "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
+    "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n  }\n  \n": types.CurrentAccountProfileDocument,
 };
 
 /**
@@ -33,7 +38,27 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n"): (typeof documents)["\n  query currentUserEdit {\n    currentUserEdit {\n      id\n      username\n      phoneNumber\n      phoneNumberConfirmed\n      email\n      emailConfirmed\n      birthdate\n      gender\n      firstName\n      middleName\n      lastName\n      knownAs\n      job\n      location\n      registered\n      updated\n      profileImage\n      backgroundImage\n      businessName\n      prefix\n      suffix\n      about\n      telegramUsername\n      website\n      lastLogin\n    }\n  }\n"];
+export function graphql(source: "\n  fragment AccountNotificationEditor on AccountNotificationsEdit {\n    id\n    notifyOnMessage\n  }\n"): (typeof documents)["\n  fragment AccountNotificationEditor on AccountNotificationsEdit {\n    id\n    notifyOnMessage\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n"): (typeof documents)["\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateCurrentAccountNotifications($profileEdit: AccountNotificationsEditInput!) {\n    currentAccountNotifications(profileEdit: $profileEdit) {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateCurrentAccountNotifications($profileEdit: AccountNotificationsEditInput!) {\n    currentAccountNotifications(profileEdit: $profileEdit) {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation updateCurrentAccountProfile($profileEdit: AccountProfileEditInput!) {\n    currentAccountProfile(profileEdit: $profileEdit) {\n      ...AccountProfileEditor\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateCurrentAccountProfile($profileEdit: AccountProfileEditInput!) {\n    currentAccountProfile(profileEdit: $profileEdit) {\n      ...AccountProfileEditor\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n  }\n  \n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

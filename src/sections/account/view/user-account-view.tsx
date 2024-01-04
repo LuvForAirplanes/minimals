@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
 
-import { _userAbout, _userPlans, _userPayment, _userInvoices, _userAddressBook } from 'src/_mock';
+import { _userPlans, _userPayment, _userInvoices, _userAddressBook } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
@@ -14,7 +14,6 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import AccountGeneral from '../account-general';
 import AccountBilling from '../account-billing';
-import AccountSocialLinks from '../account-social-links';
 import AccountNotifications from '../account-notifications';
 import AccountChangePassword from '../account-change-password';
 
@@ -23,7 +22,7 @@ import AccountChangePassword from '../account-change-password';
 const TABS = [
   {
     value: 'general',
-    label: 'General',
+    label: 'Profile',
     icon: <Iconify icon="solar:user-id-bold" width={24} />,
   },
   {
@@ -35,11 +34,6 @@ const TABS = [
     value: 'notifications',
     label: 'Notifications',
     icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
-  },
-  {
-    value: 'social',
-    label: 'Social links',
-    icon: <Iconify icon="solar:share-bold" width={24} />,
   },
   {
     value: 'security',
@@ -97,8 +91,6 @@ export default function AccountView() {
       )}
 
       {currentTab === 'notifications' && <AccountNotifications />}
-
-      {currentTab === 'social' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}
 
       {currentTab === 'security' && <AccountChangePassword />}
     </Container>
