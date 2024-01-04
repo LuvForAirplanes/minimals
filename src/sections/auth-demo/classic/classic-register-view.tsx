@@ -62,7 +62,7 @@ export default function ClassicRegisterView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
 
-        <Link href={paths.authDemo.classic.login} component={RouterLink} variant="subtitle2">
+        <Link href={paths.auth.supabase.login} component={RouterLink} variant="subtitle2">
           Sign in
         </Link>
       </Stack>

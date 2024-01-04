@@ -1,8 +1,8 @@
+import axios from 'axios';
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
 
-import { paths } from 'src/routes/paths';
+import { endpoints } from 'src/utils/axios';
 
-import { supabase } from './lib';
 import { AuthContext } from './auth-context';
 import { AuthUserType, ActionMapType, AuthStateType } from '../../types';
 
@@ -82,46 +82,16 @@ export function AuthProvider({ children }: Props) {
 
   const initialize = useCallback(async () => {
     try {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
+      const res = await axios.get(endpoints.auth.me);
 
-      if (error) {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            user: null,
+      dispatch({
+        type: Types.INITIAL,
+        payload: {
+          user: {
+            ...res.data,
           },
-        });
-        console.error(error);
-        throw error;
-      }
-
-      if (session?.user) {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            user: {
-              ...session?.user,
-              session: {
-                access_token: session.access_token,
-                expires_at: session.expires_at,
-                expires_in: session.expires_in,
-                refresh_token: session.refresh_token,
-                token_type: session.token_type,
-              },
-            },
-          },
-        });
-      } else {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            user: null,
-          },
-        });
-      }
+        },
+      });
     } catch (error) {
       console.error(error);
       dispatch({
@@ -139,70 +109,44 @@ export function AuthProvider({ children }: Props) {
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+    const res = await axios.post(endpoints.auth.login, {
+      username: email,
       password,
     });
 
-    if (error) {
-      dispatch({
-        type: Types.LOGIN,
-        payload: {
-          user: null,
+    dispatch({
+      type: Types.LOGIN,
+      payload: {
+        user: {
+          ...res.data,
         },
-      });
-      console.error(error);
-      throw error;
-    } else {
-      dispatch({
-        type: Types.LOGIN,
-        payload: {
-          user: {
-            ...data.user,
-            session: {
-              access_token: data.session.access_token,
-              expires_at: data.session.expires_at,
-              expires_in: data.session.expires_in,
-              refresh_token: data.session.refresh_token,
-              token_type: data.session.token_type,
-            },
-          },
-        },
-      });
-    }
+      },
+    });
   }, []);
 
   // REGISTER
   const register = useCallback(
     async (email: string, password: string, firstName: string, lastName: string) => {
-      const { error } = await supabase.auth.signUp({
-        email,
+      const res = await axios.post(endpoints.auth.register, {
+        username: email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}${paths.dashboard.root}`,
-          data: {
-            display_name: `${firstName} ${lastName}`,
+        rememberMe: true,
+      });
+
+      dispatch({
+        type: Types.REGISTER,
+        payload: {
+          user: {
+            ...res.data,
           },
         },
       });
-
-      if (error) {
-        console.error(error);
-        throw error;
-      }
     },
     []
   );
 
   // LOGOUT
   const logout = useCallback(async () => {
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      console.error(error);
-      throw error;
-    }
-
     dispatch({
       type: Types.LOGOUT,
     });
@@ -210,24 +154,22 @@ export function AuthProvider({ children }: Props) {
 
   // FORGOT PASSWORD
   const forgotPassword = useCallback(async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}${paths.auth.supabase.newPassword}`,
-    });
-
-    if (error) {
-      console.error(error);
-      throw error;
-    }
+    // const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    //   redirectTo: `${window.location.origin}${paths.auth.supabase.newPassword}`,
+    // });
+    // if (error) {
+    //   console.error(error);
+    //   throw error;
+    // }
   }, []);
 
   // NEW PASSWORD
   const updatePassword = useCallback(async (password: string) => {
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      console.error(error);
-      throw error;
-    }
+    // const { error } = await supabase.auth.updateUser({ password });
+    // if (error) {
+    //   console.error(error);
+    //   throw error;
+    // }
   }, []);
 
   // ----------------------------------------------------------------------
@@ -241,7 +183,7 @@ export function AuthProvider({ children }: Props) {
       user: {
         ...state.user,
         role: 'admin',
-        displayName: `${state.user?.user_metadata.display_name}`,
+        displayName: `${state.user?.username}`,
       },
       method: 'supabase',
       loading: status === 'loading',

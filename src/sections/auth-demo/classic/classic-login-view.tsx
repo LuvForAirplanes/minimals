@@ -58,7 +58,7 @@ export default function ClassicLoginView() {
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2">New user?</Typography>
 
-        <Link component={RouterLink} href={paths.authDemo.classic.register} variant="subtitle2">
+        <Link component={RouterLink} href={paths.auth.supabase.register} variant="subtitle2">
           Create an account
         </Link>
       </Stack>
@@ -86,7 +86,7 @@ export default function ClassicLoginView() {
 
       <Link
         component={RouterLink}
-        href={paths.authDemo.classic.forgotPassword}
+        href={paths.auth.supabase.forgotPassword}
         variant="body2"
         color="inherit"
         underline="always"
