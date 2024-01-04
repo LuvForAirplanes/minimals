@@ -1,0 +1,540 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Address {
+  attention: String
+  completeAddress: String!
+  completeAddressLine: String!
+  line1: String
+  line2: String
+  mak: String
+  postalCode: PostalCode
+  postalCodeId: String
+  postalCodeIdResolved: String!
+  postalExt: String
+  user: ApplicationUser!
+  userId: String!
+  priority: Int!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+type ApplicationUser {
+  businessName: String
+  prefix: String
+  firstName: String
+  middleName: String
+  lastName: String
+  suffix: String
+  gender: String
+  birthdate: DateTime
+  knownAsResolved: String
+  knownAs: String
+  fullName: String!
+  registered: DateTime
+  lastLogin: DateTime
+  updated: DateTime
+  approved: Boolean!
+  approvedById: String
+  approvedBy: ApplicationUser
+  sellerApproved: Boolean!
+  sellerApprovedById: String
+  sellerApprovedBy: ApplicationUser
+  approvedUsers: [ApplicationUser!]!
+  sellerApprovedUsers: [ApplicationUser!]!
+  profileImage: [Byte!]
+  backgroundImage: [Byte!]
+  about: String!
+  location: String!
+  job: String!
+  listings: [Listing!]!
+  sentMessages: [Message!]!
+  receivedMessages: [Message!]!
+  addresses: [Address!]!
+  website: String!
+  telegramUsername: String!
+  id: String!
+  userName: String
+  normalizedUserName: String
+  email: String
+  normalizedEmail: String
+  emailConfirmed: Boolean!
+  passwordHash: String
+  securityStamp: String
+  concurrencyStamp: String
+  phoneNumber: String
+  phoneNumberConfirmed: Boolean!
+  twoFactorEnabled: Boolean!
+  lockoutEnd: DateTime
+  lockoutEnabled: Boolean!
+  accessFailedCount: Int!
+}
+
+type Asset {
+  extension: String!
+  data: [Byte!]!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+  name: String!
+  notes: String
+}
+
+"Information about the offset pagination."
+type CollectionSegmentInfo {
+  "Indicates whether more items exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more items exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+}
+
+type DashboardStats {
+  users: Int!
+}
+
+type Listing {
+  title: String!
+  content: String!
+  price: Int!
+  msrp: Int
+  partNumber: String
+  unit: String!
+  user: ApplicationUser
+  userId: String
+  type: ListingType!
+  typeId: String!
+  images: [ListingImage!]!
+  isPublished: Boolean!
+  quantity: Int!
+  acceptsOffers: Boolean!
+  isSold: Boolean!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+type ListingImage {
+  listing: Listing!
+  listingId: UUID!
+  definition: [Byte!]!
+  order: Int!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+type ListingType {
+  id: String!
+  name: String!
+}
+
+type Message {
+  subject: String!
+  date: DateTime!
+  content: String!
+  fromUserId: String!
+  fromUser: ApplicationUser!
+  toUserId: String!
+  toUser: ApplicationUser!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+type Mutation {
+  updateListing: Boolean!
+}
+
+type Notice {
+  title: String
+  content: String!
+  signature: String
+  start: DateTime
+  end: DateTime
+  isActive: Boolean!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type PostalCode {
+  city: String!
+  country: String
+  id: String!
+  state: String!
+}
+
+type Query {
+  assets: [Asset!]!
+  users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
+  userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
+  user(id: String!): ApplicationUser
+  currentUser: ApplicationUser!
+  systemAdmin: Boolean!
+  dashboardStatistics: DashboardStats
+  notices: [Notice!]!
+}
+
+type Subscription {
+  test: String!
+}
+
+"A segment of a collection."
+type UserSearchCollectionSegment {
+  "Information to aid in pagination."
+  pageInfo: CollectionSegmentInfo!
+  "A flattened list of the items."
+  items: [ApplicationUser!]
+}
+
+"A connection to a list of items."
+type UsersConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [UsersEdge!]
+  "A flattened list of the nodes."
+  nodes: [ApplicationUser!]
+}
+
+"An edge in a connection."
+type UsersEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ApplicationUser!
+}
+
+input AddressFilterInput {
+  and: [AddressFilterInput!]
+  or: [AddressFilterInput!]
+  attention: StringOperationFilterInput
+  completeAddress: StringOperationFilterInput
+  completeAddressLine: StringOperationFilterInput
+  line1: StringOperationFilterInput
+  line2: StringOperationFilterInput
+  mak: StringOperationFilterInput
+  postalCode: PostalCodeFilterInput
+  postalCodeId: StringOperationFilterInput
+  postalCodeIdResolved: StringOperationFilterInput
+  postalExt: StringOperationFilterInput
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+  priority: IntOperationFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input ApplicationUserFilterInput {
+  and: [ApplicationUserFilterInput!]
+  or: [ApplicationUserFilterInput!]
+  businessName: StringOperationFilterInput
+  prefix: StringOperationFilterInput
+  firstName: StringOperationFilterInput
+  middleName: StringOperationFilterInput
+  lastName: StringOperationFilterInput
+  suffix: StringOperationFilterInput
+  gender: StringOperationFilterInput
+  birthdate: DateTimeOperationFilterInput
+  knownAsResolved: StringOperationFilterInput
+  knownAs: StringOperationFilterInput
+  fullName: StringOperationFilterInput
+  registered: DateTimeOperationFilterInput
+  lastLogin: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+  approved: BooleanOperationFilterInput
+  approvedById: StringOperationFilterInput
+  approvedBy: ApplicationUserFilterInput
+  sellerApproved: BooleanOperationFilterInput
+  sellerApprovedById: StringOperationFilterInput
+  sellerApprovedBy: ApplicationUserFilterInput
+  approvedUsers: ListFilterInputTypeOfApplicationUserFilterInput
+  sellerApprovedUsers: ListFilterInputTypeOfApplicationUserFilterInput
+  profileImage: ListByteOperationFilterInput
+  backgroundImage: ListByteOperationFilterInput
+  about: StringOperationFilterInput
+  location: StringOperationFilterInput
+  job: StringOperationFilterInput
+  listings: ListFilterInputTypeOfListingFilterInput
+  sentMessages: ListFilterInputTypeOfMessageFilterInput
+  receivedMessages: ListFilterInputTypeOfMessageFilterInput
+  addresses: ListFilterInputTypeOfAddressFilterInput
+  website: StringOperationFilterInput
+  telegramUsername: StringOperationFilterInput
+  id: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  normalizedUserName: StringOperationFilterInput
+  email: StringOperationFilterInput
+  normalizedEmail: StringOperationFilterInput
+  emailConfirmed: BooleanOperationFilterInput
+  passwordHash: StringOperationFilterInput
+  securityStamp: StringOperationFilterInput
+  concurrencyStamp: StringOperationFilterInput
+  phoneNumber: StringOperationFilterInput
+  phoneNumberConfirmed: BooleanOperationFilterInput
+  twoFactorEnabled: BooleanOperationFilterInput
+  lockoutEnd: DateTimeOperationFilterInput
+  lockoutEnabled: BooleanOperationFilterInput
+  accessFailedCount: IntOperationFilterInput
+}
+
+input ApplicationUserSortInput {
+  businessName: SortEnumType
+  prefix: SortEnumType
+  firstName: SortEnumType
+  middleName: SortEnumType
+  lastName: SortEnumType
+  suffix: SortEnumType
+  gender: SortEnumType
+  birthdate: SortEnumType
+  knownAsResolved: SortEnumType
+  knownAs: SortEnumType
+  fullName: SortEnumType
+  registered: SortEnumType
+  lastLogin: SortEnumType
+  updated: SortEnumType
+  approved: SortEnumType
+  approvedById: SortEnumType
+  approvedBy: ApplicationUserSortInput
+  sellerApproved: SortEnumType
+  sellerApprovedById: SortEnumType
+  sellerApprovedBy: ApplicationUserSortInput
+  about: SortEnumType
+  location: SortEnumType
+  job: SortEnumType
+  website: SortEnumType
+  telegramUsername: SortEnumType
+  id: SortEnumType
+  userName: SortEnumType
+  normalizedUserName: SortEnumType
+  email: SortEnumType
+  normalizedEmail: SortEnumType
+  emailConfirmed: SortEnumType
+  passwordHash: SortEnumType
+  securityStamp: SortEnumType
+  concurrencyStamp: SortEnumType
+  phoneNumber: SortEnumType
+  phoneNumberConfirmed: SortEnumType
+  twoFactorEnabled: SortEnumType
+  lockoutEnd: SortEnumType
+  lockoutEnabled: SortEnumType
+  accessFailedCount: SortEnumType
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ByteOperationFilterInput {
+  eq: Byte
+  neq: Byte
+  in: [Byte]
+  nin: [Byte]
+  gt: Byte
+  ngt: Byte
+  gte: Byte
+  ngte: Byte
+  lt: Byte
+  nlt: Byte
+  lte: Byte
+  nlte: Byte
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input IntOperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListByteOperationFilterInput {
+  all: ByteOperationFilterInput
+  none: ByteOperationFilterInput
+  some: ByteOperationFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfAddressFilterInput {
+  all: AddressFilterInput
+  none: AddressFilterInput
+  some: AddressFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfApplicationUserFilterInput {
+  all: ApplicationUserFilterInput
+  none: ApplicationUserFilterInput
+  some: ApplicationUserFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfListingFilterInput {
+  all: ListingFilterInput
+  none: ListingFilterInput
+  some: ListingFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfListingImageFilterInput {
+  all: ListingImageFilterInput
+  none: ListingImageFilterInput
+  some: ListingImageFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfMessageFilterInput {
+  all: MessageFilterInput
+  none: MessageFilterInput
+  some: MessageFilterInput
+  any: Boolean
+}
+
+input ListingFilterInput {
+  and: [ListingFilterInput!]
+  or: [ListingFilterInput!]
+  title: StringOperationFilterInput
+  content: StringOperationFilterInput
+  price: IntOperationFilterInput
+  msrp: IntOperationFilterInput
+  partNumber: StringOperationFilterInput
+  unit: StringOperationFilterInput
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+  type: ListingTypeFilterInput
+  typeId: StringOperationFilterInput
+  images: ListFilterInputTypeOfListingImageFilterInput
+  isPublished: BooleanOperationFilterInput
+  quantity: IntOperationFilterInput
+  acceptsOffers: BooleanOperationFilterInput
+  isSold: BooleanOperationFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input ListingImageFilterInput {
+  and: [ListingImageFilterInput!]
+  or: [ListingImageFilterInput!]
+  listing: ListingFilterInput
+  listingId: UuidOperationFilterInput
+  definition: ListByteOperationFilterInput
+  order: IntOperationFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input ListingTypeFilterInput {
+  and: [ListingTypeFilterInput!]
+  or: [ListingTypeFilterInput!]
+  id: StringOperationFilterInput
+  name: StringOperationFilterInput
+}
+
+input MessageFilterInput {
+  and: [MessageFilterInput!]
+  or: [MessageFilterInput!]
+  subject: StringOperationFilterInput
+  date: DateTimeOperationFilterInput
+  content: StringOperationFilterInput
+  fromUserId: StringOperationFilterInput
+  fromUser: ApplicationUserFilterInput
+  toUserId: StringOperationFilterInput
+  toUser: ApplicationUserFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input PostalCodeFilterInput {
+  and: [PostalCodeFilterInput!]
+  or: [PostalCodeFilterInput!]
+  city: StringOperationFilterInput
+  country: StringOperationFilterInput
+  id: StringOperationFilterInput
+  state: StringOperationFilterInput
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input UuidOperationFilterInput {
+  eq: UUID
+  neq: UUID
+  in: [UUID]
+  nin: [UUID]
+  gt: UUID
+  ngt: UUID
+  gte: UUID
+  ngte: UUID
+  lt: UUID
+  nlt: UUID
+  lte: UUID
+  nlte: UUID
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"The `Byte` scalar type represents non-fractional whole numeric values. Byte can represent values between 0 and 255."
+scalar Byte
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

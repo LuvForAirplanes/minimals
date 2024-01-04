@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
@@ -11,11 +12,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
-
 import { fData } from 'src/utils/format-number';
 
 import { countries } from 'src/assets/data';
+import { getCurrentUserQuery } from 'src/lib/queries/currentUser';
+import { CurrentUserQuery, CurrentUserQueryVariables } from 'src/lib/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -25,26 +26,8 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 
-// ----------------------------------------------------------------------
-
-type UserType = {
-  displayName: string;
-  email: string;
-  photoURL: any;
-  phoneNumber: string;
-  country: string;
-  address: string;
-  state: string;
-  city: string;
-  zipCode: string;
-  about: string;
-  isPublic: boolean;
-};
-
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
-
-  const { user } = useMockedUser();
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required'),
@@ -57,27 +40,24 @@ export default function AccountGeneral() {
     city: Yup.string().required('City is required'),
     zipCode: Yup.string().required('Zip code is required'),
     about: Yup.string().required('About is required'),
+    username: Yup.string().required('Username is required'),
     // not required
     isPublic: Yup.boolean(),
   });
 
-  const defaultValues: UserType = {
-    displayName: user?.displayName || '',
-    email: user?.email || '',
-    photoURL: user?.photoURL || null,
-    phoneNumber: user?.phoneNumber || '',
-    country: user?.country || '',
-    address: user?.address || '',
-    state: user?.state || '',
-    city: user?.city || '',
-    zipCode: user?.zipCode || '',
-    about: user?.about || '',
-    isPublic: user?.isPublic || false,
-  };
-
   const methods = useForm({
     resolver: yupResolver(UpdateUserSchema),
-    defaultValues,
+  });
+
+  useQuery<CurrentUserQuery, CurrentUserQueryVariables>(getCurrentUserQuery, {
+    onCompleted: (data) => {
+      const u = data.currentUser;
+      methods.reset({
+        displayName: u.fullName,
+        about: u.about,
+        username: u.userName ?? '',
+      });
+    },
   });
 
   const {
@@ -162,6 +142,7 @@ export default function AccountGeneral() {
               }}
             >
               <RHFTextField name="displayName" label="Name" />
+              <RHFTextField name="username" label="Username" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
               <RHFTextField name="address" label="Address" />

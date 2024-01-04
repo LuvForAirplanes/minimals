@@ -37,6 +37,10 @@ export default defineConfig({
         target: 'https://localhost:7283',
         secure: false,
       },
+      '/graphql': {
+        target: 'https://localhost:7283',
+        secure: false,
+      },
     },
   },
   preview: {
