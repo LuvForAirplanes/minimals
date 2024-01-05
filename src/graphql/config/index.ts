@@ -1,6 +1,7 @@
 import { onError } from '@apollo/client/link/error';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import {
   from,
   split,
@@ -32,9 +33,9 @@ const wsLink = new WebSocketLink({
   },
 });
 
-// const uploadLink = createUploadLink({
-//   uri: '/graphql/',
-// });
+const uploadLink = createUploadLink({
+  uri: '/graphql/',
+});
 
 const cleanTypeName = new ApolloLink((operation, forward) => {
   if (operation.variables && operation.variables.file === undefined) {
@@ -74,18 +75,18 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   }
 });
 
-// const uploadVsNonUploadLink = split(
-//   ({ query }) => {
-//     const definition = getMainDefinition(query);
-//     return (
-//       definition!.variableDefinitions!.filter(
-//         (v) => (v.type as any)?.type?.name?.value === 'Upload'
-//       ).length > 0
-//     );
-//   },
-//   uploadLink,
-//   httpLink
-// );
+const uploadVsNonUploadLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition!.variableDefinitions!.filter(
+        (v) => (v.type as any)?.type?.name?.value === 'Upload'
+      ).length > 0
+    );
+  },
+  uploadLink,
+  httpLink
+);
 
 export const cache = new InMemoryCache({
   possibleTypes: PossibleTypes,
@@ -97,10 +98,8 @@ const splitLink = split(
     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
   },
   wsLink,
-  httpLink
+  uploadVsNonUploadLink
 );
-
-// uploadVsNonUploadLink
 
 export const client = new ApolloClient({
   link: from([cleanTypeName, errorLink, splitLink]),
