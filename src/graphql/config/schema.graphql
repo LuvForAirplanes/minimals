@@ -171,6 +171,8 @@ type Mutation {
   currentAccountProfile(profileEdit: AccountProfileEditInput!): AccountProfileEdit!
   currentAccountNotifications(notificationsEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
   deleteUser(id: String!): Boolean!
+  uploadCurrentProfileImage(file: Upload!): Boolean!
+  changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
 }
 
 type Notice {
@@ -212,6 +214,7 @@ type Query {
   currentAccountNotifications: AccountNotificationsEdit!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
+  currentAccountProfileImage: [Byte!]
 }
 
 type Subscription {
@@ -583,3 +586,6 @@ scalar Byte
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
 
 scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

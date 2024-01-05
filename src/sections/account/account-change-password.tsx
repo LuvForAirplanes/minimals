@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Card from '@mui/material/Card';
@@ -10,11 +11,15 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { changeAccountPasswordMutation } from 'src/graphql/mutations/changeAccountPassword';
+import {
+  ChangeAccountPasswordMutation,
+  ChangeAccountPasswordMutationVariables,
+} from 'src/graphql/types/graphql';
+
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
-
-// ----------------------------------------------------------------------
 
 export default function AccountChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
@@ -51,9 +56,19 @@ export default function AccountChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
+  const [resetPassword] = useMutation<
+    ChangeAccountPasswordMutation,
+    ChangeAccountPasswordMutationVariables
+  >(changeAccountPasswordMutation);
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const value = methods.getValues();
+      await resetPassword({
+        variables: {
+          existingPassword: value.oldPassword,
+          newPassword: value.newPassword,
+        },
+      });
       reset();
       enqueueSnackbar('Update success!');
       console.info('DATA', data);

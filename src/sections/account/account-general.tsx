@@ -23,6 +23,7 @@ import {
 import { fData } from 'src/utils/format-number';
 
 import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
+import { uploadProfileMutation } from 'src/graphql/mutations/uploadAccountProfile';
 import { getCurrentAccountProfileQuery } from 'src/graphql/queries/currentAccountProfile';
 import { updateCurrentAccountProfileMutation } from 'src/graphql/mutations/currentAccountProfile';
 import {
@@ -30,13 +31,16 @@ import {
   CurrentAccountProfileQuery,
   DeleteUserMutationVariables,
   AccountProfileEditorFragment,
+  UploadCurrentProfileImageMutation,
   CurrentAccountProfileQueryVariables,
   UpdateCurrentAccountProfileMutation,
+  UploadCurrentProfileImageMutationVariables,
   UpdateCurrentAccountProfileMutationVariables,
 } from 'src/graphql/types/graphql';
 
+import { UploadAvatar } from 'src/components/upload';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFUploadAvatar } from 'src/components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
@@ -147,20 +151,24 @@ export default function AccountGeneral() {
     }
   });
 
+  const [uploadProfile] = useMutation<
+    UploadCurrentProfileImageMutation,
+    UploadCurrentProfileImageMutationVariables
+  >(uploadProfileMutation);
+
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      // const newFile = Object.assign(file, {
-      //   preview: URL.createObjectURL(file),
-      // });
-
       if (file) {
-        // setValue('photoURL', newFile, { shouldValidate: true });
+        uploadProfile({
+          variables: {
+            file,
+          },
+        });
       }
     },
-    []
-    // [setValue]
+    [uploadProfile]
   );
 
   return (
@@ -168,9 +176,9 @@ export default function AccountGeneral() {
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
-            <RHFUploadAvatar
-              name="photoURL"
-              maxSize={3145728}
+            <UploadAvatar
+              file="/api/avatars/user"
+              maxSize={4000000}
               onDrop={handleDrop}
               helperText={
                 <Typography
@@ -188,6 +196,26 @@ export default function AccountGeneral() {
                 </Typography>
               }
             />
+            {/*  <RHFUploadAvatar
+              name="photoURL"
+              maxSize={4000000}
+              onDrop={handleDrop}
+              helperText={
+                <Typography
+                  variant="caption"
+                  sx={{
+                    mt: 3,
+                    mx: 'auto',
+                    display: 'block',
+                    textAlign: 'center',
+                    color: 'text.disabled',
+                  }}
+                >
+                  Allowed *.jpeg, *.jpg, *.png, *.gif
+                  <br /> max size of {fData(3145728)}
+                </Typography>
+              }
+            /> */}
 
             <RHFSwitch
               name="isPublic"

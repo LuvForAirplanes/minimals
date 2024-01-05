@@ -35,6 +35,9 @@ const wsLink = new WebSocketLink({
 
 const uploadLink = createUploadLink({
   uri: '/graphql/',
+  headers: {
+    'GraphQL-Preflight': '1',
+  },
 });
 
 const cleanTypeName = new ApolloLink((operation, forward) => {
