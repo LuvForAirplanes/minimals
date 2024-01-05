@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useState, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery, useMutation } from '@apollo/client';
 
@@ -11,24 +11,36 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, CircularProgress } from '@mui/material';
+import {
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from '@mui/material';
 
 import { fData } from 'src/utils/format-number';
 
-import { CurrentAccountProfileQuery } from 'src/graphql/types/graphql';
+import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
 import { getCurrentAccountProfileQuery } from 'src/graphql/queries/currentAccountProfile';
 import { updateCurrentAccountProfileMutation } from 'src/graphql/mutations/currentAccountProfile';
 import {
+  DeleteUserMutation,
+  CurrentAccountProfileQuery,
+  DeleteUserMutationVariables,
+  AccountProfileEditorFragment,
   CurrentAccountProfileQueryVariables,
   UpdateCurrentAccountProfileMutation,
   UpdateCurrentAccountProfileMutationVariables,
-} from 'src/lib/types/graphql';
+} from 'src/graphql/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFUploadAvatar } from 'src/components/hook-form';
 
 export default function AccountGeneral() {
   const { enqueueSnackbar } = useSnackbar();
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const UpdateUserSchema = Yup.object().shape({
     id: Yup.string().required(),
@@ -68,11 +80,12 @@ export default function AccountGeneral() {
     },
   });
 
-  const { loading } = useQuery<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>(
+  useQuery<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>(
     getCurrentAccountProfileQuery,
     {
       onCompleted: (data) => {
         const {
+          id,
           about,
           businessName,
           email,
@@ -84,19 +97,20 @@ export default function AccountGeneral() {
           telegramUsername,
           username,
           website,
-        } = data.currentAccountProfile;
+        } = data.currentAccountProfile as AccountProfileEditorFragment;
         methods.reset({
+          id,
           about,
           businessName: businessName ?? '',
           email: email ?? '',
           firstName,
-          job,
+          job: job ?? '',
           lastName,
-          location,
+          location: location ?? '',
           phone: phone ?? '',
-          telegramUsername,
+          telegramUsername: telegramUsername ?? '',
           username: username ?? '',
-          website,
+          website: website ?? '',
         });
       },
     }
@@ -109,16 +123,22 @@ export default function AccountGeneral() {
       profileEdit: methods.getValues(),
     },
   });
+  const [deleteAccount, { loading: deleting }] = useMutation<
+    DeleteUserMutation,
+    DeleteUserMutationVariables
+  >(deleteUserMutation, {
+    variables: {
+      id: methods.getValues().id,
+    },
+  });
 
   const {
-    // setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
       await updateProfile();
       enqueueSnackbar('Update success!');
       console.info('DATA', data);
@@ -145,125 +165,141 @@ export default function AccountGeneral() {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Grid container spacing={3}>
-          <Grid xs={12} md={4}>
-            <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
-              <RHFUploadAvatar
-                name="photoURL"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                helperText={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 3,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.disabled',
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              />
+      <Grid container spacing={3}>
+        <Grid xs={12} md={4}>
+          <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
+            <RHFUploadAvatar
+              name="photoURL"
+              maxSize={3145728}
+              onDrop={handleDrop}
+              helperText={
+                <Typography
+                  variant="caption"
+                  sx={{
+                    mt: 3,
+                    mx: 'auto',
+                    display: 'block',
+                    textAlign: 'center',
+                    color: 'text.disabled',
+                  }}
+                >
+                  Allowed *.jpeg, *.jpg, *.png, *.gif
+                  <br /> max size of {fData(3145728)}
+                </Typography>
+              }
+            />
 
-              <RHFSwitch
-                name="isPublic"
-                labelPlacement="start"
-                label="Public Profile"
-                sx={{ mt: 5 }}
-              />
+            <RHFSwitch
+              name="isPublic"
+              labelPlacement="start"
+              label="Public Profile"
+              disabled
+              sx={{ mt: 5 }}
+            />
 
-              <Button variant="soft" color="error" sx={{ mt: 3 }}>
-                Delete User
-              </Button>
-            </Card>
-          </Grid>
-
-          <Grid xs={12} md={8}>
-            <Card sx={{ p: 3 }}>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="firstName" label="First Name" />
-                <RHFTextField name="lastName" label="Last Name" />
-              </Box>
-
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3, mb: 3 }}>
-                <RHFTextField name="businessName" label="Business Name" />
-              </Stack>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="email" label="Email Address" />
-                <RHFTextField name="phone" label="Phone Number" />
-              </Box>
-
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3, mb: 3 }}>
-                <RHFTextField name="username" label="Username" />
-              </Stack>
-
-              <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-                The information below is not required, but it will allow your buyers to learn more
-                about you and increase their trust.
-              </Alert>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField
-                  name="telegramUsername"
-                  label="Telegram/CloudVeil Username"
-                  placeholder="e.g. @LuvForAirplanes"
-                />
-                <RHFTextField
-                  name="website"
-                  label="Website"
-                  placeholder="e.g. my-business-website.com"
-                />
-                <RHFTextField name="location" label="Location" placeholder="e.g. Myerstown, PA" />
-                <RHFTextField
-                  name="job"
-                  label="Job/Occupation"
-                  placeholder="What you do for a job... (not required)"
-                />
-              </Box>
-
-              <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
-                <RHFTextField name="about" multiline rows={4} label="About" />
-
-                <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Save Changes
-                </LoadingButton>
-              </Stack>
-            </Card>
-          </Grid>
+            <Button variant="soft" color="error" sx={{ mt: 3 }} onClick={() => setIsDeleting(true)}>
+              Delete Account
+            </Button>
+          </Card>
         </Grid>
-      )}
+
+        <Grid xs={12} md={8}>
+          <Card sx={{ p: 3 }}>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFTextField name="firstName" label="First Name" />
+              <RHFTextField name="lastName" label="Last Name" />
+            </Box>
+
+            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3, mb: 3 }}>
+              <RHFTextField name="businessName" label="Business Name" />
+            </Stack>
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField name="phone" label="Phone Number" />
+            </Box>
+
+            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3, mb: 3 }}>
+              <RHFTextField name="username" label="Username" />
+            </Stack>
+
+            <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
+              The information below is not required, but will help buyers to learn more about you
+              and increase their level of trust.
+            </Alert>
+
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFTextField
+                name="telegramUsername"
+                label="Telegram/CloudVeil Username"
+                placeholder="e.g. @LuvForAirplanes"
+              />
+              <RHFTextField
+                name="website"
+                label="Website"
+                placeholder="e.g. my-business-website.com"
+              />
+              <RHFTextField name="location" label="Location" placeholder="e.g. Myerstown, PA" />
+              <RHFTextField
+                name="job"
+                label="Job/Occupation"
+                placeholder="What you do for a job... (not required)"
+              />
+            </Box>
+
+            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+              <RHFTextField name="about" multiline rows={4} label="About" />
+
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                Save Changes
+              </LoadingButton>
+            </Stack>
+          </Card>
+        </Grid>
+      </Grid>
+      <Dialog
+        open={isDeleting}
+        onClose={() => setIsDeleting(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete Account</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to permanently remove this user? This cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleting(false)}>Cancel</Button>
+          <LoadingButton autoFocus color="error" loading={deleting} onClick={() => deleteAccount()}>
+            Delete
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </FormProvider>
   );
 }

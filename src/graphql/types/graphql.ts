@@ -36,31 +36,31 @@ export type AccountProfileEdit = {
   __typename?: 'AccountProfileEdit';
   about: Scalars['String']['output'];
   businessName?: Maybe<Scalars['String']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
   firstName?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  job: Scalars['String']['output'];
+  job?: Maybe<Scalars['String']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
-  location: Scalars['String']['output'];
+  location?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
-  telegramUsername: Scalars['String']['output'];
-  username?: Maybe<Scalars['String']['output']>;
-  website: Scalars['String']['output'];
+  telegramUsername?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
+  website?: Maybe<Scalars['String']['output']>;
 };
 
 export type AccountProfileEditInput = {
   about: Scalars['String']['input'];
   businessName?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
   firstName?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
-  job: Scalars['String']['input'];
+  job?: InputMaybe<Scalars['String']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
-  location: Scalars['String']['input'];
+  location?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
-  telegramUsername: Scalars['String']['input'];
-  username?: InputMaybe<Scalars['String']['input']>;
-  website: Scalars['String']['input'];
+  telegramUsername?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
+  website?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Address = {
@@ -109,7 +109,7 @@ export type ApplicationUser = {
   about: Scalars['String']['output'];
   accessFailedCount: Scalars['Int']['output'];
   addresses: Array<Address>;
-  approved: Scalars['Boolean']['output'];
+  approved?: Maybe<Scalars['Boolean']['output']>;
   approvedBy?: Maybe<ApplicationUser>;
   approvedById?: Maybe<Scalars['String']['output']>;
   approvedUsers: Array<ApplicationUser>;
@@ -123,13 +123,13 @@ export type ApplicationUser = {
   fullName: Scalars['String']['output'];
   gender?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
-  job: Scalars['String']['output'];
+  job?: Maybe<Scalars['String']['output']>;
   knownAs?: Maybe<Scalars['String']['output']>;
   knownAsResolved?: Maybe<Scalars['String']['output']>;
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
   listings: Array<Listing>;
-  location: Scalars['String']['output'];
+  location?: Maybe<Scalars['String']['output']>;
   lockoutEnabled: Scalars['Boolean']['output'];
   lockoutEnd?: Maybe<Scalars['DateTime']['output']>;
   middleName?: Maybe<Scalars['String']['output']>;
@@ -144,17 +144,17 @@ export type ApplicationUser = {
   receivedMessages: Array<Message>;
   registered?: Maybe<Scalars['DateTime']['output']>;
   securityStamp?: Maybe<Scalars['String']['output']>;
-  sellerApproved: Scalars['Boolean']['output'];
+  sellerApproved?: Maybe<Scalars['Boolean']['output']>;
   sellerApprovedBy?: Maybe<ApplicationUser>;
   sellerApprovedById?: Maybe<Scalars['String']['output']>;
   sellerApprovedUsers: Array<ApplicationUser>;
   sentMessages: Array<Message>;
   suffix?: Maybe<Scalars['String']['output']>;
-  telegramUsername: Scalars['String']['output'];
+  telegramUsername?: Maybe<Scalars['String']['output']>;
   twoFactorEnabled: Scalars['Boolean']['output'];
   updated?: Maybe<Scalars['DateTime']['output']>;
   userName?: Maybe<Scalars['String']['output']>;
-  website: Scalars['String']['output'];
+  website?: Maybe<Scalars['String']['output']>;
 };
 
 export type ApplicationUserFilterInput = {
@@ -486,17 +486,23 @@ export type Mutation = {
   __typename?: 'Mutation';
   currentAccountNotifications: AccountNotificationsEdit;
   currentAccountProfile: AccountProfileEdit;
+  deleteUser: Scalars['Boolean']['output'];
   updateListing: Scalars['Boolean']['output'];
 };
 
 
 export type MutationCurrentAccountNotificationsArgs = {
-  profileEdit: AccountNotificationsEditInput;
+  notificationsEdit: AccountNotificationsEditInput;
 };
 
 
 export type MutationCurrentAccountProfileArgs = {
   profileEdit: AccountProfileEditInput;
+};
+
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type Notice = {
@@ -639,10 +645,57 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']['input']>;
 };
 
+export type AccountNotificationEditorFragment = { __typename?: 'AccountNotificationsEdit', id: string, notifyOnMessage: boolean } & { ' $fragmentName'?: 'AccountNotificationEditorFragment' };
+
+export type AccountProfileEditorFragment = { __typename?: 'AccountProfileEdit', id: string, about: string, businessName?: string | null, email: string, firstName?: string | null, lastName?: string | null, job?: string | null, location?: string | null, phone?: string | null, telegramUsername?: string | null, username: string, website?: string | null } & { ' $fragmentName'?: 'AccountProfileEditorFragment' };
+
+export type UpdateCurrentAccountNotificationsMutationVariables = Exact<{
+  notificationsEdit: AccountNotificationsEditInput;
+}>;
+
+
+export type UpdateCurrentAccountNotificationsMutation = { __typename?: 'Mutation', currentAccountNotifications: (
+    { __typename?: 'AccountNotificationsEdit' }
+    & { ' $fragmentRefs'?: { 'AccountNotificationEditorFragment': AccountNotificationEditorFragment } }
+  ) };
+
+export type UpdateCurrentAccountProfileMutationVariables = Exact<{
+  profileEdit: AccountProfileEditInput;
+}>;
+
+
+export type UpdateCurrentAccountProfileMutation = { __typename?: 'Mutation', currentAccountProfile: (
+    { __typename?: 'AccountProfileEdit' }
+    & { ' $fragmentRefs'?: { 'AccountProfileEditorFragment': AccountProfileEditorFragment } }
+  ) };
+
+export type DeleteUserMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: boolean };
+
+export type CurrentAccountNotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentAccountNotificationsQuery = { __typename?: 'Query', currentAccountNotifications: (
+    { __typename?: 'AccountNotificationsEdit' }
+    & { ' $fragmentRefs'?: { 'AccountNotificationEditorFragment': AccountNotificationEditorFragment } }
+  ) };
+
 export type CurrentAccountProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentAccountProfileQuery = { __typename?: 'Query', currentAccountProfile: { __typename?: 'AccountProfileEdit', id: string, about: string, businessName?: string | null, email?: string | null, firstName?: string | null, lastName?: string | null, job: string, location: string, phone?: string | null, telegramUsername: string, username?: string | null, website: string } };
+export type CurrentAccountProfileQuery = { __typename?: 'Query', currentAccountProfile: (
+    { __typename?: 'AccountProfileEdit' }
+    & { ' $fragmentRefs'?: { 'AccountProfileEditorFragment': AccountProfileEditorFragment } }
+  ) };
 
-
-export const CurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]}}]} as unknown as DocumentNode<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>;
+export const AccountNotificationEditorFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<AccountNotificationEditorFragment, unknown>;
+export const AccountProfileEditorFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<AccountProfileEditorFragment, unknown>;
+export const UpdateCurrentAccountNotificationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCurrentAccountNotifications"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"notificationsEdit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEditInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountNotifications"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"notificationsEdit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"notificationsEdit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountNotificationEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<UpdateCurrentAccountNotificationsMutation, UpdateCurrentAccountNotificationsMutationVariables>;
+export const UpdateCurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCurrentAccountProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"profileEdit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEditInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"profileEdit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"profileEdit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountProfileEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<UpdateCurrentAccountProfileMutation, UpdateCurrentAccountProfileMutationVariables>;
+export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteUserMutation, DeleteUserMutationVariables>;
+export const CurrentAccountNotificationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountNotificationEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<CurrentAccountNotificationsQuery, CurrentAccountNotificationsQueryVariables>;
+export const CurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountProfileEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>;

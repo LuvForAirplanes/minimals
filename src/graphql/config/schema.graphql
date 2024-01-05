@@ -14,13 +14,13 @@ type AccountProfileEdit {
   firstName: String
   lastName: String
   businessName: String
-  email: String
+  email: String!
   phone: String
-  username: String
-  telegramUsername: String!
-  website: String!
-  location: String!
-  job: String!
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
   about: String!
 }
 
@@ -58,10 +58,10 @@ type ApplicationUser {
   registered: DateTime
   lastLogin: DateTime
   updated: DateTime
-  approved: Boolean!
+  approved: Boolean
   approvedById: String
   approvedBy: ApplicationUser
-  sellerApproved: Boolean!
+  sellerApproved: Boolean
   sellerApprovedById: String
   sellerApprovedBy: ApplicationUser
   approvedUsers: [ApplicationUser!]!
@@ -69,14 +69,14 @@ type ApplicationUser {
   profileImage: [Byte!]
   backgroundImage: [Byte!]
   about: String!
-  location: String!
-  job: String!
+  location: String
+  job: String
   listings: [Listing!]!
   sentMessages: [Message!]!
   receivedMessages: [Message!]!
   addresses: [Address!]!
-  website: String!
-  telegramUsername: String!
+  website: String
+  telegramUsername: String
   notifyOnMessage: Boolean!
   id: String!
   userName: String
@@ -169,7 +169,8 @@ type Message {
 type Mutation {
   updateListing: Boolean!
   currentAccountProfile(profileEdit: AccountProfileEditInput!): AccountProfileEdit!
-  currentAccountNotifications(profileEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
+  currentAccountNotifications(notificationsEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
+  deleteUser(id: String!): Boolean!
 }
 
 type Notice {
@@ -253,13 +254,13 @@ input AccountProfileEditInput {
   firstName: String
   lastName: String
   businessName: String
-  email: String
+  email: String!
   phone: String
-  username: String
-  telegramUsername: String!
-  website: String!
-  location: String!
-  job: String!
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
   about: String!
 }
 
