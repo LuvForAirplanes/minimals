@@ -1,21 +1,39 @@
 import { useQuery } from '@apollo/client';
 import React, { useRef, useMemo, useState, useEffect } from 'react';
 
-import { GridRowId, GridPaginationModel } from '@mui/x-data-grid';
+import {
+  GridRowId,
+  GridFeatureMode,
+  GridPaginationModel,
+  GridCallbackDetails,
+} from '@mui/x-data-grid';
 
 import { getUsersQuery } from 'src/graphql/queries/users';
-import { UsersQuery, UsersQueryVariables } from 'src/graphql/types/graphql';
+import { UsersQuery, ApplicationUser, UsersQueryVariables } from 'src/graphql/types/graphql';
 
-interface Filtering<T> {
-  gridArgs: {
-    filterModel?: GridFilterModel;
-    onFilterModelChange: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
-  };
-  where?: T;
-  setFilter: any;
+import { Sorting } from './useSorting';
+import { Filtering } from './useFiltering';
+
+interface PagingProps {
+  sort: Sorting<unknown>;
+  filter: Filtering<unknown>;
 }
 
-export function usePaging() {
+interface Paging {
+  gridArgs: {
+    paginationModel?: GridPaginationModel;
+    onPaginationModelChange: (
+      model: GridPaginationModel,
+      details: GridCallbackDetails<any>
+    ) => void;
+    rowCount: number;
+    rows: readonly any[];
+    isLoading: boolean;
+    paginationMode?: GridFeatureMode | undefined;
+  };
+}
+
+export function usePaging({ filter, sort }: PagingProps): Paging {
   const PAGE_SIZE = 5;
 
   const mapPageToNextCursor = useRef<{ [page: number]: GridRowId }>({});
@@ -35,7 +53,7 @@ export function usePaging() {
       }) as UsersQueryVariables,
     [paginationModel, sort, filter]
   );
-  console.log(queryOptions);
+
   const { loading: isLoading, data } = useQuery<UsersQuery, UsersQueryVariables>(getUsersQuery, {
     variables: queryOptions,
   });
@@ -61,10 +79,21 @@ export function usePaging() {
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
-  const [rowCountState, setRowCountState] = React.useState(data?.data?.count || 0);
+  const [rowCount, setRowCountState] = React.useState(data?.data?.count || 0);
   React.useEffect(() => {
     setRowCountState((prevRowCountState) =>
       data?.data?.count !== undefined ? data?.data?.count : prevRowCountState
     );
   }, [data?.data?.count, setRowCountState]);
+
+  return {
+    gridArgs: {
+      rowCount,
+      onPaginationModelChange: handlePaginationModelChange,
+      paginationModel,
+      rows: (data?.data?.nodes as ApplicationUser[]) ?? ([] as ApplicationUser[]),
+      isLoading,
+      paginationMode: 'server',
+    },
+  };
 }

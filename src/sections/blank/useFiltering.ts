@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import {
   GridFilterItem,
   GridFilterModel,
+  GridFeatureMode,
   GridLogicOperator,
   GridCallbackDetails,
 } from '@mui/x-data-grid';
@@ -66,10 +67,11 @@ export function createWhere<WhereInputType>(filter?: GridFilterModel): WhereInpu
   } as unknown as WhereInputType;
 }
 
-interface Filtering<T> {
+export interface Filtering<T> {
   gridArgs: {
     filterModel?: GridFilterModel;
     onFilterModelChange: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
+    filterMode?: GridFeatureMode | undefined;
   };
   where?: T;
   setFilter: any;
@@ -89,6 +91,7 @@ export function useFiltering<WhereInputType>(
         onFilterModelChange: (e) => {
           setFilter(e);
         },
+        filterMode: 'server',
       },
       where,
       setFilter,

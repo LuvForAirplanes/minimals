@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-import { GridSortModel, GridCallbackDetails } from '@mui/x-data-grid';
+import { GridSortModel, GridFeatureMode, GridCallbackDetails } from '@mui/x-data-grid';
 
 import { SortEnumType } from 'src/graphql/types/graphql';
 
@@ -52,10 +52,11 @@ function createOrderBy<SortInputType>(
   return result;
 }
 
-interface Sorting<T> {
+export interface Sorting<T> {
   gridArgs: {
     sortModel?: GridSortModel;
     onSortModelChange: (model: GridSortModel, details: GridCallbackDetails<any>) => void;
+    sortingMode?: GridFeatureMode | undefined;
   };
   order: T[];
 }
@@ -83,6 +84,7 @@ export function useSorting<SortInputType>(
           setSort(e);
         },
         sortModel: sort,
+        sortingMode: 'server',
       },
       order,
     };
