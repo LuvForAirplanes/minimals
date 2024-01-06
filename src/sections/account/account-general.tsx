@@ -196,26 +196,6 @@ export default function AccountGeneral() {
                 </Typography>
               }
             />
-            {/*  <RHFUploadAvatar
-              name="photoURL"
-              maxSize={4000000}
-              onDrop={handleDrop}
-              helperText={
-                <Typography
-                  variant="caption"
-                  sx={{
-                    mt: 3,
-                    mx: 'auto',
-                    display: 'block',
-                    textAlign: 'center',
-                    color: 'text.disabled',
-                  }}
-                >
-                  Allowed *.jpeg, *.jpg, *.png, *.gif
-                  <br /> max size of {fData(3145728)}
-                </Typography>
-              }
-            /> */}
 
             <RHFSwitch
               name="isPublic"

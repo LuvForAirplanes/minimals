@@ -177,12 +177,16 @@ type Message {
 }
 
 type Mutation {
-  updateListing: Boolean!
   currentAccountProfile(profileEdit: AccountProfileEditInput!): AccountProfileEdit!
   currentAccountNotifications(notificationsEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
   deleteUser(id: String!): Boolean!
   uploadCurrentProfileImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
+  user(id: String! profileEdit: UserEditInput!): UserEdit!
+  userList(id: String! profileEdit: UserListEditInput!): UserListEdit!
+  userNotifications(id: String! notificationsEdit: UserNotificationsEditInput!): UserNotificationsEdit!
+  uploadUserProfileImage(file: Upload! id: String!): Boolean!
+  changeUserPassword(id: String! existingPassword: String! newPassword: String!): Boolean!
 }
 
 type Notice {
@@ -217,18 +221,54 @@ type PostalCode {
 }
 
 type Query {
+  currentAccountProfile: AccountProfileEdit!
+  currentAccountNotifications: AccountNotificationsEdit!
+  currentAccountProfileImage: [Byte!]
   assets: [Asset!]!
   dashboardStatistics: DashboardStats
   notices: [Notice!]!
-  currentAccountProfile: AccountProfileEdit!
-  currentAccountNotifications: AccountNotificationsEdit!
+  userProfile(id: String!): UserEdit!
+  userNotifications(id: String!): UserNotificationsEdit!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
-  currentAccountProfileImage: [Byte!]
+  userProfileImage(id: String!): [Byte!]
 }
 
 type Subscription {
   test: String!
+}
+
+type UserEdit {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String!
+  phone: String
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
+  about: String!
+}
+
+type UserListEdit {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  userName: String
+  email: String!
+  phoneNumber: String
+  location: String
+  approved: Boolean
+  sellerApproved: Boolean
+}
+
+type UserNotificationsEdit {
+  id: String!
+  notifyOnMessage: Boolean!
 }
 
 "A segment of a collection."
@@ -588,6 +628,39 @@ input StringOperationFilterInput {
   nstartsWith: String
   endsWith: String
   nendsWith: String
+}
+
+input UserEditInput {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String!
+  phone: String
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
+  about: String!
+}
+
+input UserListEditInput {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  userName: String
+  email: String!
+  phoneNumber: String
+  location: String
+  approved: Boolean
+  sellerApproved: Boolean
+}
+
+input UserNotificationsEditInput {
+  id: String!
+  notifyOnMessage: Boolean!
 }
 
 input UuidOperationFilterInput {

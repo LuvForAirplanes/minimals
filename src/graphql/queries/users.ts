@@ -6,6 +6,15 @@ const UserFragment = gql`
     id
     firstName
     lastName
+    email
+    userName
+    businessName
+    approved
+    sellerApproved
+    phoneNumber
+    location
+    approved
+    sellerApproved
   }
 `;
 

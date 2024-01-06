@@ -34,7 +34,7 @@ interface Paging {
 }
 
 export function usePaging({ filter, sort }: PagingProps): Paging {
-  const PAGE_SIZE = 5;
+  const PAGE_SIZE = 10;
 
   const mapPageToNextCursor = useRef<{ [page: number]: GridRowId }>({});
 
