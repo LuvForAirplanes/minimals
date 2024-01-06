@@ -1,4 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
+import { useQuery, useMutation } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -8,10 +9,18 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { getCurrentAccountNotificationsQuery } from 'src/graphql/queries/currentAccountNotifications';
+import { updateCurrentAccountNotificationsMutation } from 'src/graphql/mutations/currentAccountNotifications';
+import {
+  CurrentAccountNotificationsQuery,
+  AccountNotificationEditorFragment,
+  CurrentAccountNotificationsQueryVariables,
+  UpdateCurrentAccountNotificationsMutation,
+  UpdateCurrentAccountNotificationsMutationVariables,
+} from 'src/graphql/types/graphql';
+
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar';
-
-// ----------------------------------------------------------------------
 
 const NOTIFICATIONS = [
   {
@@ -26,14 +35,12 @@ const NOTIFICATIONS = [
   },
 ];
 
-// ----------------------------------------------------------------------
-
 export default function AccountNotifications() {
   const { enqueueSnackbar } = useSnackbar();
 
   const methods = useForm({
     defaultValues: {
-      selected: ['activity_comments'],
+      selected: [''],
     },
   });
 
@@ -43,14 +50,36 @@ export default function AccountNotifications() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const { data } = useQuery<
+    CurrentAccountNotificationsQuery,
+    CurrentAccountNotificationsQueryVariables
+  >(getCurrentAccountNotificationsQuery, {
+    onCompleted: (d) =>
+      methods.reset({
+        selected: (d.currentAccountNotifications as AccountNotificationEditorFragment)
+          .notifyOnMessage
+          ? ['activity_comments']
+          : [],
+      }),
+  });
 
   const values = watch();
 
-  const onSubmit = handleSubmit(async (data) => {
+  const [updateNotifications] = useMutation<
+    UpdateCurrentAccountNotificationsMutation,
+    UpdateCurrentAccountNotificationsMutationVariables
+  >(updateCurrentAccountNotificationsMutation);
+  const onSubmit = handleSubmit(async (d) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await updateNotifications({
+        variables: {
+          notificationsEdit: {
+            id: (data!.currentAccountNotifications as AccountNotificationEditorFragment).id,
+            notifyOnMessage: d.selected.includes('activity_comments'),
+          },
+        },
+      });
       enqueueSnackbar('Update success!');
-      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
