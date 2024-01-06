@@ -122,6 +122,7 @@ export type ApplicationUser = {
   email?: Maybe<Scalars['String']['output']>;
   emailConfirmed: Scalars['Boolean']['output'];
   firstName?: Maybe<Scalars['String']['output']>;
+  friends: Array<Friend>;
   fullName: Scalars['String']['output'];
   gender?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
@@ -135,6 +136,7 @@ export type ApplicationUser = {
   lockoutEnabled: Scalars['Boolean']['output'];
   lockoutEnd?: Maybe<Scalars['DateTime']['output']>;
   middleName?: Maybe<Scalars['String']['output']>;
+  myFriends: Array<Friend>;
   normalizedEmail?: Maybe<Scalars['String']['output']>;
   normalizedUserName?: Maybe<Scalars['String']['output']>;
   notifyOnMessage: Scalars['Boolean']['output'];
@@ -175,6 +177,7 @@ export type ApplicationUserFilterInput = {
   email?: InputMaybe<StringOperationFilterInput>;
   emailConfirmed?: InputMaybe<BooleanOperationFilterInput>;
   firstName?: InputMaybe<StringOperationFilterInput>;
+  friends?: InputMaybe<ListFilterInputTypeOfFriendFilterInput>;
   fullName?: InputMaybe<StringOperationFilterInput>;
   gender?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<StringOperationFilterInput>;
@@ -188,6 +191,7 @@ export type ApplicationUserFilterInput = {
   lockoutEnabled?: InputMaybe<BooleanOperationFilterInput>;
   lockoutEnd?: InputMaybe<DateTimeOperationFilterInput>;
   middleName?: InputMaybe<StringOperationFilterInput>;
+  myFriends?: InputMaybe<ListFilterInputTypeOfFriendFilterInput>;
   normalizedEmail?: InputMaybe<StringOperationFilterInput>;
   normalizedUserName?: InputMaybe<StringOperationFilterInput>;
   notifyOnMessage?: InputMaybe<BooleanOperationFilterInput>;
@@ -317,6 +321,25 @@ export type DateTimeOperationFilterInput = {
   nlte?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type Friend = {
+  __typename?: 'Friend';
+  befriended: Scalars['DateTime']['output'];
+  friendUser: ApplicationUser;
+  friendUserId: Scalars['String']['output'];
+  user: ApplicationUser;
+  userId: Scalars['String']['output'];
+};
+
+export type FriendFilterInput = {
+  and?: InputMaybe<Array<FriendFilterInput>>;
+  befriended?: InputMaybe<DateTimeOperationFilterInput>;
+  friendUser?: InputMaybe<ApplicationUserFilterInput>;
+  friendUserId?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<FriendFilterInput>>;
+  user?: InputMaybe<ApplicationUserFilterInput>;
+  userId?: InputMaybe<StringOperationFilterInput>;
+};
+
 export type IntOperationFilterInput = {
   eq?: InputMaybe<Scalars['Int']['input']>;
   gt?: InputMaybe<Scalars['Int']['input']>;
@@ -351,6 +374,13 @@ export type ListFilterInputTypeOfApplicationUserFilterInput = {
   any?: InputMaybe<Scalars['Boolean']['input']>;
   none?: InputMaybe<ApplicationUserFilterInput>;
   some?: InputMaybe<ApplicationUserFilterInput>;
+};
+
+export type ListFilterInputTypeOfFriendFilterInput = {
+  all?: InputMaybe<FriendFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<FriendFilterInput>;
+  some?: InputMaybe<FriendFilterInput>;
 };
 
 export type ListFilterInputTypeOfListingFilterInput = {
@@ -635,6 +665,8 @@ export type UsersConnection = {
   nodes?: Maybe<Array<ApplicationUser>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 /** An edge in a connection. */
@@ -723,8 +755,24 @@ export type CurrentAccountProfileQuery = { __typename?: 'Query', currentAccountP
     & { ' $fragmentRefs'?: { 'AccountProfileEditorFragment': AccountProfileEditorFragment } }
   ) };
 
+export type UserFragment = { __typename: 'ApplicationUser', id: string, firstName?: string | null, lastName?: string | null } & { ' $fragmentName'?: 'UserFragment' };
+
+export type UsersQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Array<ApplicationUserSortInput> | ApplicationUserSortInput>;
+  where?: InputMaybe<ApplicationUserFilterInput>;
+}>;
+
+
+export type UsersQuery = { __typename?: 'Query', data?: { __typename?: 'UsersConnection', count: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null }, nodes?: Array<(
+      { __typename?: 'ApplicationUser' }
+      & { ' $fragmentRefs'?: { 'UserFragment': UserFragment } }
+    )> | null } | null };
+
 export const AccountNotificationEditorFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<AccountNotificationEditorFragment, unknown>;
 export const AccountProfileEditorFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<AccountProfileEditorFragment, unknown>;
+export const UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]} as unknown as DocumentNode<UserFragment, unknown>;
 export const ChangeAccountPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"changeAccountPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changeAccountPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"existingPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}}},{"kind":"Argument","name":{"kind":"Name","value":"newPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}}}]}]}}]} as unknown as DocumentNode<ChangeAccountPasswordMutation, ChangeAccountPasswordMutationVariables>;
 export const UpdateCurrentAccountNotificationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCurrentAccountNotifications"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"notificationsEdit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEditInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountNotifications"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"notificationsEdit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"notificationsEdit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountNotificationEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<UpdateCurrentAccountNotificationsMutation, UpdateCurrentAccountNotificationsMutationVariables>;
 export const UpdateCurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateCurrentAccountProfile"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"profileEdit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEditInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"profileEdit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"profileEdit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountProfileEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<UpdateCurrentAccountProfileMutation, UpdateCurrentAccountProfileMutationVariables>;
@@ -732,3 +780,4 @@ export const DeleteUserDocument = {"kind":"Document","definitions":[{"kind":"Ope
 export const UploadCurrentProfileImageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"uploadCurrentProfileImage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"file"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Upload"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uploadCurrentProfileImage"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"file"},"value":{"kind":"Variable","name":{"kind":"Name","value":"file"}}}]}]}}]} as unknown as DocumentNode<UploadCurrentProfileImageMutation, UploadCurrentProfileImageMutationVariables>;
 export const CurrentAccountNotificationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountNotificationEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<CurrentAccountNotificationsQuery, CurrentAccountNotificationsQueryVariables>;
 export const CurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountProfileEditor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfileImage"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>;
+export const UsersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"users"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"50"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUserSortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUserFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"data"},"name":{"kind":"Name","value":"users"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"count"},"name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"User"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}}]}}]} as unknown as DocumentNode<UsersQuery, UsersQueryVariables>;

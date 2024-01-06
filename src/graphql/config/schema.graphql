@@ -74,6 +74,8 @@ type ApplicationUser {
   listings: [Listing!]!
   sentMessages: [Message!]!
   receivedMessages: [Message!]!
+  myFriends: [Friend!]!
+  friends: [Friend!]!
   addresses: [Address!]!
   website: String
   telegramUsername: String
@@ -115,6 +117,14 @@ type CollectionSegmentInfo {
 
 type DashboardStats {
   users: Int!
+}
+
+type Friend {
+  userId: String!
+  user: ApplicationUser!
+  friendUserId: String!
+  friendUser: ApplicationUser!
+  befriended: DateTime!
 }
 
 type Listing {
@@ -237,6 +247,8 @@ type UsersConnection {
   edges: [UsersEdge!]
   "A flattened list of the nodes."
   nodes: [ApplicationUser!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
 }
 
 "An edge in a connection."
@@ -321,6 +333,8 @@ input ApplicationUserFilterInput {
   listings: ListFilterInputTypeOfListingFilterInput
   sentMessages: ListFilterInputTypeOfMessageFilterInput
   receivedMessages: ListFilterInputTypeOfMessageFilterInput
+  myFriends: ListFilterInputTypeOfFriendFilterInput
+  friends: ListFilterInputTypeOfFriendFilterInput
   addresses: ListFilterInputTypeOfAddressFilterInput
   website: StringOperationFilterInput
   telegramUsername: StringOperationFilterInput
@@ -421,6 +435,16 @@ input DateTimeOperationFilterInput {
   nlte: DateTime
 }
 
+input FriendFilterInput {
+  and: [FriendFilterInput!]
+  or: [FriendFilterInput!]
+  userId: StringOperationFilterInput
+  user: ApplicationUserFilterInput
+  friendUserId: StringOperationFilterInput
+  friendUser: ApplicationUserFilterInput
+  befriended: DateTimeOperationFilterInput
+}
+
 input IntOperationFilterInput {
   eq: Int
   neq: Int
@@ -454,6 +478,13 @@ input ListFilterInputTypeOfApplicationUserFilterInput {
   all: ApplicationUserFilterInput
   none: ApplicationUserFilterInput
   some: ApplicationUserFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfFriendFilterInput {
+  all: FriendFilterInput
+  none: FriendFilterInput
+  some: FriendFilterInput
   any: Boolean
 }
 

@@ -22,6 +22,8 @@ const documents = {
     "\n  mutation uploadCurrentProfileImage($file: Upload!) {\n    uploadCurrentProfileImage(file: $file)\n  }\n": types.UploadCurrentProfileImageDocument,
     "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
     "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n": types.CurrentAccountProfileDocument,
+    "\n  fragment User on ApplicationUser {\n    __typename\n    id\n    firstName\n    lastName\n  }\n": types.UserFragmentDoc,
+    "\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n": types.UsersDocument,
 };
 
 /**
@@ -74,6 +76,14 @@ export function graphql(source: "\n  query currentAccountNotifications {\n    cu
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"): (typeof documents)["\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment User on ApplicationUser {\n    __typename\n    id\n    firstName\n    lastName\n  }\n"): (typeof documents)["\n  fragment User on ApplicationUser {\n    __typename\n    id\n    firstName\n    lastName\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n"): (typeof documents)["\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

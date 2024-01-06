@@ -23,7 +23,7 @@ const specialOperators: Record<string, any> = {
 };
 
 export function createWhere<WhereInputType>(filter?: GridFilterModel): WhereInputType | undefined {
-  if (!filter) return;
+  if (!filter || !filter.items[0].value || filter.items[0].value === '') return;
 
   const args = [];
   const filters: GridFilterItem[] = Array.isArray(filter.items)
