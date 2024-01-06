@@ -8,26 +8,23 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import { alpha, useTheme } from '@mui/material/styles';
 
-import { fShortenNumber } from 'src/utils/format-number';
-
 import { _socials } from 'src/_mock';
 import { AvatarShape } from 'src/assets/illustrations';
+import { SocialUserFragment } from 'src/graphql/types/graphql';
 
 import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
 
-import { IUserCard } from 'src/types/user';
-
 // ----------------------------------------------------------------------
 
 type Props = {
-  user: IUserCard;
+  user: SocialUserFragment;
 };
 
 export default function UserCard({ user }: Props) {
   const theme = useTheme();
 
-  const { name, coverUrl, role, totalFollowers, totalPosts, avatarUrl, totalFollowing } = user;
+  const { fullName, userName, location, followers, following, listings } = user;
 
   return (
     <Card sx={{ textAlign: 'center' }}>
@@ -44,8 +41,8 @@ export default function UserCard({ user }: Props) {
         />
 
         <Avatar
-          alt={name}
-          src={avatarUrl}
+          alt={fullName}
+          src={`/api/avatars/user/${userName}`}
           sx={{
             width: 64,
             height: 64,
@@ -59,8 +56,8 @@ export default function UserCard({ user }: Props) {
         />
 
         <Image
-          src={coverUrl}
-          alt={coverUrl}
+          src={`/api/avatars/background/${userName}`}
+          alt={userName ?? ''}
           ratio="16/9"
           overlay={alpha(theme.palette.grey[900], 0.48)}
         />
@@ -68,8 +65,8 @@ export default function UserCard({ user }: Props) {
 
       <ListItemText
         sx={{ mt: 7, mb: 1 }}
-        primary={name}
-        secondary={role}
+        primary={fullName}
+        secondary={location}
         primaryTypographyProps={{ typography: 'subtitle1' }}
         secondaryTypographyProps={{ component: 'span', mt: 0.5 }}
       />
@@ -99,9 +96,9 @@ export default function UserCard({ user }: Props) {
       >
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.5, color: 'text.secondary' }}>
-            Follower
+            Followers
           </Typography>
-          {fShortenNumber(totalFollowers)}
+          {followers}
         </div>
 
         <div>
@@ -109,14 +106,14 @@ export default function UserCard({ user }: Props) {
             Following
           </Typography>
 
-          {fShortenNumber(totalFollowing)}
+          {following}
         </div>
 
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.5, color: 'text.secondary' }}>
             Total Post
           </Typography>
-          {fShortenNumber(totalPosts)}
+          {listings}
         </div>
       </Box>
     </Card>

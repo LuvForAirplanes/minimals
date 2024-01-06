@@ -7,7 +7,7 @@ import { _userList } from 'src/_mock';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import UserNewEditForm from '../user-new-edit-form';
+import UserEditForm from '../user-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export default function UserEditView({ id }: Props) {
         }}
       />
 
-      <UserNewEditForm currentUser={currentUser} />
+      <UserEditForm currentUser={currentUser} />
     </Container>
   );
 }

@@ -71,7 +71,7 @@ type ApplicationUser {
   about: String!
   location: String
   job: String
-  listings: [Listing!]!
+  listings: Long!
   sentMessages: [Message!]!
   receivedMessages: [Message!]!
   myFriends: [Friend!]!
@@ -95,6 +95,8 @@ type ApplicationUser {
   lockoutEnd: DateTime
   lockoutEnabled: Boolean!
   accessFailedCount: Int!
+  following: Long!
+  followers: Long!
 }
 
 type Asset {
@@ -187,6 +189,7 @@ type Mutation {
   userNotifications(id: String! notificationsEdit: UserNotificationsEditInput!): UserNotificationsEdit!
   uploadUserProfileImage(file: Upload! id: String!): Boolean!
   changeUserPassword(id: String! existingPassword: String! newPassword: String!): Boolean!
+  registerUser(user: RegisterUserEditInput!): String!
 }
 
 type Notice {
@@ -199,6 +202,14 @@ type Notice {
   id: UUID!
   added: DateTime!
   updated: DateTime!
+}
+
+"A segment of a collection."
+type OffsetUsersCollectionSegment {
+  "Information to aid in pagination."
+  pageInfo: CollectionSegmentInfo!
+  "A flattened list of the items."
+  items: [ApplicationUser!]
 }
 
 "Information about pagination in a connection."
@@ -230,6 +241,8 @@ type Query {
   userProfile(id: String!): UserEdit!
   userNotifications(id: String!): UserNotificationsEdit!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
+  offsetUsers(skip: Int take: Int where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): OffsetUsersCollectionSegment
+  totalUsers: Int!
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   userProfileImage(id: String!): [Byte!]
 }
@@ -615,6 +628,27 @@ input PostalCodeFilterInput {
   state: StringOperationFilterInput
 }
 
+input RegisterUserEditInput {
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String!
+  phone: String
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
+  about: String!
+  password: String!
+  emailVerified: Boolean!
+  phoneVerified: Boolean!
+  sendEmailVerification: Boolean!
+  sendPhoneVerification: Boolean!
+  approved: Boolean!
+  sellerApproved: Boolean!
+}
+
 input StringOperationFilterInput {
   and: [StringOperationFilterInput!]
   or: [StringOperationFilterInput!]
@@ -688,6 +722,9 @@ scalar Byte
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
 
 scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")
 
