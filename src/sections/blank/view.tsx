@@ -2,11 +2,12 @@ import Box from '@mui/material/Box';
 import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridToolbar, GridValueGetterParams } from '@mui/x-data-grid';
 
 import { useSettingsContext } from 'src/components/settings';
 
 import { useSorting } from './useSorting';
+import { useFiltering } from './useFiltering';
 
 // ----------------------------------------------------------------------
 
@@ -55,9 +56,9 @@ export default function BlankView() {
     { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
     { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
   ];
-
   const sort = useSorting([{ field: 'id', sort: 'desc' }]);
-  console.log(sort.order);
+  const filter = useFiltering();
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Typography variant="h4"> Blank </Typography>
@@ -72,21 +73,30 @@ export default function BlankView() {
           border: (theme) => `dashed 1px ${theme.palette.divider}`,
         }}
       >
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 500, width: '100%' }}>
           <DataGrid
             rows={rows}
             columns={columns}
-            onFilterModelChange={(e) => console.log(e)}
             {...sort.gridArgs}
+            {...filter.gridArgs}
             onPaginationModelChange={(e) => console.log(e)}
             checkboxSelection
+            ignoreDiacritics
             // sortingMode="server"
+            // filteringMode="server"
+            // paginationMode="server"
             disableRowSelectionOnClick
             initialState={{
               pagination: {
                 paginationModel: {
                   pageSize: 5,
                 },
+              },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{
+              toolbar: {
+                showQuickFilter: true,
               },
             }}
             pageSizeOptions={[5]}
