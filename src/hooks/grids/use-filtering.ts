@@ -8,7 +8,7 @@ import {
   GridCallbackDetails,
 } from '@mui/x-data-grid';
 
-import { useDebounced } from './useDebounced';
+import { useDebounced } from './use-debounced';
 
 // Map from the Kendo Grid operator to the GraphQL one.
 const operatorMap: Record<string, string> = {

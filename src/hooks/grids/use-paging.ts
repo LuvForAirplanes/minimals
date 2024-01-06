@@ -11,8 +11,8 @@ import {
 import { getUsersQuery } from 'src/graphql/queries/users';
 import { UsersQuery, ApplicationUser, UsersQueryVariables } from 'src/graphql/types/graphql';
 
-import { Sorting } from './useSorting';
-import { Filtering } from './useFiltering';
+import { Sorting } from './use-sorting';
+import { Filtering } from './use-filtering';
 
 interface PagingProps {
   sort: Sorting<unknown>;
@@ -29,6 +29,7 @@ interface Paging {
     rowCount: number;
     rows: readonly any[];
     isLoading: boolean;
+    loading: boolean;
     paginationMode?: GridFeatureMode | undefined;
   };
 }
@@ -93,6 +94,7 @@ export function usePaging({ filter, sort }: PagingProps): Paging {
       paginationModel,
       rows: (data?.data?.nodes as ApplicationUser[]) ?? ([] as ApplicationUser[]),
       isLoading,
+      loading: isLoading,
       paginationMode: 'server',
     },
   };

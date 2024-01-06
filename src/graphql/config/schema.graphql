@@ -179,7 +179,7 @@ type Message {
 type Mutation {
   currentAccountProfile(profileEdit: AccountProfileEditInput!): AccountProfileEdit!
   currentAccountNotifications(notificationsEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
-  deleteUser(id: String!): Boolean!
+  deleteUser(id: String ids: [String!]): Boolean!
   uploadCurrentProfileImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
   user(id: String! profileEdit: UserEditInput!): UserEdit!
