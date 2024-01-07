@@ -46,7 +46,7 @@ export default function UserCardList() {
           marginTop: 25,
         }}
       >
-        <Typography>12,000 Users</Typography>
+        <Typography>{data?.totalUsers} Users</Typography>
         <Box style={{ display: 'flex' }}>
           <Select
             value={pageSize}
@@ -54,7 +54,9 @@ export default function UserCardList() {
             onChange={(e) => setPageSize(e.target.value as number)}
           >
             {options.map((s) => (
-              <MenuItem value={s}>{s}</MenuItem>
+              <MenuItem key={s} value={s}>
+                {s}
+              </MenuItem>
             ))}
           </Select>
           <Pagination
@@ -62,7 +64,6 @@ export default function UserCardList() {
             count={10}
             page={page}
             onChange={handleChange}
-            style={{}}
           />
         </Box>
       </Box>

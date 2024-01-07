@@ -183,11 +183,13 @@ type Mutation {
   currentAccountNotifications(notificationsEdit: AccountNotificationsEditInput!): AccountNotificationsEdit!
   deleteUser(id: String ids: [String!]): Boolean!
   uploadCurrentProfileImage(file: Upload!): Boolean!
+  uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
   user(id: String! profileEdit: UserEditInput!): UserEdit!
   userList(id: String! profileEdit: UserListEditInput!): UserListEdit!
   userNotifications(id: String! notificationsEdit: UserNotificationsEditInput!): UserNotificationsEdit!
   uploadUserProfileImage(file: Upload! id: String!): Boolean!
+  uploadUserBackgroundImage(file: Upload! id: String!): Boolean!
   changeUserPassword(id: String! existingPassword: String! newPassword: String!): Boolean!
   registerUser(user: RegisterUserEditInput!): String!
 }

@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useState, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery, useMutation } from '@apollo/client';
+import { useState, useCallback, ChangeEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -14,9 +14,13 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Alert,
   Dialog,
+  styled,
+  Tooltip,
+  CardMedia,
   DialogTitle,
   DialogActions,
   DialogContent,
+  CardActionArea,
   DialogContentText,
 } from '@mui/material';
 
@@ -24,6 +28,7 @@ import { fData } from 'src/utils/format-number';
 
 import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
 import { uploadProfileMutation } from 'src/graphql/mutations/uploadAccountProfile';
+import { uploadBackgroundMutation } from 'src/graphql/mutations/uploadAccountBackground';
 import { getCurrentAccountProfileQuery } from 'src/graphql/queries/currentAccountProfile';
 import { updateCurrentAccountProfileMutation } from 'src/graphql/mutations/currentAccountProfile';
 import {
@@ -34,8 +39,10 @@ import {
   UploadCurrentProfileImageMutation,
   CurrentAccountProfileQueryVariables,
   UpdateCurrentAccountProfileMutation,
+  UploadCurrentBackgroundImageMutation,
   UploadCurrentProfileImageMutationVariables,
   UpdateCurrentAccountProfileMutationVariables,
+  UploadCurrentBackgroundImageMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import { UploadAvatar } from 'src/components/upload';
@@ -154,7 +161,23 @@ export default function AccountGeneral() {
   const [uploadProfile] = useMutation<
     UploadCurrentProfileImageMutation,
     UploadCurrentProfileImageMutationVariables
-  >(uploadProfileMutation);
+  >(uploadProfileMutation, {
+    onCompleted: () => {
+      (document.getElementById('profileImg')?.children[0].children[0] as HTMLImageElement).src = `${
+        (document.getElementById('profileImg')?.children[0].children[0] as HTMLImageElement).src
+      }?_=${new Date().getTime()}`;
+    },
+  });
+  const [uploadBackground] = useMutation<
+    UploadCurrentBackgroundImageMutation,
+    UploadCurrentBackgroundImageMutationVariables
+  >(uploadBackgroundMutation, {
+    onCompleted: () => {
+      (document.getElementById('backgroundImg') as HTMLImageElement).src = `${
+        (document.getElementById('backgroundImg') as HTMLImageElement).src
+      }?_=${new Date().getTime()}`;
+    },
+  });
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -171,10 +194,39 @@ export default function AccountGeneral() {
     [uploadProfile]
   );
 
+  const handleBackgroundDrop = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files![0];
+
+      if (file) {
+        uploadBackground({
+          variables: {
+            file,
+          },
+        });
+      }
+    },
+    [uploadBackground]
+  );
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
+          <Tooltip title="Change header photo.">
+            <Card sx={{ mb: 3 }}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={`/api/avatars/background/${methods.getValues().username}`}
+                  onClick={() => (document.getElementsByClassName('vhi')[0] as HTMLElement).click()}
+                  id="backgroundImg"
+                />
+                <VisuallyHiddenInput className="vhi" type="file" onChange={handleBackgroundDrop} />
+              </CardActionArea>
+            </Card>
+          </Tooltip>
           <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
             <UploadAvatar
               file="/api/avatars/user"
@@ -311,3 +363,15 @@ export default function AccountGeneral() {
     </FormProvider>
   );
 }
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});

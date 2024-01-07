@@ -37,6 +37,7 @@ export default function UploadAvatar({
 
   const renderPreview = hasFile && (
     <Image
+      id="profileImg"
       alt="avatar"
       src={imgUrl}
       sx={{

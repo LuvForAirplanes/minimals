@@ -23,7 +23,9 @@ const documents = {
     "\n  mutation updateCurrentAccountProfile($profileEdit: AccountProfileEditInput!) {\n    currentAccountProfile(profileEdit: $profileEdit) {\n      ...AccountProfileEditor\n    }\n  }\n  \n": types.UpdateCurrentAccountProfileDocument,
     "\n  mutation deleteUser($id: String, $ids: [String!]) {\n    deleteUser(id: $id, ids: $ids)\n  }\n": types.DeleteUserDocument,
     "\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n": types.RegisterUserDocument,
+    "\n  mutation uploadCurrentBackgroundImage($file: Upload!) {\n    uploadCurrentBackgroundImage(file: $file)\n  }\n": types.UploadCurrentBackgroundImageDocument,
     "\n  mutation uploadCurrentProfileImage($file: Upload!) {\n    uploadCurrentProfileImage(file: $file)\n  }\n": types.UploadCurrentProfileImageDocument,
+    "\n  mutation uploadUserBackgroundImage($id: String!, $file: Upload!) {\n    uploadUserBackgroundImage(id: $id, file: $file)\n  }\n": types.UploadUserBackgroundImageDocument,
     "\n  mutation uploadUserProfileImage($id: String!, $file: Upload!) {\n    uploadUserProfileImage(id: $id, file: $file)\n  }\n": types.UploadUserProfileImageDocument,
     "\n  mutation updateUserList($id: String!, $profileEdit: UserListEditInput!) {\n    userList(id: $id, profileEdit: $profileEdit) {\n      id\n      firstName\n      lastName\n      userName\n      businessName\n      approved\n      sellerApproved\n      email\n      phoneNumber\n      location\n    }\n  }\n": types.UpdateUserListDocument,
     "\n  mutation updateUserNotifications($id: String!, $notificationsEdit: UserNotificationsEditInput!) {\n    userNotifications(id: $id, notificationsEdit: $notificationsEdit) {\n      ...UserNotificationsEditor\n    }\n  }\n  \n": types.UpdateUserNotificationsDocument,
@@ -95,7 +97,15 @@ export function graphql(source: "\n  mutation registerUser($user: RegisterUserEd
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation uploadCurrentBackgroundImage($file: Upload!) {\n    uploadCurrentBackgroundImage(file: $file)\n  }\n"): (typeof documents)["\n  mutation uploadCurrentBackgroundImage($file: Upload!) {\n    uploadCurrentBackgroundImage(file: $file)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation uploadCurrentProfileImage($file: Upload!) {\n    uploadCurrentProfileImage(file: $file)\n  }\n"): (typeof documents)["\n  mutation uploadCurrentProfileImage($file: Upload!) {\n    uploadCurrentProfileImage(file: $file)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation uploadUserBackgroundImage($id: String!, $file: Upload!) {\n    uploadUserBackgroundImage(id: $id, file: $file)\n  }\n"): (typeof documents)["\n  mutation uploadUserBackgroundImage($id: String!, $file: Upload!) {\n    uploadUserBackgroundImage(id: $id, file: $file)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

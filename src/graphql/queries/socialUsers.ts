@@ -5,6 +5,8 @@ const UserFragment = gql`
     __typename
     id
     fullName
+    firstName
+    lastName
     location
     telegramUsername
     email
