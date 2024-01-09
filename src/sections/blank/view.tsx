@@ -174,17 +174,17 @@ export default function BlankView() {
     }
   );
 
-  const [deleteUsers] = useMutation<DeleteUserMutation, DeleteUserMutationVariables>(
-    deleteUserMutation,
-    {
-      variables: {
-        ids: rowSelectionModel.map((m) => m as string),
-        id: openedMenuId,
-      },
-      refetchQueries: [getUsersQuery],
-      onCompleted: () => enqueueSnackbar('Successfully deleted users!', { variant: 'success' }),
-    }
-  );
+  const [deleteUsers, { loading: deleting }] = useMutation<
+    DeleteUserMutation,
+    DeleteUserMutationVariables
+  >(deleteUserMutation, {
+    variables: {
+      ids: rowSelectionModel.map((m) => m as string),
+      id: openedMenuId,
+    },
+    refetchQueries: [getUsersQuery],
+    onCompleted: () => enqueueSnackbar('Successfully deleted users!', { variant: 'success' }),
+  });
 
   const sort = useSorting([{ field: 'email', sort: 'asc' }]);
   const filter = useFiltering();
@@ -257,7 +257,14 @@ export default function BlankView() {
               },
             }}
             slots={{
-              toolbar: () => CustomToolbar(rowSelectionModel, () => confirmDelete.onTrue()),
+              toolbar: () =>
+                CustomToolbar(
+                  rowSelectionModel,
+                  () => confirmDelete.onTrue(),
+                  deleting,
+                  paging.refetch,
+                  paging.loading
+                ),
               loadingOverlay: LinearProgress,
             }}
             slotProps={{
@@ -331,19 +338,34 @@ export default function BlankView() {
   );
 }
 
-function CustomToolbar({ length }: GridRowSelectionModel, del: any) {
+function CustomToolbar(
+  { length }: GridRowSelectionModel,
+  del: any,
+  deleting: boolean,
+  reload: any,
+  reloading: boolean
+) {
   return (
     <GridToolbarContainer>
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />
       <GridToolbarExport />
+      <LoadingButton
+        sx={{ padding: '3px 5px' }}
+        startIcon={<Iconify icon="mdi:reload" />}
+        onClick={reload}
+        loading={reloading}
+      >
+        Reload
+      </LoadingButton>
       {length > 0 && (
         <LoadingButton
           sx={{ padding: '3px 5px' }}
           color="error"
           startIcon={<Iconify icon="mdi:delete-outline" />}
           onClick={del}
+          loading={deleting}
         >
           Delete
         </LoadingButton>

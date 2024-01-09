@@ -32,6 +32,8 @@ interface Paging {
     loading: boolean;
     paginationMode?: GridFeatureMode | undefined;
   };
+  refetch: any;
+  loading: boolean;
 }
 
 export function usePaging({ filter, sort }: PagingProps): Paging {
@@ -55,7 +57,11 @@ export function usePaging({ filter, sort }: PagingProps): Paging {
     [paginationModel, sort, filter]
   );
 
-  const { loading: isLoading, data } = useQuery<UsersQuery, UsersQueryVariables>(getUsersQuery, {
+  const {
+    loading: isLoading,
+    data,
+    refetch: refetchData,
+  } = useQuery<UsersQuery, UsersQueryVariables>(getUsersQuery, {
     variables: queryOptions,
   });
 
@@ -97,5 +103,9 @@ export function usePaging({ filter, sort }: PagingProps): Paging {
       loading: isLoading,
       paginationMode: 'server',
     },
+    refetch: () => {
+      refetchData();
+    },
+    loading: isLoading,
   };
 }
