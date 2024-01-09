@@ -7,7 +7,6 @@ export const getUserProfileQuery = gql`
     userProfile(id: $id) {
       ...UserEditor
     }
-    userProfileImage(id: $id)
   }
   ${userEditFragment}
 `;

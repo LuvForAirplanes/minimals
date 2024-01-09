@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
-import { useMutation } from '@apollo/client';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import { LoadingButton } from '@mui/lab';
 import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import {
+  Tab,
   List,
+  Tabs,
+  Card,
   Avatar,
   Button,
   Tooltip,
@@ -40,10 +43,13 @@ import { useFiltering } from 'src/hooks/grids/use-filtering';
 import { getUsersQuery } from 'src/graphql/queries/users';
 import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
 import { updateUserListMutation } from 'src/graphql/mutations/userList';
+import { userStatisticsQuery } from 'src/graphql/queries/userStatistics';
 import {
   DeleteUserMutation,
+  UserStatisticsQuery,
   UpdateUserListMutation,
   DeleteUserMutationVariables,
+  UserStatisticsQueryVariables,
   UpdateUserListMutationVariables,
 } from 'src/graphql/types/graphql';
 
@@ -71,7 +77,7 @@ export default function BlankView() {
       field: 'email',
       headerName: 'Account',
       editable: true,
-      width: 300,
+      width: 310,
       renderCell: (d) => (
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
@@ -97,13 +103,13 @@ export default function BlankView() {
       field: 'phone',
       headerName: 'Phone Number',
       editable: true,
-      width: 150,
+      width: 160,
     },
     {
       field: 'businessName',
       headerName: 'Company',
       editable: true,
-      width: 200,
+      width: 210,
     },
     {
       field: 'location',
@@ -189,6 +195,10 @@ export default function BlankView() {
   const sort = useSorting([{ field: 'email', sort: 'asc' }]);
   const filter = useFiltering();
   const paging = usePaging({ filter, sort });
+  const { data } = useQuery<UserStatisticsQuery, UserStatisticsQueryVariables>(userStatisticsQuery);
+
+  const [currentFilter, setCurrentFilter] = useState<string>('All');
+  const tabs = ['All', 'Approved', 'Pending', 'Rejected'];
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -214,16 +224,58 @@ export default function BlankView() {
         }}
       />
 
-      <Box
-        sx={{
-          mt: 5,
-          width: 1,
-          borderRadius: 2,
-          padding: 2,
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
-          border: (theme) => `dashed 1px ${theme.palette.divider}`,
-        }}
-      >
+      <Card>
+        <Tabs
+          value={currentFilter}
+          onChange={(d, s) => {
+            setCurrentFilter(s);
+            if (s === 'Approved') {
+              filter.setFilter({
+                items: [{ field: 'approved', operator: '=', value: true }],
+              });
+            } else if (s === 'All') {
+              filter.setFilter();
+            } else if (s === 'Pending') {
+              filter.setFilter({
+                items: [{ field: 'approved', operator: '=', value: null }],
+              });
+            } else if (s === 'Rejected') {
+              filter.setFilter({
+                items: [{ field: 'approved', operator: '=', value: false }],
+              });
+            }
+          }}
+          sx={{
+            px: 2.5,
+            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+          }}
+        >
+          {tabs.map((tab) => (
+            <Tab
+              key={tab}
+              iconPosition="end"
+              value={tab}
+              label={tab}
+              icon={
+                <Label
+                  variant={tab === 'all' ? 'filled' : 'soft'}
+                  color={
+                    (tab === 'Approved' && 'success') ||
+                    (tab === 'Pending' && 'warning') ||
+                    (tab === 'Rejected' && 'error') ||
+                    'default'
+                  }
+                >
+                  {tab === 'Approved' && (data?.userStatistics.approved ?? 0)}
+                  {tab === 'Pending' && (data?.userStatistics.pending ?? 0)}
+                  {tab === 'Rejected' && (data?.userStatistics.rejected ?? 0)}
+                  {tab === 'All' && (data?.userStatistics.all ?? 0)}
+                </Label>
+              }
+            />
+          ))}
+        </Tabs>
+
         <Box sx={{ height: 550, width: '100%' }}>
           <DataGrid
             {...paging.gridArgs}
@@ -282,7 +334,7 @@ export default function BlankView() {
             pageSizeOptions={[10, 25, 100]}
           />
         </Box>
-      </Box>
+      </Card>
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}

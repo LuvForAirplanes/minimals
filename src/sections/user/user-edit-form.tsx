@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { ChangeEvent, useCallback } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQuery, useMutation } from '@apollo/client';
 
@@ -10,22 +11,41 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Alert, Button, Tooltip, Typography } from '@mui/material';
+import {
+  Alert,
+  Button,
+  styled,
+  Tooltip,
+  CardMedia,
+  Typography,
+  CardActionArea,
+} from '@mui/material';
 
 import { fData } from 'src/utils/format-number';
 
+import { churchGroupsQuery } from 'src/graphql/queries/churchGroups';
 import { getUserProfileQuery } from 'src/graphql/queries/userProfile';
 import { updateUserMutation } from 'src/graphql/mutations/userProfile';
+import { uploadBackgroundMutation } from 'src/graphql/mutations/uploadAccountBackground';
 import {
   UserMutation,
   UserProfileQuery,
+  ChurchGroupsQuery,
   UserEditorFragment,
   UserMutationVariables,
   UserProfileQueryVariables,
+  ChurchGroupsQueryVariables,
+  UploadCurrentBackgroundImageMutation,
+  UploadCurrentBackgroundImageMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import { UploadAvatar } from 'src/components/upload';
-import FormProvider, { RHFSwitch, RHFCheckbox, RHFTextField } from 'src/components/hook-form';
+import FormProvider, {
+  RHFSwitch,
+  RHFCheckbox,
+  RHFTextField,
+  RHFAutocomplete,
+} from 'src/components/hook-form';
 
 interface Props {
   setName: (name: string) => void;
@@ -79,6 +99,9 @@ export default function UserEditForm({ setName }: Props) {
     churchGroup: '',
   };
 
+  const { data: churchGroups } = useQuery<ChurchGroupsQuery, ChurchGroupsQueryVariables>(
+    churchGroupsQuery
+  );
   useQuery<UserProfileQuery, UserProfileQueryVariables>(getUserProfileQuery, {
     variables: {
       id: params.id ?? '',
@@ -153,11 +176,51 @@ export default function UserEditForm({ setName }: Props) {
       console.error(error);
     }
   });
-  console.log(methods.formState.errors);
+
+  const [uploadBackground] = useMutation<
+    UploadCurrentBackgroundImageMutation,
+    UploadCurrentBackgroundImageMutationVariables
+  >(uploadBackgroundMutation, {
+    onCompleted: () => {
+      (document.getElementById('backgroundImg') as HTMLImageElement).src = `${
+        (document.getElementById('backgroundImg') as HTMLImageElement).src
+      }?_=${new Date().getTime()}`;
+    },
+  });
+
+  const handleBackgroundDrop = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files![0];
+
+      if (file) {
+        uploadBackground({
+          variables: {
+            file,
+          },
+        });
+      }
+    },
+    [uploadBackground]
+  );
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
+          <Tooltip title="Change header photo.">
+            <Card sx={{ mb: 3 }}>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={`/api/avatars/background/${methods.getValues().username}`}
+                  onClick={() => (document.getElementsByClassName('vhi')[0] as HTMLElement).click()}
+                  id="backgroundImg"
+                />
+                <VisuallyHiddenInput className="vhi" type="file" onChange={handleBackgroundDrop} />
+              </CardActionArea>
+            </Card>
+          </Tooltip>
           <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
             <UploadAvatar
               file="/api/avatars/user"
@@ -210,6 +273,12 @@ export default function UserEditForm({ setName }: Props) {
               <RHFCheckbox name="approved" label="Buyer Approved" />
               <RHFCheckbox name="sellerApproved" label="Seller Approved" />
             </Box>
+            <RHFAutocomplete
+              sx={{ mt: 3 }}
+              name="churchGroup"
+              label="Conference/Fellowship/Church Group"
+              options={churchGroups?.churchGroups.map((g) => g.name) ?? []}
+            />
           </Card>
 
           <Card sx={{ p: 3, mt: 3 }}>
@@ -269,3 +338,15 @@ export default function UserEditForm({ setName }: Props) {
     </FormProvider>
   );
 }
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});

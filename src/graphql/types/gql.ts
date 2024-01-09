@@ -32,13 +32,15 @@ const documents = {
     "\n  mutation updateUserList($id: String!, $profileEdit: UserListEditInput!) {\n    userList(id: $id, profileEdit: $profileEdit) {\n      id\n      firstName\n      lastName\n      userName\n      businessName\n      approved\n      sellerApproved\n      email\n      phoneNumber\n      location\n    }\n  }\n": types.UpdateUserListDocument,
     "\n  mutation updateUserNotifications($id: String!, $notificationsEdit: UserNotificationsEditInput!) {\n    userNotifications(id: $id, notificationsEdit: $notificationsEdit) {\n      ...UserNotificationsEditor\n    }\n  }\n  \n": types.UpdateUserNotificationsDocument,
     "\n  mutation user($id: String!, $profileEdit: UserEditInput!) {\n    user(id: $id, profileEdit: $profileEdit) {\n      ...UserEditor\n    }\n  }\n  \n": types.UserDocument,
+    "\n  query churchGroups {\n    churchGroups {\n      id\n      name\n    }\n  }\n": types.ChurchGroupsDocument,
     "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
     "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n": types.CurrentAccountProfileDocument,
-    "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n": types.QuickUserProfileDocument,
+    "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n": types.QuickUserProfileDocument,
     "\n  fragment SocialUser on ApplicationUser {\n    __typename\n    id\n    fullName\n    firstName\n    lastName\n    location\n    telegramUsername\n    email\n    phoneNumber\n    following\n    followers\n    listings\n    userName\n  }\n": types.SocialUserFragmentDoc,
     "\n  query socialUsers($skip: Int = 0, $take: Int = 21) {\n    totalUsers\n    offsetUsers(skip: $skip, take: $take) {\n      items {\n        ...SocialUser\n      }\n    }\n  }\n  \n": types.SocialUsersDocument,
     "\n  query userNotifications($id: String!) {\n    userNotifications(id: $id) {\n      ...UserNotificationsEditor\n    }\n  }\n  \n": types.UserNotificationsDocument,
-    "\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n": types.UserProfileDocument,
+    "\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n  }\n  \n": types.UserProfileDocument,
+    "\n  query userStatistics {\n    userStatistics {\n      all\n      approved\n      pending\n      rejected\n    }\n  }\n": types.UserStatisticsDocument,
     "\n  fragment User on ApplicationUser {\n    __typename\n    id\n    firstName\n    lastName\n    email\n    userName\n    businessName\n    approved\n    sellerApproved\n    phoneNumber\n    location\n    approved\n    sellerApproved\n  }\n": types.UserFragmentDoc,
     "\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n": types.UsersDocument,
 };
@@ -136,6 +138,10 @@ export function graphql(source: "\n  mutation user($id: String!, $profileEdit: U
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  query churchGroups {\n    churchGroups {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query churchGroups {\n    churchGroups {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -144,7 +150,7 @@ export function graphql(source: "\n  query currentAccountProfile {\n    currentA
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n"): (typeof documents)["\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n"];
+export function graphql(source: "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -160,7 +166,11 @@ export function graphql(source: "\n  query userNotifications($id: String!) {\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n"): (typeof documents)["\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n    userProfileImage(id: $id)\n  }\n  \n"];
+export function graphql(source: "\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query userStatistics {\n    userStatistics {\n      all\n      approved\n      pending\n      rejected\n    }\n  }\n"): (typeof documents)["\n  query userStatistics {\n    userStatistics {\n      all\n      approved\n      pending\n      rejected\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

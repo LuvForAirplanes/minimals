@@ -257,6 +257,7 @@ type Query {
   totalUsers: Int!
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   userProfileImage(id: String!): [Byte!]
+  userStatistics: UserStatistics!
 }
 
 type QuickUserEdit {
@@ -322,6 +323,13 @@ type UserSearchCollectionSegment {
   pageInfo: CollectionSegmentInfo!
   "A flattened list of the items."
   items: [ApplicationUser!]
+}
+
+type UserStatistics {
+  all: Int!
+  approved: Int!
+  pending: Int!
+  rejected: Int!
 }
 
 "A connection to a list of items."

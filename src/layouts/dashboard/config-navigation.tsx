@@ -97,17 +97,9 @@ export function useNavData() {
         items: [
           // USER
           {
-            title: t('user'),
-            path: paths.dashboard.user.root,
+            title: 'Users',
             icon: ICONS.user,
-            children: [
-              { title: t('profile'), path: paths.dashboard.user.root },
-              { title: t('cards'), path: paths.dashboard.user.cards },
-              { title: t('list'), path: paths.dashboard.user.list },
-              { title: t('create'), path: paths.dashboard.user.new },
-              { title: t('edit'), path: paths.dashboard.user.demo.edit },
-              { title: t('account'), path: paths.dashboard.user.account },
-            ],
+            path: paths.dashboard.user.list,
           },
 
           // PRODUCT

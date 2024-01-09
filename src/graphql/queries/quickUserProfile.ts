@@ -7,7 +7,6 @@ export const getQuickUserProfileQuery = gql`
     quickUserProfile(id: $id) {
       ...QuickUserEditor
     }
-    userProfileImage(id: $id)
   }
   ${quickUserEditFragment}
 `;
