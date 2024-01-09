@@ -26,7 +26,7 @@ import { fData } from 'src/utils/format-number';
 import { churchGroupsQuery } from 'src/graphql/queries/churchGroups';
 import { getUserProfileQuery } from 'src/graphql/queries/userProfile';
 import { updateUserMutation } from 'src/graphql/mutations/userProfile';
-import { uploadBackgroundMutation } from 'src/graphql/mutations/uploadAccountBackground';
+import { uploadUserBackgroundMutation } from 'src/graphql/mutations/uploadUserBackground';
 import {
   UserMutation,
   UserProfileQuery,
@@ -35,8 +35,8 @@ import {
   UserMutationVariables,
   UserProfileQueryVariables,
   ChurchGroupsQueryVariables,
-  UploadCurrentBackgroundImageMutation,
-  UploadCurrentBackgroundImageMutationVariables,
+  UploadUserBackgroundImageMutation,
+  UploadUserBackgroundImageMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import { UploadAvatar } from 'src/components/upload';
@@ -178,9 +178,9 @@ export default function UserEditForm({ setName }: Props) {
   });
 
   const [uploadBackground] = useMutation<
-    UploadCurrentBackgroundImageMutation,
-    UploadCurrentBackgroundImageMutationVariables
-  >(uploadBackgroundMutation, {
+    UploadUserBackgroundImageMutation,
+    UploadUserBackgroundImageMutationVariables
+  >(uploadUserBackgroundMutation, {
     onCompleted: () => {
       (document.getElementById('backgroundImg') as HTMLImageElement).src = `${
         (document.getElementById('backgroundImg') as HTMLImageElement).src
@@ -195,12 +195,13 @@ export default function UserEditForm({ setName }: Props) {
       if (file) {
         uploadBackground({
           variables: {
+            id: params.id ?? '',
             file,
           },
         });
       }
     },
-    [uploadBackground]
+    [uploadBackground, params.id]
   );
 
   return (
