@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
-export const userEditFragment = gql`
-  fragment UserEditor on UserEdit {
+export const quickUserEditFragment = gql`
+  fragment QuickUserEditor on QuickUserEdit {
     id
     about
     businessName
@@ -14,10 +14,5 @@ export const userEditFragment = gql`
     telegramUsername
     username
     website
-    churchGroup
-    approved
-    sellerApproved
-    emailVerified
-    phoneVerified
   }
 `;

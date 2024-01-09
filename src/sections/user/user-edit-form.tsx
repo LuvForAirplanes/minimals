@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
+import { useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useQuery, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,36 +12,32 @@ import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Alert, Button, Tooltip, Typography } from '@mui/material';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
 import { fData } from 'src/utils/format-number';
 
-import { registerUserMutation } from 'src/graphql/mutations/registerUser';
-import { RegisterUserMutation, RegisterUserMutationVariables } from 'src/graphql/types/graphql';
+import { getUserProfileQuery } from 'src/graphql/queries/userProfile';
+import { updateUserMutation } from 'src/graphql/mutations/userProfile';
+import {
+  UserMutation,
+  UserProfileQuery,
+  UserEditorFragment,
+  UserMutationVariables,
+  UserProfileQueryVariables,
+} from 'src/graphql/types/graphql';
 
 import { UploadAvatar } from 'src/components/upload';
-import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSwitch, RHFCheckbox, RHFTextField } from 'src/components/hook-form';
 
-import { IUserItem } from 'src/types/user';
+interface Props {
+  setName: (name: string) => void;
+}
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  currentUser?: IUserItem;
-};
-
-export default function UserEditForm({ currentUser }: Props) {
-  const router = useRouter();
-
-  const { enqueueSnackbar } = useSnackbar();
-
+export default function UserEditForm({ setName }: Props) {
+  const params = useParams<{ id: string }>();
   const NewUserSchema = Yup.object().shape({
+    id: Yup.string().required('Id is required'),
     about: Yup.string().required('About is required'),
     businessName: Yup.string().nullable(),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
     firstName: Yup.string().nullable(),
     job: Yup.string().default(''),
     lastName: Yup.string().nullable(),
@@ -56,13 +54,13 @@ export default function UserEditForm({ currentUser }: Props) {
     website: Yup.string().default(''),
     emailVerified: Yup.boolean().default(false),
     phoneVerified: Yup.boolean().default(false),
-    sendEmailVerification: Yup.boolean().default(false),
-    sendPhoneVerification: Yup.boolean().default(false),
     approved: Yup.boolean().default(true),
     sellerApproved: Yup.boolean().default(false),
+    churchGroup: Yup.string().required('Church group is required'),
   });
 
   const defaultValues = {
+    id: '',
     about: '',
     businessName: '',
     email: '',
@@ -74,23 +72,67 @@ export default function UserEditForm({ currentUser }: Props) {
     telegramUsername: '',
     username: '',
     website: '',
-    password: '',
     phoneVerified: false,
     emailVerified: false,
-    sendPhoneVerification: false,
-    sendEmailVerification: false,
     approved: true,
     sellerApproved: false,
+    churchGroup: '',
   };
 
-  const [registerUser] = useMutation<RegisterUserMutation, RegisterUserMutationVariables>(
-    registerUserMutation
-  );
+  useQuery<UserProfileQuery, UserProfileQueryVariables>(getUserProfileQuery, {
+    variables: {
+      id: params.id ?? '',
+    },
+    onCompleted: (data) => {
+      const {
+        id: idd,
+        about,
+        businessName,
+        email,
+        firstName,
+        job,
+        lastName,
+        location,
+        phone,
+        telegramUsername,
+        username,
+        website,
+        churchGroup,
+        emailVerified,
+        phoneVerified,
+      } = data.userProfile as UserEditorFragment;
+      setName(`${firstName} ${lastName}`);
+      methods.reset({
+        id: idd,
+        about,
+        businessName: businessName ?? '',
+        email: email ?? '',
+        firstName,
+        job: job ?? '',
+        lastName,
+        location: location ?? '',
+        phone: phone ?? '',
+        telegramUsername: telegramUsername ?? '',
+        username: username ?? '',
+        website: website ?? '',
+        churchGroup,
+        emailVerified,
+        phoneVerified,
+      });
+    },
+  });
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
   });
+  const [updateUser] = useMutation<UserMutation, UserMutationVariables>(updateUserMutation, {
+    variables: {
+      id: methods.getValues().id,
+      profileEdit: methods.getValues(),
+    },
+  });
 
+  const { enqueueSnackbar } = useSnackbar();
   const {
     reset,
     handleSubmit,
@@ -99,14 +141,14 @@ export default function UserEditForm({ currentUser }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const result = await registerUser({
+      await updateUser({
         variables: {
-          user: methods.getValues(),
+          id: data.id,
+          profileEdit: data,
         },
       });
+      enqueueSnackbar('Sucessfully updated user!', { variant: 'success' });
       reset();
-      enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.user.edit(result.data?.registerUser ?? ''));
     } catch (error) {
       console.error(error);
     }
@@ -119,7 +161,6 @@ export default function UserEditForm({ currentUser }: Props) {
           <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
             <UploadAvatar
               file="/api/avatars/user"
-              disabled
               helperText={
                 <Typography
                   variant="caption"
@@ -136,18 +177,6 @@ export default function UserEditForm({ currentUser }: Props) {
                 </Typography>
               }
             />
-
-            <Typography
-              variant="caption"
-              sx={{
-                mt: 3,
-                mx: 'auto',
-                display: 'block',
-                textAlign: 'center',
-              }}
-            >
-              Save this user before uploading graphics.
-            </Typography>
 
             <RHFSwitch
               name="isPublic"
@@ -172,37 +201,12 @@ export default function UserEditForm({ currentUser }: Props) {
             >
               <RHFTextField name="firstName" label="First Name" />
               <RHFTextField name="lastName" label="Last Name" />
-            </Box>
-
-            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3, mb: 3 }}>
               <RHFTextField name="businessName" label="Business Name" />
-            </Stack>
-
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+              <RHFTextField name="username" label="Username" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phone" label="Phone Number" />
               <RHFCheckbox name="emailVerified" label="Email Verified" />
               <RHFCheckbox name="phoneVerified" label="Phone Verified" />
-              <RHFCheckbox
-                name="sendEmailVerification"
-                label="Send Email Verification"
-                disabled={methods.watch().emailVerified}
-              />
-              <RHFCheckbox
-                name="sendPhoneVerification"
-                label="Send Phone Verification"
-                disabled={methods.watch().phoneVerified}
-              />
-              <RHFTextField name="username" label="Username" />
-              <RHFTextField name="password" label="Password" />
               <RHFCheckbox name="approved" label="Buyer Approved" />
               <RHFCheckbox name="sellerApproved" label="Seller Approved" />
             </Box>

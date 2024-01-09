@@ -11,14 +11,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import { getUserProfileQuery } from 'src/graphql/queries/userProfile';
 import { updateUserMutation } from 'src/graphql/mutations/userProfile';
+import { getQuickUserProfileQuery } from 'src/graphql/queries/quickUserProfile';
 import {
   UserProfileQuery,
-  UpdateUserMutation,
+  QuickUserMutation,
   UserEditorFragment,
   UserProfileQueryVariables,
-  UpdateUserMutationVariables,
+  QuickUserMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -71,7 +71,7 @@ export default function UserQuickEditForm({ id, open, onClose }: Props) {
     },
   });
 
-  useQuery<UserProfileQuery, UserProfileQueryVariables>(getUserProfileQuery, {
+  useQuery<UserProfileQuery, UserProfileQueryVariables>(getQuickUserProfileQuery, {
     variables: {
       id,
     },
@@ -108,7 +108,7 @@ export default function UserQuickEditForm({ id, open, onClose }: Props) {
     },
   });
 
-  const [updateProfile] = useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+  const [updateProfile] = useMutation<QuickUserMutation, QuickUserMutationVariables>(
     updateUserMutation,
     {
       variables: {

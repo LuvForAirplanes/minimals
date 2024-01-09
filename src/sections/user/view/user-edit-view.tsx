@@ -1,8 +1,8 @@
+import { useState } from 'react';
+
 import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
-
-import { _userList } from 'src/_mock';
 
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
@@ -17,8 +17,7 @@ type Props = {
 
 export default function UserEditView({ id }: Props) {
   const settings = useSettingsContext();
-
-  const currentUser = _userList.find((user) => user.id === id);
+  const [name, setName] = useState<string>('');
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -33,14 +32,13 @@ export default function UserEditView({ id }: Props) {
             name: 'User',
             href: paths.dashboard.user.root,
           },
-          { name: currentUser?.name },
+          { name },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
-
-      <UserEditForm currentUser={currentUser} />
+      <UserEditForm setName={setName} />
     </Container>
   );
 }

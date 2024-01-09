@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -39,7 +41,7 @@ export default function UserCard({ user }: Props) {
 
   return (
     <Card sx={{ textAlign: 'center' }}>
-      <CardActionArea href={`/dashboard/user/${id}/edit`}>
+      <CardActionArea component={Link} to={`/dashboard/user/${id}/edit`}>
         <Box sx={{ position: 'relative' }}>
           <AvatarShape
             sx={{

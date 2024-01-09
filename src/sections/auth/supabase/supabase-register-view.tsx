@@ -1,6 +1,7 @@
+import axios from 'axios';
 import * as Yup from 'yup';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Link from '@mui/material/Link';
@@ -20,7 +21,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useAuthContext } from 'src/auth/hooks';
 
 import Iconify from 'src/components/iconify';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFCheckbox, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +31,10 @@ export default function FirebaseRegisterView() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const router = useRouter();
-
+  const [churchGroups, setChurchGroups] = useState<string[]>([]);
+  useEffect(() => {
+    axios.get('/api/churches/groups').then((d) => setChurchGroups(d.data as string[]));
+  }, []);
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
@@ -38,6 +42,9 @@ export default function FirebaseRegisterView() {
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
+    phoneNumber: Yup.string().required('Phone number is required'),
+    churchGroup: Yup.string().required('Church group is required'),
+    conservativeChurch: Yup.boolean().required('Conservative selection required'),
   });
 
   const defaultValues = {
@@ -45,6 +52,9 @@ export default function FirebaseRegisterView() {
     lastName: '',
     email: '',
     password: '',
+    phoneNumber: '',
+    churchGroup: '',
+    conservativeChurch: true,
   };
 
   const methods = useForm({
@@ -60,7 +70,14 @@ export default function FirebaseRegisterView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await register?.(data.email, data.password, data.firstName, data.lastName);
+      await register?.(
+        data.email,
+        data.password,
+        data.firstName,
+        data.lastName,
+        data.phoneNumber,
+        data.churchGroup
+      );
       const searchParams = new URLSearchParams({
         email: data.email,
       }).toString();
@@ -77,7 +94,7 @@ export default function FirebaseRegisterView() {
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-      <Typography variant="h4">Get started absolutely free</Typography>
+      <Typography variant="h4">Get started with PlainConnect</Typography>
 
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
@@ -118,6 +135,14 @@ export default function FirebaseRegisterView() {
         <RHFTextField name="lastName" label="Last name" />
       </Stack>
 
+      <RHFAutocomplete
+        name="churchGroup"
+        label="Conference/Fellowship/Church group"
+        options={churchGroups}
+        freeSolo
+      />
+      <RHFCheckbox name="conservativeChurch" label="I am part of a conservative church group" />
+      <RHFTextField name="phoneNumber" label="Phone number" />
       <RHFTextField name="email" label="Email address" />
 
       <RHFTextField

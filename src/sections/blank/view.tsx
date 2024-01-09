@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import { LoadingButton } from '@mui/lab';
@@ -63,6 +64,7 @@ export default function BlankView() {
   const confirmDelete = useBoolean();
   const quickEdit = useBoolean();
   const popover = usePopover();
+  const navigate = useNavigate();
 
   const columns: GridColDef[] = [
     {
@@ -139,13 +141,10 @@ export default function BlankView() {
       field: '',
       renderCell: (d) => (
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
+          <Tooltip title="Edit" placement="top" arrow>
             <IconButton
               color={quickEdit.value ? 'inherit' : 'default'}
-              onClick={() => {
-                setEditingId(d.row.id);
-                quickEdit.onTrue();
-              }}
+              onClick={() => navigate(`/dashboard/user/${d.row.id}/edit`)}
             >
               <Iconify icon="solar:pen-bold" />
             </IconButton>
@@ -301,7 +300,7 @@ export default function BlankView() {
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          Quick Edit
         </MenuItem>
       </CustomPopover>
 
@@ -325,7 +324,6 @@ export default function BlankView() {
           </Button>
         }
       />
-
       {editingId ? (
         <UserQuickEditForm id={editingId ?? ''} open onClose={() => setEditingId(null)} />
       ) : null}

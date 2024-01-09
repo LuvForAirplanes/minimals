@@ -126,13 +126,22 @@ export function AuthProvider({ children }: Props) {
 
   // REGISTER
   const register = useCallback(
-    async (email: string, password: string, firstName: string, lastName: string) => {
+    async (
+      email: string,
+      password: string,
+      firstName: string,
+      lastName: string,
+      phoneNumber: string,
+      churchGroup: string
+    ) => {
       const res = await axios.post(endpoints.auth.register, {
         firstName,
         lastName,
         email,
         password,
         rememberMe: true,
+        phoneNumber,
+        churchGroup,
       });
 
       dispatch({

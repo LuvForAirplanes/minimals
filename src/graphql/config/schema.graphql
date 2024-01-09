@@ -80,6 +80,8 @@ type ApplicationUser {
   website: String
   telegramUsername: String
   notifyOnMessage: Boolean!
+  churchGroup: String!
+  church: String
   id: String!
   userName: String
   normalizedUserName: String
@@ -107,6 +109,11 @@ type Asset {
   updated: DateTime!
   name: String!
   notes: String
+}
+
+type ChurchGroup {
+  id: String!
+  name: String!
 }
 
 "Information about the offset pagination."
@@ -185,6 +192,7 @@ type Mutation {
   uploadCurrentProfileImage(file: Upload!): Boolean!
   uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
+  quickUser(id: String! profileEdit: QuickUserEditInput!): QuickUserEdit!
   user(id: String! profileEdit: UserEditInput!): UserEdit!
   userList(id: String! profileEdit: UserListEditInput!): UserListEdit!
   userNotifications(id: String! notificationsEdit: UserNotificationsEditInput!): UserNotificationsEdit!
@@ -238,8 +246,10 @@ type Query {
   currentAccountNotifications: AccountNotificationsEdit!
   currentAccountProfileImage: [Byte!]
   assets: [Asset!]!
+  churchGroups(order: [ChurchGroupSortInput!]): [ChurchGroup!]!
   dashboardStatistics: DashboardStats
   notices: [Notice!]!
+  quickUserProfile(id: String!): QuickUserEdit!
   userProfile(id: String!): UserEdit!
   userNotifications(id: String!): UserNotificationsEdit!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ApplicationUserFilterInput order: [ApplicationUserSortInput!]): UsersConnection
@@ -247,6 +257,21 @@ type Query {
   totalUsers: Int!
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   userProfileImage(id: String!): [Byte!]
+}
+
+type QuickUserEdit {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String!
+  phone: String
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
+  about: String!
 }
 
 type Subscription {
@@ -266,6 +291,11 @@ type UserEdit {
   location: String
   job: String
   about: String!
+  churchGroup: String!
+  emailVerified: Boolean!
+  phoneVerified: Boolean!
+  approved: Boolean!
+  sellerApproved: Boolean!
 }
 
 type UserListEdit {
@@ -394,6 +424,8 @@ input ApplicationUserFilterInput {
   website: StringOperationFilterInput
   telegramUsername: StringOperationFilterInput
   notifyOnMessage: BooleanOperationFilterInput
+  churchGroup: StringOperationFilterInput
+  church: StringOperationFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -438,6 +470,8 @@ input ApplicationUserSortInput {
   website: SortEnumType
   telegramUsername: SortEnumType
   notifyOnMessage: SortEnumType
+  churchGroup: SortEnumType
+  church: SortEnumType
   id: SortEnumType
   userName: SortEnumType
   normalizedUserName: SortEnumType
@@ -473,6 +507,11 @@ input ByteOperationFilterInput {
   nlt: Byte
   lte: Byte
   nlte: Byte
+}
+
+input ChurchGroupSortInput {
+  id: SortEnumType
+  name: SortEnumType
 }
 
 input DateTimeOperationFilterInput {
@@ -630,6 +669,21 @@ input PostalCodeFilterInput {
   state: StringOperationFilterInput
 }
 
+input QuickUserEditInput {
+  id: String!
+  firstName: String
+  lastName: String
+  businessName: String
+  email: String!
+  phone: String
+  username: String!
+  telegramUsername: String
+  website: String
+  location: String
+  job: String
+  about: String!
+}
+
 input RegisterUserEditInput {
   firstName: String
   lastName: String
@@ -679,6 +733,11 @@ input UserEditInput {
   location: String
   job: String
   about: String!
+  churchGroup: String!
+  emailVerified: Boolean!
+  phoneVerified: Boolean!
+  approved: Boolean!
+  sellerApproved: Boolean!
 }
 
 input UserListEditInput {
