@@ -116,7 +116,11 @@ export default function ListingTypesView() {
         name,
       },
     },
-    onCompleted: () => setAdding(false),
+    onCompleted: () => {
+      setName('');
+      setId(null);
+      setAdding(false);
+    },
   });
 
   const [deleteListingType, { loading: deleting }] = useMutation<

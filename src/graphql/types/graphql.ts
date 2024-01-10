@@ -18,6 +18,8 @@ export type Scalars = {
   Byte: { input: any; output: any; }
   /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
   DateTime: { input: any; output: any; }
+  /** The built-in `Decimal` scalar type. */
+  Decimal: { input: any; output: any; }
   /** The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1. */
   Long: { input: any; output: any; }
   UUID: { input: any; output: any; }
@@ -120,6 +122,7 @@ export type ApplicationUser = {
   backgroundImage?: Maybe<Array<Scalars['Byte']['output']>>;
   birthdate?: Maybe<Scalars['DateTime']['output']>;
   businessName?: Maybe<Scalars['String']['output']>;
+  categories: Array<UserListingCategory>;
   church?: Maybe<Scalars['String']['output']>;
   churchGroup: Scalars['String']['output'];
   concurrencyStamp?: Maybe<Scalars['String']['output']>;
@@ -181,6 +184,7 @@ export type ApplicationUserFilterInput = {
   backgroundImage?: InputMaybe<ListByteOperationFilterInput>;
   birthdate?: InputMaybe<DateTimeOperationFilterInput>;
   businessName?: InputMaybe<StringOperationFilterInput>;
+  categories?: InputMaybe<ListFilterInputTypeOfUserListingCategoryFilterInput>;
   church?: InputMaybe<StringOperationFilterInput>;
   churchGroup?: InputMaybe<StringOperationFilterInput>;
   concurrencyStamp?: InputMaybe<StringOperationFilterInput>;
@@ -346,6 +350,21 @@ export type DateTimeOperationFilterInput = {
   nlte?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type DecimalOperationFilterInput = {
+  eq?: InputMaybe<Scalars['Decimal']['input']>;
+  gt?: InputMaybe<Scalars['Decimal']['input']>;
+  gte?: InputMaybe<Scalars['Decimal']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['Decimal']['input']>>>;
+  lt?: InputMaybe<Scalars['Decimal']['input']>;
+  lte?: InputMaybe<Scalars['Decimal']['input']>;
+  neq?: InputMaybe<Scalars['Decimal']['input']>;
+  ngt?: InputMaybe<Scalars['Decimal']['input']>;
+  ngte?: InputMaybe<Scalars['Decimal']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['Decimal']['input']>>>;
+  nlt?: InputMaybe<Scalars['Decimal']['input']>;
+  nlte?: InputMaybe<Scalars['Decimal']['input']>;
+};
+
 export type Friend = {
   __typename?: 'Friend';
   befriended: Scalars['DateTime']['output'];
@@ -429,6 +448,13 @@ export type ListFilterInputTypeOfMessageFilterInput = {
   some?: InputMaybe<MessageFilterInput>;
 };
 
+export type ListFilterInputTypeOfUserListingCategoryFilterInput = {
+  all?: InputMaybe<UserListingCategoryFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<UserListingCategoryFilterInput>;
+  some?: InputMaybe<UserListingCategoryFilterInput>;
+};
+
 export type ListFilterInputTypeOfUserPostFilterInput = {
   all?: InputMaybe<UserPostFilterInput>;
   any?: InputMaybe<Scalars['Boolean']['input']>;
@@ -447,15 +473,18 @@ export type Listing = {
   __typename?: 'Listing';
   acceptsOffers: Scalars['Boolean']['output'];
   added: Scalars['DateTime']['output'];
+  category: ListingCategory;
+  categoryId?: Maybe<Scalars['String']['output']>;
   content: Scalars['String']['output'];
+  dateSold?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['UUID']['output'];
   images: Array<ListingImage>;
   isPublished: Scalars['Boolean']['output'];
-  isSold: Scalars['Boolean']['output'];
-  msrp?: Maybe<Scalars['Int']['output']>;
+  msrp?: Maybe<Scalars['Decimal']['output']>;
   partNumber?: Maybe<Scalars['String']['output']>;
-  price: Scalars['Int']['output'];
+  price: Scalars['Decimal']['output'];
   quantity: Scalars['Int']['output'];
+  serialNumber?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   type: ListingType;
   typeId: Scalars['String']['output'];
@@ -465,20 +494,62 @@ export type Listing = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
+export type ListingAddEditInput = {
+  acceptsOffers: Scalars['Boolean']['input'];
+  categoryId: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+  isPublished: Scalars['Boolean']['input'];
+  msrp?: InputMaybe<Scalars['Decimal']['input']>;
+  partNumber?: InputMaybe<Scalars['String']['input']>;
+  price: Scalars['Decimal']['input'];
+  quantity: Scalars['Int']['input'];
+  serialNumber?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+};
+
+export type ListingCategory = {
+  __typename?: 'ListingCategory';
+  added: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  listable: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
+  parent: ListingCategory;
+  parentId: Scalars['String']['output'];
+  updated: Scalars['DateTime']['output'];
+};
+
+export type ListingCategoryFilterInput = {
+  added?: InputMaybe<DateTimeOperationFilterInput>;
+  and?: InputMaybe<Array<ListingCategoryFilterInput>>;
+  id?: InputMaybe<StringOperationFilterInput>;
+  listable?: InputMaybe<BooleanOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  notes?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ListingCategoryFilterInput>>;
+  parent?: InputMaybe<ListingCategoryFilterInput>;
+  parentId?: InputMaybe<StringOperationFilterInput>;
+  updated?: InputMaybe<DateTimeOperationFilterInput>;
+};
+
 export type ListingFilterInput = {
   acceptsOffers?: InputMaybe<BooleanOperationFilterInput>;
   added?: InputMaybe<DateTimeOperationFilterInput>;
   and?: InputMaybe<Array<ListingFilterInput>>;
+  category?: InputMaybe<ListingCategoryFilterInput>;
+  categoryId?: InputMaybe<StringOperationFilterInput>;
   content?: InputMaybe<StringOperationFilterInput>;
+  dateSold?: InputMaybe<DateTimeOperationFilterInput>;
   id?: InputMaybe<UuidOperationFilterInput>;
   images?: InputMaybe<ListFilterInputTypeOfListingImageFilterInput>;
   isPublished?: InputMaybe<BooleanOperationFilterInput>;
-  isSold?: InputMaybe<BooleanOperationFilterInput>;
-  msrp?: InputMaybe<IntOperationFilterInput>;
+  msrp?: InputMaybe<DecimalOperationFilterInput>;
   or?: InputMaybe<Array<ListingFilterInput>>;
   partNumber?: InputMaybe<StringOperationFilterInput>;
-  price?: InputMaybe<IntOperationFilterInput>;
+  price?: InputMaybe<DecimalOperationFilterInput>;
   quantity?: InputMaybe<IntOperationFilterInput>;
+  serialNumber?: InputMaybe<StringOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
   type?: InputMaybe<ListingTypeFilterInput>;
   typeId?: InputMaybe<StringOperationFilterInput>;
@@ -587,11 +658,13 @@ export type MessageFilterInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addListing: Scalars['UUID']['output'];
   addListingType: ListingType;
   changeAccountPassword: Scalars['Boolean']['output'];
   changeUserPassword: Scalars['Boolean']['output'];
   currentAccountNotifications: AccountNotificationsEdit;
   currentAccountProfile: AccountProfileEdit;
+  deleteListing: Scalars['Boolean']['output'];
   deleteListingType: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
   quickUser: QuickUserEdit;
@@ -604,6 +677,11 @@ export type Mutation = {
   user: UserEdit;
   userList: UserListEdit;
   userNotifications: UserNotificationsEdit;
+};
+
+
+export type MutationAddListingArgs = {
+  listing: ListingAddEditInput;
 };
 
 
@@ -632,6 +710,11 @@ export type MutationCurrentAccountNotificationsArgs = {
 
 export type MutationCurrentAccountProfileArgs = {
   profileEdit: AccountProfileEditInput;
+};
+
+
+export type MutationDeleteListingArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -979,6 +1062,23 @@ export type UserListEditInput = {
   userName?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UserListingCategory = {
+  __typename?: 'UserListingCategory';
+  category: ListingCategory;
+  categoryId: Scalars['String']['output'];
+  user: ApplicationUser;
+  userId: Scalars['String']['output'];
+};
+
+export type UserListingCategoryFilterInput = {
+  and?: InputMaybe<Array<UserListingCategoryFilterInput>>;
+  category?: InputMaybe<ListingCategoryFilterInput>;
+  categoryId?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<UserListingCategoryFilterInput>>;
+  user?: InputMaybe<ApplicationUserFilterInput>;
+  userId?: InputMaybe<StringOperationFilterInput>;
+};
+
 export type UserNotificationsEdit = {
   __typename?: 'UserNotificationsEdit';
   id: Scalars['String']['output'];
@@ -1113,6 +1213,13 @@ export type QuickUserEditorFragment = { __typename?: 'QuickUserEdit', id: string
 export type UserNotificationsEditorFragment = { __typename?: 'UserNotificationsEdit', id: string, notifyOnMessage: boolean } & { ' $fragmentName'?: 'UserNotificationsEditorFragment' };
 
 export type UserEditorFragment = { __typename?: 'UserEdit', id: string, about: string, businessName?: string | null, email: string, firstName?: string | null, lastName?: string | null, job?: string | null, location?: string | null, phone?: string | null, telegramUsername?: string | null, username: string, website?: string | null, churchGroup: string, approved: boolean, sellerApproved: boolean, emailVerified: boolean, phoneVerified: boolean } & { ' $fragmentName'?: 'UserEditorFragment' };
+
+export type AddListingMutationVariables = Exact<{
+  listing: ListingAddEditInput;
+}>;
+
+
+export type AddListingMutation = { __typename?: 'Mutation', addListing: any };
 
 export type AddListingTypeMutationVariables = Exact<{
   type: ListingTypeInput;
@@ -1369,6 +1476,7 @@ export const UserNotificationsEditorFragmentDoc = {"kind":"Document","definition
 export const UserEditorFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"UserEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}},{"kind":"Field","name":{"kind":"Name","value":"churchGroup"}},{"kind":"Field","name":{"kind":"Name","value":"approved"}},{"kind":"Field","name":{"kind":"Name","value":"sellerApproved"}},{"kind":"Field","name":{"kind":"Name","value":"emailVerified"}},{"kind":"Field","name":{"kind":"Name","value":"phoneVerified"}}]}}]} as unknown as DocumentNode<UserEditorFragment, unknown>;
 export const SocialUserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"SocialUser"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"following"}},{"kind":"Field","name":{"kind":"Name","value":"followers"}},{"kind":"Field","name":{"kind":"Name","value":"listings"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]} as unknown as DocumentNode<SocialUserFragment, unknown>;
 export const UserFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"User"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ApplicationUser"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"approved"}},{"kind":"Field","name":{"kind":"Name","value":"sellerApproved"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"approved"}},{"kind":"Field","name":{"kind":"Name","value":"sellerApproved"}}]}}]} as unknown as DocumentNode<UserFragment, unknown>;
+export const AddListingDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addListing"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"listing"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ListingAddEditInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addListing"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"listing"},"value":{"kind":"Variable","name":{"kind":"Name","value":"listing"}}}]}]}}]} as unknown as DocumentNode<AddListingMutation, AddListingMutationVariables>;
 export const AddListingTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addListingType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ListingTypeInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addListingType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingType"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingType"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingType"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<AddListingTypeMutation, AddListingTypeMutationVariables>;
 export const ChangeAccountPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"changeAccountPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changeAccountPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"existingPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}}},{"kind":"Argument","name":{"kind":"Name","value":"newPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}}}]}]}}]} as unknown as DocumentNode<ChangeAccountPasswordMutation, ChangeAccountPasswordMutationVariables>;
 export const ChangeUserPasswordDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"changeUserPassword"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changeUserPassword"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"existingPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"existingPassword"}}},{"kind":"Argument","name":{"kind":"Name","value":"newPassword"},"value":{"kind":"Variable","name":{"kind":"Name","value":"newPassword"}}}]}]}}]} as unknown as DocumentNode<ChangeUserPasswordMutation, ChangeUserPasswordMutationVariables>;

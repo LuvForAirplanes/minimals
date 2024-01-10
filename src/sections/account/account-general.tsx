@@ -181,8 +181,9 @@ export default function AccountGeneral() {
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
+      console.log(acceptedFiles);
       const file = acceptedFiles[0];
-
+      console.log(file);
       if (file) {
         uploadProfile({
           variables: {

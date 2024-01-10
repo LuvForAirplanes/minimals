@@ -84,6 +84,7 @@ type ApplicationUser {
   church: String
   postResponses: [UserPostResponse!]!
   posts: [UserPost!]!
+  categories: [UserListingCategory!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -141,9 +142,10 @@ type Friend {
 type Listing {
   title: String!
   content: String!
-  price: Int!
-  msrp: Int
+  price: Decimal!
+  msrp: Decimal
   partNumber: String
+  serialNumber: String
   unit: String!
   user: ApplicationUser
   userId: String
@@ -153,10 +155,23 @@ type Listing {
   isPublished: Boolean!
   quantity: Int!
   acceptsOffers: Boolean!
-  isSold: Boolean!
+  dateSold: DateTime
+  category: ListingCategory!
+  categoryId: String
   id: UUID!
   added: DateTime!
   updated: DateTime!
+}
+
+type ListingCategory {
+  parentId: String!
+  parent: ListingCategory!
+  listable: Boolean!
+  id: String!
+  added: DateTime!
+  updated: DateTime!
+  name: String!
+  notes: String
 }
 
 type ListingImage {
@@ -214,6 +229,8 @@ type Mutation {
   uploadCurrentProfileImage(file: Upload!): Boolean!
   uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
+  addListing(listing: ListingAddEditInput!): UUID!
+  deleteListing(id: UUID!): Boolean!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
   deleteListingType(id: String!): Boolean!
@@ -336,6 +353,13 @@ type UserListEdit {
   location: String
   approved: Boolean
   sellerApproved: Boolean
+}
+
+type UserListingCategory {
+  user: ApplicationUser!
+  userId: String!
+  category: ListingCategory!
+  categoryId: String!
 }
 
 type UserNotificationsEdit {
@@ -488,6 +512,7 @@ input ApplicationUserFilterInput {
   church: StringOperationFilterInput
   postResponses: ListFilterInputTypeOfUserPostResponseFilterInput
   posts: ListFilterInputTypeOfUserPostFilterInput
+  categories: ListFilterInputTypeOfUserListingCategoryFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -591,6 +616,21 @@ input DateTimeOperationFilterInput {
   nlte: DateTime
 }
 
+input DecimalOperationFilterInput {
+  eq: Decimal
+  neq: Decimal
+  in: [Decimal]
+  nin: [Decimal]
+  gt: Decimal
+  ngt: Decimal
+  gte: Decimal
+  ngte: Decimal
+  lt: Decimal
+  nlt: Decimal
+  lte: Decimal
+  nlte: Decimal
+}
+
 input FriendFilterInput {
   and: [FriendFilterInput!]
   or: [FriendFilterInput!]
@@ -665,6 +705,13 @@ input ListFilterInputTypeOfMessageFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfUserListingCategoryFilterInput {
+  all: UserListingCategoryFilterInput
+  none: UserListingCategoryFilterInput
+  some: UserListingCategoryFilterInput
+  any: Boolean
+}
+
 input ListFilterInputTypeOfUserPostFilterInput {
   all: UserPostFilterInput
   none: UserPostFilterInput
@@ -679,14 +726,42 @@ input ListFilterInputTypeOfUserPostResponseFilterInput {
   any: Boolean
 }
 
+input ListingAddEditInput {
+  title: String!
+  content: String!
+  serialNumber: String
+  partNumber: String
+  quantity: Int!
+  categoryId: String!
+  unit: String!
+  price: Decimal!
+  msrp: Decimal
+  isPublished: Boolean!
+  acceptsOffers: Boolean!
+}
+
+input ListingCategoryFilterInput {
+  and: [ListingCategoryFilterInput!]
+  or: [ListingCategoryFilterInput!]
+  parentId: StringOperationFilterInput
+  parent: ListingCategoryFilterInput
+  listable: BooleanOperationFilterInput
+  id: StringOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+  name: StringOperationFilterInput
+  notes: StringOperationFilterInput
+}
+
 input ListingFilterInput {
   and: [ListingFilterInput!]
   or: [ListingFilterInput!]
   title: StringOperationFilterInput
   content: StringOperationFilterInput
-  price: IntOperationFilterInput
-  msrp: IntOperationFilterInput
+  price: DecimalOperationFilterInput
+  msrp: DecimalOperationFilterInput
   partNumber: StringOperationFilterInput
+  serialNumber: StringOperationFilterInput
   unit: StringOperationFilterInput
   user: ApplicationUserFilterInput
   userId: StringOperationFilterInput
@@ -696,7 +771,9 @@ input ListingFilterInput {
   isPublished: BooleanOperationFilterInput
   quantity: IntOperationFilterInput
   acceptsOffers: BooleanOperationFilterInput
-  isSold: BooleanOperationFilterInput
+  dateSold: DateTimeOperationFilterInput
+  category: ListingCategoryFilterInput
+  categoryId: StringOperationFilterInput
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
@@ -839,6 +916,15 @@ input UserListEditInput {
   sellerApproved: Boolean
 }
 
+input UserListingCategoryFilterInput {
+  and: [UserListingCategoryFilterInput!]
+  or: [UserListingCategoryFilterInput!]
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+  category: ListingCategoryFilterInput
+  categoryId: StringOperationFilterInput
+}
+
 input UserNotificationsEditInput {
   id: String!
   notifyOnMessage: Boolean!
@@ -899,6 +985,9 @@ scalar Byte
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The built-in `Decimal` scalar type."
+scalar Decimal
 
 "The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
 scalar Long

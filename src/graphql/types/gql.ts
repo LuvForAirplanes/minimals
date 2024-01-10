@@ -19,6 +19,7 @@ const documents = {
     "\n  fragment QuickUserEditor on QuickUserEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.QuickUserEditorFragmentDoc,
     "\n  fragment UserNotificationsEditor on UserNotificationsEdit {\n    id\n    notifyOnMessage\n  }\n": types.UserNotificationsEditorFragmentDoc,
     "\n  fragment UserEditor on UserEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n    churchGroup\n    approved\n    sellerApproved\n    emailVerified\n    phoneVerified\n  }\n": types.UserEditorFragmentDoc,
+    "\n  mutation addListing($listing: ListingAddEditInput!) {\n    addListing(listing: $listing)\n  }\n": types.AddListingDocument,
     "\n  mutation addListingType($type: ListingTypeInput!) {\n    addListingType(type: $type) {\n      ...ListingType\n    }\n  }\n  \n": types.AddListingTypeDocument,
     "\n  mutation changeAccountPassword($existingPassword: String!, $newPassword: String!) {\n    changeAccountPassword(existingPassword: $existingPassword, newPassword: $newPassword)\n  }\n": types.ChangeAccountPasswordDocument,
     "\n  mutation changeUserPassword($id: String!, $existingPassword: String!, $newPassword: String!) {\n    changeUserPassword(id: $id, existingPassword: $existingPassword, newPassword: $newPassword)\n  }\n": types.ChangeUserPasswordDocument,
@@ -88,6 +89,10 @@ export function graphql(source: "\n  fragment UserNotificationsEditor on UserNot
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment UserEditor on UserEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n    churchGroup\n    approved\n    sellerApproved\n    emailVerified\n    phoneVerified\n  }\n"): (typeof documents)["\n  fragment UserEditor on UserEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n    churchGroup\n    approved\n    sellerApproved\n    emailVerified\n    phoneVerified\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation addListing($listing: ListingAddEditInput!) {\n    addListing(listing: $listing)\n  }\n"): (typeof documents)["\n  mutation addListing($listing: ListingAddEditInput!) {\n    addListing(listing: $listing)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
