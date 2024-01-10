@@ -44,6 +44,7 @@ const ICONS = {
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
   listingTypes: icon('ic_clipboard'),
+  listingCategories: icon('ic_notes'),
 };
 
 // ----------------------------------------------------------------------
@@ -108,6 +109,13 @@ export function useNavData() {
             title: 'Listing Types',
             icon: ICONS.listingTypes,
             path: paths.dashboard.listingTypes.root,
+          },
+
+          // LISTING TYPES
+          {
+            title: 'Listing Categories',
+            icon: ICONS.listingCategories,
+            path: paths.dashboard.listingCategories.root,
           },
 
           // PRODUCT

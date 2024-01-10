@@ -108,14 +108,11 @@ export default function ProductNewEditForm() {
     // Send a POST request to the upload endpoint with the formData
     // and a header that specifies the content type as multipart/form-data
     try {
-      const response = await axios.post(`/api/listings/${id}/upload`, formData, {
+      await axios.post(`/api/listings/${id}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
-      // Handle the response
-      console.log(response.data);
     } catch (error) {
       // Handle the error
       console.error(error);

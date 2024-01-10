@@ -11,6 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
+import { getListingsQuery } from 'src/graphql/queries/listings';
 import { getQuickListingQuery } from 'src/graphql/queries/quickListing';
 import { updateQuickListingMutation } from 'src/graphql/mutations/updateQuickListing';
 import {
@@ -102,6 +103,7 @@ export default function ListingQuickEditForm({ id, open, onClose }: Props) {
     variables: {
       listing: methods.getValues(),
     },
+    refetchQueries: [getListingsQuery],
   });
 
   const {
@@ -150,8 +152,8 @@ export default function ListingQuickEditForm({ id, open, onClose }: Props) {
             <RHFTextField name="serialNumber" label="Serial Number" />
             <RHFTextField name="partNumber" label="Part Number" />
             <RHFTextField name="quantity" label="Quantity" type="number" />
-            <RHFTextField name="unit" label="Phone Number" />
-            <RHFTextField name="price" label="Username" />
+            <RHFTextField name="unit" label="Unit" />
+            <RHFTextField name="price" label="Price" />
             <RHFTextField name="msrp" label="MSRP" />
             <RHFSwitch name="acceptsOffers" label="Accepts Offers" />
             <RHFSwitch name="isPublished" label="Published" />

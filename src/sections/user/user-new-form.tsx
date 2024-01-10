@@ -111,7 +111,6 @@ export default function UserNewForm({ currentUser }: Props) {
       console.error(error);
     }
   });
-  console.log(methods.formState.errors);
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>

@@ -82,6 +82,9 @@ export const paths = {
     listingTypes: {
       root: `${ROOTS.DASHBOARD}/listing-types`,
     },
+    listingCategories: {
+      root: `${ROOTS.DASHBOARD}/listing-categories`,
+    },
     user: {
       root: `${ROOTS.DASHBOARD}/user`,
       new: `${ROOTS.DASHBOARD}/user/new`,

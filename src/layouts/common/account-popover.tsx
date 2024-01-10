@@ -81,7 +81,7 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
+          src="/api/avatars/user"
           alt={user?.userName}
           sx={{
             width: 36,

@@ -24,7 +24,6 @@ const specialOperators: Record<string, any> = {
 };
 
 export function createWhere<WhereInputType>(filter?: GridFilterModel): WhereInputType | undefined {
-  console.log(filter);
   if (
     !filter ||
     filter.items.length === 0 ||

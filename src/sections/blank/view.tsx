@@ -70,7 +70,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import ListingQuickEditForm from './listing-quick-edit-form';
+import ListingQuickEditForm from '../product/view/listing-quick-edit-form';
 
 export default function BlankView() {
   const settings = useSettingsContext();

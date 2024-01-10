@@ -113,7 +113,6 @@ export function AuthProvider({ children }: Props) {
       username: email,
       password,
     });
-    console.log(res.data);
     dispatch({
       type: Types.LOGIN,
       payload: {

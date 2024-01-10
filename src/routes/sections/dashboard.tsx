@@ -5,6 +5,7 @@ import { ApolloProvider } from '@apollo/client';
 import { AuthGuard } from 'src/auth/guard';
 import { client } from 'src/graphql/config';
 import DashboardLayout from 'src/layouts/dashboard';
+import ListingCategoriesPage from 'src/pages/dashboard/listing-categories';
 
 import { LoadingScreen } from 'src/components/loading-screen';
 
@@ -90,6 +91,7 @@ export const dashboardRoutes = [
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
       { path: 'listing-types', element: <ListingTypesPage /> },
+      { path: 'listing-categories', element: <ListingCategoriesPage /> },
       {
         path: 'user',
         children: [

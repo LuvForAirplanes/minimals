@@ -21,7 +21,7 @@ export default function NavUpgrade() {
     >
       <Stack alignItems="center">
         <Box sx={{ position: 'relative' }}>
-          <Avatar src={user?.photoURL} alt={user?.displayName} sx={{ width: 48, height: 48 }}>
+          <Avatar src="/api/avatars/user" alt={user?.displayName} sx={{ width: 48, height: 48 }}>
             {user?.displayName?.charAt(0).toUpperCase()}
           </Avatar>
 
@@ -29,15 +29,14 @@ export default function NavUpgrade() {
             color="success"
             variant="filled"
             sx={{
-              top: -6,
+              top: -5,
               px: 0.5,
-              left: 40,
+              left: 38,
               height: 20,
               position: 'absolute',
-              borderBottomLeftRadius: 2,
             }}
           >
-            Free
+            Seller
           </Label>
         </Box>
 

@@ -85,6 +85,7 @@ type ApplicationUser {
   postResponses: [UserPostResponse!]!
   posts: [UserPost!]!
   categories: [UserListingCategory!]!
+  reviews: [ListingReview!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -158,21 +159,49 @@ type Listing {
   dateSold: DateTime
   category: ListingCategory!
   categoryId: String
+  reviews: [ListingReview!]!
   id: UUID!
   added: DateTime!
   updated: DateTime!
   mainImageId: UUID
 }
 
+"A connection to a list of items."
+type ListingCategoriesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ListingCategoriesEdge!]
+  "A flattened list of the nodes."
+  nodes: [ListingCategory!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type ListingCategoriesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ListingCategory!
+}
+
 type ListingCategory {
-  parentId: String!
-  parent: ListingCategory!
+  parentId: String
+  parent: ListingCategory
   listable: Boolean!
   id: String!
   added: DateTime!
   updated: DateTime!
   name: String!
   notes: String
+}
+
+type ListingCategoryEdit {
+  id: String!
+  name: String!
+  parentId: String
+  listable: Boolean!
 }
 
 type ListingImage {
@@ -190,6 +219,16 @@ type ListingListEdit {
   quantity: Int!
   price: Decimal!
   isPublished: Boolean!
+}
+
+type ListingReview {
+  listing: Listing!
+  listingId: UUID!
+  user: ApplicationUser!
+  userId: String!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
 }
 
 type ListingStatistics {
@@ -263,6 +302,9 @@ type Mutation {
   uploadCurrentProfileImage(file: Upload!): Boolean!
   uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
+  addListingCategory(category: ListingCategoryEditInput!): ListingCategoryEdit!
+  updateListingCategory(category: ListingCategoryEditInput!): ListingCategoryEdit!
+  deleteListingCategory(id: String!): Boolean!
   addListing(listing: ListingAddEditInput!): UUID!
   listingList(listing: ListingListEditInput!): ListingListEdit!
   quickListing(listing: QuickListingEditInput!): QuickListingEdit!
@@ -326,6 +368,7 @@ type Query {
   assets: [Asset!]!
   churchGroups(order: [ChurchGroupSortInput!]): [ChurchGroup!]!
   dashboardStatistics: DashboardStats
+  listingCategories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingCategorySortInput!] where: ListingCategoryFilterInput): ListingCategoriesConnection
   listings("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingSortInput!] where: ListingFilterInput): ListingsConnection
   quickListing(id: UUID!): QuickListingEdit!
   listingStatistics: ListingStatistics!
@@ -565,6 +608,7 @@ input ApplicationUserFilterInput {
   postResponses: ListFilterInputTypeOfUserPostResponseFilterInput
   posts: ListFilterInputTypeOfUserPostFilterInput
   categories: ListFilterInputTypeOfUserListingCategoryFilterInput
+  reviews: ListFilterInputTypeOfListingReviewFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -750,6 +794,13 @@ input ListFilterInputTypeOfListingImageFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfListingReviewFilterInput {
+  all: ListingReviewFilterInput
+  none: ListingReviewFilterInput
+  some: ListingReviewFilterInput
+  any: Boolean
+}
+
 input ListFilterInputTypeOfMessageFilterInput {
   all: MessageFilterInput
   none: MessageFilterInput
@@ -790,6 +841,13 @@ input ListingAddEditInput {
   msrp: Decimal
   isPublished: Boolean!
   acceptsOffers: Boolean!
+}
+
+input ListingCategoryEditInput {
+  id: String!
+  name: String!
+  parentId: String
+  listable: Boolean!
 }
 
 input ListingCategoryFilterInput {
@@ -837,6 +895,7 @@ input ListingFilterInput {
   dateSold: DateTimeOperationFilterInput
   category: ListingCategoryFilterInput
   categoryId: StringOperationFilterInput
+  reviews: ListFilterInputTypeOfListingReviewFilterInput
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
@@ -859,6 +918,18 @@ input ListingListEditInput {
   quantity: Int!
   price: Decimal!
   isPublished: Boolean!
+}
+
+input ListingReviewFilterInput {
+  and: [ListingReviewFilterInput!]
+  or: [ListingReviewFilterInput!]
+  listing: ListingFilterInput
+  listingId: UuidOperationFilterInput
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
 }
 
 input ListingSortInput {
