@@ -45,9 +45,14 @@ import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
 import { updateUserListMutation } from 'src/graphql/mutations/userList';
 import { userStatisticsQuery } from 'src/graphql/queries/userStatistics';
 import {
+  UsersQuery,
+  UserFragment,
   DeleteUserMutation,
   UserStatisticsQuery,
+  UsersQueryVariables,
   UpdateUserListMutation,
+  ApplicationUserSortInput,
+  ApplicationUserFilterInput,
   DeleteUserMutationVariables,
   UserStatisticsQueryVariables,
   UpdateUserListMutationVariables,
@@ -192,9 +197,14 @@ export default function UserListView() {
     onCompleted: () => enqueueSnackbar('Successfully deleted users!', { variant: 'success' }),
   });
 
-  const sort = useSorting([{ field: 'email', sort: 'asc' }]);
-  const filter = useFiltering();
-  const paging = usePaging({ filter, sort });
+  const sort = useSorting<ApplicationUserSortInput>([{ field: 'email', sort: 'asc' }]);
+  const filter = useFiltering<ApplicationUserFilterInput>();
+  const paging = usePaging<UsersQuery, UserFragment, UsersQueryVariables>(
+    getUsersQuery,
+    sort.order,
+    filter.where,
+    {}
+  );
   const { data } = useQuery<UserStatisticsQuery, UserStatisticsQueryVariables>(userStatisticsQuery);
 
   const [currentFilter, setCurrentFilter] = useState<string>('All');

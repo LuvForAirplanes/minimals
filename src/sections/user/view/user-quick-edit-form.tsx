@@ -14,11 +14,11 @@ import DialogContent from '@mui/material/DialogContent';
 import { updateUserMutation } from 'src/graphql/mutations/userProfile';
 import { getQuickUserProfileQuery } from 'src/graphql/queries/quickUserProfile';
 import {
-  UserProfileQuery,
   QuickUserMutation,
+  QuickUserProfileQuery,
   QuickUserEditorFragment,
-  UserProfileQueryVariables,
   QuickUserMutationVariables,
+  QuickUserProfileQueryVariables,
 } from 'src/graphql/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -72,7 +72,7 @@ export default function UserQuickEditForm({ id, open, onClose }: Props) {
     },
   });
 
-  useQuery<UserProfileQuery, UserProfileQueryVariables>(getQuickUserProfileQuery, {
+  useQuery<QuickUserProfileQuery, QuickUserProfileQueryVariables>(getQuickUserProfileQuery, {
     variables: {
       id,
     },
@@ -91,7 +91,7 @@ export default function UserQuickEditForm({ id, open, onClose }: Props) {
         telegramUsername,
         username,
         website,
-      } = data.userProfile as QuickUserEditorFragment;
+      } = data.quickUserProfile as QuickUserEditorFragment;
       methods.reset({
         id: idd,
         about,

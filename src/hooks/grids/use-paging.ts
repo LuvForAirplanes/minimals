@@ -1,5 +1,5 @@
-import { useQuery } from '@apollo/client';
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { useQuery, DocumentNode } from '@apollo/client';
+import React, { useRef, useState, useEffect } from 'react';
 
 import {
   GridRowId,
@@ -8,16 +8,9 @@ import {
   GridCallbackDetails,
 } from '@mui/x-data-grid';
 
-import { getUsersQuery } from 'src/graphql/queries/users';
-import { UsersQuery, ApplicationUser, UsersQueryVariables } from 'src/graphql/types/graphql';
-
-import { Sorting } from './use-sorting';
-import { Filtering } from './use-filtering';
-
-interface PagingProps {
-  sort: Sorting<unknown>;
-  filter: Filtering<unknown>;
-}
+import { QueryContext } from 'src/graphql/config';
+import { Connection } from 'src/graphql/types/queryTypes';
+import { ApplicationUser } from 'src/graphql/types/graphql';
 
 interface Paging {
   gridArgs: {
@@ -36,7 +29,36 @@ interface Paging {
   loading: boolean;
 }
 
-export function usePaging({ filter, sort }: PagingProps): Paging {
+interface ConnectionDataInterface<T> {
+  // CountData is a child data
+  readonly data?:
+    | (Connection<T> & {
+        readonly count: number;
+      })
+    | null;
+}
+interface RawDataInterface<T> {
+  readonly data?: any;
+  /** Only a temp property to use the unused T to prevent copiler warnings. data should be using T, but isn't due to type issues. */
+  readonly showData?: T;
+}
+type DataInterface<T> = ConnectionDataInterface<T> | RawDataInterface<T>;
+
+export function usePaging<
+  TData extends DataInterface<TDataNode>,
+  TDataNode,
+  TQueryVariables extends {
+    order?: any | null;
+    where?: any | null;
+    first?: number | null;
+    after?: string | null;
+  },
+>(
+  query: DocumentNode,
+  order: TQueryVariables['order'],
+  where: TQueryVariables['where'],
+  queryVariables: TQueryVariables | null = null
+): Paging {
   const PAGE_SIZE = 10;
 
   const mapPageToNextCursor = useRef<{ [page: number]: GridRowId }>({});
@@ -46,23 +68,28 @@ export function usePaging({ filter, sort }: PagingProps): Paging {
     pageSize: PAGE_SIZE,
   });
 
-  const queryOptions = useMemo(
-    () =>
-      ({
-        after: mapPageToNextCursor.current[paginationModel.page - 1],
-        first: paginationModel.pageSize,
-        order: sort.order,
-        where: filter.where,
-      }) as UsersQueryVariables,
-    [paginationModel, sort, filter]
-  );
+  // const queryOptions = useMemo(
+  //   () =>
+  //     ({
+  //       after: mapPageToNextCursor.current[paginationModel.page - 1],
+  //       first: paginationModel.pageSize,
+  //       order,
+  //       where,
+  //     }) as TQueryVariables,
+  //   [paginationModel, order, where]
+  // );
 
   const {
     loading: isLoading,
     data,
     refetch: refetchData,
-  } = useQuery<UsersQuery, UsersQueryVariables>(getUsersQuery, {
-    variables: queryOptions,
+  } = useQuery<TData, TQueryVariables>(query, {
+    context: { hideErrors: true } as QueryContext,
+    variables: {
+      order,
+      where,
+      ...queryVariables,
+    } as TQueryVariables,
   });
 
   const handlePaginationModelChange = (newPaginationModel: GridPaginationModel) => {
@@ -88,7 +115,7 @@ export function usePaging({ filter, sort }: PagingProps): Paging {
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
   const [rowCount, setRowCountState] = React.useState(data?.data?.count || 0);
   React.useEffect(() => {
-    setRowCountState((prevRowCountState) =>
+    setRowCountState((prevRowCountState: number) =>
       data?.data?.count !== undefined ? data?.data?.count : prevRowCountState
     );
   }, [data?.data?.count, setRowCountState]);

@@ -43,6 +43,7 @@ const ICONS = {
   ecommerce: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
+  listingTypes: icon('ic_clipboard'),
 };
 
 // ----------------------------------------------------------------------
@@ -100,6 +101,13 @@ export function useNavData() {
             title: 'Users',
             icon: ICONS.user,
             path: paths.dashboard.user.list,
+          },
+
+          // LISTING TYPES
+          {
+            title: 'Listing Types',
+            icon: ICONS.listingTypes,
+            path: paths.dashboard.listingTypes.root,
           },
 
           // PRODUCT

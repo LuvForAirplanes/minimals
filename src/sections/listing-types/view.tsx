@@ -59,7 +59,7 @@ import { useSettingsContext } from 'src/components/settings';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-export default function BlankView() {
+export default function ListingTypesView() {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [deletingId, setDeletingId] = useState<string | null>(null);

@@ -82,6 +82,8 @@ type ApplicationUser {
   notifyOnMessage: Boolean!
   churchGroup: String!
   church: String
+  postResponses: [UserPostResponse!]!
+  posts: [UserPost!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -172,6 +174,26 @@ type ListingType {
   name: String!
 }
 
+"A connection to a list of items."
+type ListingTypesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ListingTypesEdge!]
+  "A flattened list of the nodes."
+  nodes: [ListingType!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type ListingTypesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ListingType!
+}
+
 type Message {
   subject: String!
   date: DateTime!
@@ -192,6 +214,9 @@ type Mutation {
   uploadCurrentProfileImage(file: Upload!): Boolean!
   uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
+  addListingType(type: ListingTypeInput!): ListingType!
+  updateListingType(type: ListingTypeInput!): ListingType!
+  deleteListingType(id: String!): Boolean!
   quickUser(id: String! profileEdit: QuickUserEditInput!): QuickUserEdit!
   user(id: String! profileEdit: UserEditInput!): UserEdit!
   userList(id: String! profileEdit: UserListEditInput!): UserListEdit!
@@ -248,6 +273,7 @@ type Query {
   assets: [Asset!]!
   churchGroups(order: [ChurchGroupSortInput!]): [ChurchGroup!]!
   dashboardStatistics: DashboardStats
+  listingTypes("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingTypeSortInput!] where: ListingTypeFilterInput): ListingTypesConnection
   notices: [Notice!]!
   quickUserProfile(id: String!): QuickUserEdit!
   userProfile(id: String!): UserEdit!
@@ -315,6 +341,32 @@ type UserListEdit {
 type UserNotificationsEdit {
   id: String!
   notifyOnMessage: Boolean!
+}
+
+type UserPost {
+  userId: String!
+  user: ApplicationUser!
+  content: String!
+  title: String!
+  media: [Byte!]!
+  date: DateTime!
+  responses: [UserPostResponse!]!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+type UserPostResponse {
+  postId: UUID!
+  post: UserPost!
+  userId: String!
+  user: ApplicationUser!
+  content: String!
+  isReaction: Boolean!
+  date: DateTime!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
 }
 
 "A segment of a collection."
@@ -434,6 +486,8 @@ input ApplicationUserFilterInput {
   notifyOnMessage: BooleanOperationFilterInput
   churchGroup: StringOperationFilterInput
   church: StringOperationFilterInput
+  postResponses: ListFilterInputTypeOfUserPostResponseFilterInput
+  posts: ListFilterInputTypeOfUserPostFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -611,6 +665,20 @@ input ListFilterInputTypeOfMessageFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfUserPostFilterInput {
+  all: UserPostFilterInput
+  none: UserPostFilterInput
+  some: UserPostFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfUserPostResponseFilterInput {
+  all: UserPostResponseFilterInput
+  none: UserPostResponseFilterInput
+  some: UserPostResponseFilterInput
+  any: Boolean
+}
+
 input ListingFilterInput {
   and: [ListingFilterInput!]
   or: [ListingFilterInput!]
@@ -651,6 +719,16 @@ input ListingTypeFilterInput {
   or: [ListingTypeFilterInput!]
   id: StringOperationFilterInput
   name: StringOperationFilterInput
+}
+
+input ListingTypeInput {
+  id: String!
+  name: String!
+}
+
+input ListingTypeSortInput {
+  id: SortEnumType
+  name: SortEnumType
 }
 
 input MessageFilterInput {
@@ -764,6 +842,36 @@ input UserListEditInput {
 input UserNotificationsEditInput {
   id: String!
   notifyOnMessage: Boolean!
+}
+
+input UserPostFilterInput {
+  and: [UserPostFilterInput!]
+  or: [UserPostFilterInput!]
+  userId: StringOperationFilterInput
+  user: ApplicationUserFilterInput
+  content: StringOperationFilterInput
+  title: StringOperationFilterInput
+  media: ListByteOperationFilterInput
+  date: DateTimeOperationFilterInput
+  responses: ListFilterInputTypeOfUserPostResponseFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
+}
+
+input UserPostResponseFilterInput {
+  and: [UserPostResponseFilterInput!]
+  or: [UserPostResponseFilterInput!]
+  postId: UuidOperationFilterInput
+  post: UserPostFilterInput
+  userId: StringOperationFilterInput
+  user: ApplicationUserFilterInput
+  content: StringOperationFilterInput
+  isReaction: BooleanOperationFilterInput
+  date: DateTimeOperationFilterInput
+  id: UuidOperationFilterInput
+  added: DateTimeOperationFilterInput
+  updated: DateTimeOperationFilterInput
 }
 
 input UuidOperationFilterInput {
