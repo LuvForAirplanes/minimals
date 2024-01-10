@@ -161,6 +161,7 @@ type Listing {
   id: UUID!
   added: DateTime!
   updated: DateTime!
+  mainImageId: UUID
 }
 
 type ListingCategory {
@@ -182,6 +183,19 @@ type ListingImage {
   id: UUID!
   added: DateTime!
   updated: DateTime!
+}
+
+type ListingListEdit {
+  id: UUID!
+  quantity: Int!
+  price: Decimal!
+  isPublished: Boolean!
+}
+
+type ListingStatistics {
+  all: Int!
+  published: Int!
+  draft: Int!
 }
 
 type ListingType {
@@ -209,6 +223,26 @@ type ListingTypesEdge {
   node: ListingType!
 }
 
+"A connection to a list of items."
+type ListingsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ListingsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Listing!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type ListingsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Listing!
+}
+
 type Message {
   subject: String!
   date: DateTime!
@@ -230,7 +264,9 @@ type Mutation {
   uploadCurrentBackgroundImage(file: Upload!): Boolean!
   changeAccountPassword(existingPassword: String! newPassword: String!): Boolean!
   addListing(listing: ListingAddEditInput!): UUID!
-  deleteListing(id: UUID!): Boolean!
+  listingList(listing: ListingListEditInput!): ListingListEdit!
+  quickListing(listing: QuickListingEditInput!): QuickListingEdit!
+  deleteListing(id: UUID ids: [UUID!]): Boolean!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
   deleteListingType(id: String!): Boolean!
@@ -290,6 +326,9 @@ type Query {
   assets: [Asset!]!
   churchGroups(order: [ChurchGroupSortInput!]): [ChurchGroup!]!
   dashboardStatistics: DashboardStats
+  listings("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingSortInput!] where: ListingFilterInput): ListingsConnection
+  quickListing(id: UUID!): QuickListingEdit!
+  listingStatistics: ListingStatistics!
   listingTypes("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingTypeSortInput!] where: ListingTypeFilterInput): ListingTypesConnection
   notices: [Notice!]!
   quickUserProfile(id: String!): QuickUserEdit!
@@ -301,6 +340,19 @@ type Query {
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   userProfileImage(id: String!): [Byte!]
   userStatistics: UserStatistics!
+}
+
+type QuickListingEdit {
+  id: UUID!
+  title: String!
+  serialNumber: String
+  partNumber: String
+  quantity: Int!
+  unit: String!
+  price: Decimal!
+  msrp: Decimal
+  isPublished: Boolean!
+  acceptsOffers: Boolean!
 }
 
 type QuickUserEdit {
@@ -753,6 +805,17 @@ input ListingCategoryFilterInput {
   notes: StringOperationFilterInput
 }
 
+input ListingCategorySortInput {
+  parentId: SortEnumType
+  parent: ListingCategorySortInput
+  listable: SortEnumType
+  id: SortEnumType
+  added: SortEnumType
+  updated: SortEnumType
+  name: SortEnumType
+  notes: SortEnumType
+}
+
 input ListingFilterInput {
   and: [ListingFilterInput!]
   or: [ListingFilterInput!]
@@ -789,6 +852,36 @@ input ListingImageFilterInput {
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
+}
+
+input ListingListEditInput {
+  id: UUID!
+  quantity: Int!
+  price: Decimal!
+  isPublished: Boolean!
+}
+
+input ListingSortInput {
+  title: SortEnumType
+  content: SortEnumType
+  price: SortEnumType
+  msrp: SortEnumType
+  partNumber: SortEnumType
+  serialNumber: SortEnumType
+  unit: SortEnumType
+  user: ApplicationUserSortInput
+  userId: SortEnumType
+  type: ListingTypeSortInput
+  typeId: SortEnumType
+  isPublished: SortEnumType
+  quantity: SortEnumType
+  acceptsOffers: SortEnumType
+  dateSold: SortEnumType
+  category: ListingCategorySortInput
+  categoryId: SortEnumType
+  id: SortEnumType
+  added: SortEnumType
+  updated: SortEnumType
 }
 
 input ListingTypeFilterInput {
@@ -830,6 +923,19 @@ input PostalCodeFilterInput {
   country: StringOperationFilterInput
   id: StringOperationFilterInput
   state: StringOperationFilterInput
+}
+
+input QuickListingEditInput {
+  id: UUID!
+  title: String!
+  serialNumber: String
+  partNumber: String
+  quantity: Int!
+  unit: String!
+  price: Decimal!
+  msrp: Decimal
+  isPublished: Boolean!
+  acceptsOffers: Boolean!
 }
 
 input QuickUserEditInput {

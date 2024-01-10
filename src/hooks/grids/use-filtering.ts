@@ -24,7 +24,14 @@ const specialOperators: Record<string, any> = {
 };
 
 export function createWhere<WhereInputType>(filter?: GridFilterModel): WhereInputType | undefined {
-  if (!filter || !filter.items[0].value || filter.items[0].value === '') return;
+  console.log(filter);
+  if (
+    !filter ||
+    filter.items.length === 0 ||
+    !filter.items[0].value ||
+    filter.items[0].value === ''
+  )
+    return;
 
   const args = [];
   const filters: GridFilterItem[] = Array.isArray(filter.items)
@@ -81,7 +88,6 @@ export function useFiltering<WhereInputType>(
   initialFilter?: GridFilterModel
 ): Filtering<WhereInputType> {
   const [filter, setFilter] = useState(initialFilter);
-
   const where = useDebounced(createWhere<WhereInputType>(filter), 250);
 
   return useMemo<Filtering<WhereInputType>>(

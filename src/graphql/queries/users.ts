@@ -1,22 +1,6 @@
 import { gql } from '@apollo/client';
 
-const UserFragment = gql`
-  fragment User on ApplicationUser {
-    __typename
-    id
-    firstName
-    lastName
-    email
-    userName
-    businessName
-    approved
-    sellerApproved
-    phoneNumber
-    location
-    approved
-    sellerApproved
-  }
-`;
+import { UserFragment } from '../fragments/user';
 
 export const getUsersQuery = gql`
   query users(
