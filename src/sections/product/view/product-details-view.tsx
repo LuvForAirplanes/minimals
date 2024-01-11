@@ -16,11 +16,11 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
-import { getListingEditQuery } from 'src/graphql/queries/listingEdit';
+import { getListingQuery } from 'src/graphql/queries/listing';
 import {
-  ListingEditQuery,
-  ListingEditFragment,
-  ListingEditQueryVariables,
+  ListingDetailsQuery,
+  ListingDetailsFragment,
+  ListingDetailsQueryVariables,
 } from 'src/graphql/types/graphql';
 
 import Iconify from 'src/components/iconify';
@@ -29,6 +29,8 @@ import { useSettingsContext } from 'src/components/settings';
 
 import { ProductDetailsSkeleton } from '../product-skeleton';
 import ProductDetailsToolbar from '../product-details-toolbar';
+import ProductDetailsSummary from '../product-details-summary';
+import ProductDetailsCarousel from '../product-details-carousel';
 import ProductDetailsDescription from '../product-details-description';
 
 // ----------------------------------------------------------------------
@@ -64,12 +66,14 @@ export default function ProductDetailsView() {
     data: productR,
     loading,
     error,
-  } = useQuery<ListingEditQuery, ListingEditQueryVariables>(getListingEditQuery, {
+  } = useQuery<ListingDetailsQuery, ListingDetailsQueryVariables>(getListingQuery, {
     variables: {
-      id: params.id ?? '',
+      id: params.id,
     },
   });
-  const product = productR?.listingEdit as ListingEditFragment | undefined;
+  const product = productR?.listings
+    ? (productR.listings.nodes![0] as ListingDetailsFragment)
+    : null;
 
   useEffect(() => {
     if (product) {
@@ -118,11 +122,11 @@ export default function ProductDetailsView() {
 
       <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid xs={12} md={6} lg={7}>
-          {/* <ProductDetailsCarousel product={product} /> */}
+          <ProductDetailsCarousel product={product} />
         </Grid>
 
         <Grid xs={12} md={6} lg={5}>
-          {/* <ProductDetailsSummary disabledActions product={product} /> */}
+          <ProductDetailsSummary disabledActions product={product} />
         </Grid>
       </Grid>
 
@@ -164,10 +168,10 @@ export default function ProductDetailsView() {
               value: 'description',
               label: 'Description',
             },
-            // {
-            //   value: 'reviews',
-            //   label: `Reviews (${product.reviews.length})`,
-            // },
+            {
+              value: 'reviews',
+              label: `Reviews (${product.reviews.length})`,
+            },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
           ))}

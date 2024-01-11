@@ -1,35 +1,27 @@
-import { useEffect, useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { formHelperTextClasses } from '@mui/material/FormHelperText';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { fCurrency } from 'src/utils/format-number';
 
-import { fCurrency, fShortenNumber } from 'src/utils/format-number';
+import { ListingDetailsFragment } from 'src/graphql/types/graphql';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
-import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFSelect } from 'src/components/hook-form';
+import FormProvider from 'src/components/hook-form';
 
-import { IProductItem } from 'src/types/product';
 import { ICheckoutItem } from 'src/types/checkout';
 
 import IncrementerButton from './common/incrementer-button';
 
-// ----------------------------------------------------------------------
-
 type Props = {
-  product: IProductItem;
+  product: ListingDetailsFragment;
   items?: ICheckoutItem[];
   disabledActions?: boolean;
   onGotoStep?: (step: number) => void;
@@ -44,47 +36,26 @@ export default function ProductDetailsSummary({
   disabledActions,
   ...other
 }: Props) {
-  const router = useRouter();
+  const { id, price, title, quantity, msrp } = product;
 
-  const {
-    id,
-    name,
-    sizes,
-    price,
-    coverUrl,
-    colors,
-    newLabel,
-    available,
-    priceSale,
-    saleLabel,
-    totalRatings,
-    totalReviews,
-    inventoryType,
-    subDescription,
-  } = product;
-
-  const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
+  // const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
 
   const isMaxQuantity =
     !!items?.length &&
-    items.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+    items.filter((item) => item.id === id).map((item) => item.quantity)[0] >= quantity;
 
   const defaultValues = {
     id,
-    name,
-    coverUrl,
-    available,
+    title,
     price,
-    colors: colors[0],
-    size: sizes[4],
-    quantity: available < 1 ? 0 : 1,
+    quantity: quantity < 1 ? 0 : 1,
   };
 
   const methods = useForm({
     defaultValues,
   });
 
-  const { reset, watch, control, setValue, handleSubmit } = methods;
+  const { reset, watch, setValue, handleSubmit } = methods;
 
   const values = watch();
 
@@ -96,36 +67,36 @@ export default function ProductDetailsSummary({
   }, [product]);
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      if (!existProduct) {
-        onAddCart?.({
-          ...data,
-          colors: [values.colors],
-          subTotal: data.price * data.quantity,
-        });
-      }
-      onGotoStep?.(0);
-      router.push(paths.product.checkout);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   if (!existProduct) {
+    //     onAddCart?.({
+    //       ...data,
+    //       colors: [values.colors],
+    //       subTotal: data.price * data.quantity,
+    //     });
+    //   }
+    //   onGotoStep?.(0);
+    //   router.push(paths.product.checkout);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   });
 
-  const handleAddCart = useCallback(() => {
-    try {
-      onAddCart?.({
-        ...values,
-        colors: [values.colors],
-        subTotal: values.price * values.quantity,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, [onAddCart, values]);
+  // const handleAddCart = useCallback(() => {
+  //   try {
+  //     onAddCart?.({
+  //       ...values,
+  //       colors: [values.colors],
+  //       subTotal: values.price * values.quantity,
+  //     });
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [onAddCart, values]);
 
   const renderPrice = (
     <Box sx={{ typography: 'h5' }}>
-      {priceSale && (
+      {msrp && (
         <Box
           component="span"
           sx={{
@@ -134,7 +105,7 @@ export default function ProductDetailsSummary({
             mr: 0.5,
           }}
         >
-          {fCurrency(priceSale)}
+          {fCurrency(msrp)}
         </Box>
       )}
 
@@ -182,59 +153,6 @@ export default function ProductDetailsSummary({
     </Stack>
   );
 
-  const renderColorOptions = (
-    <Stack direction="row">
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Color
-      </Typography>
-
-      <Controller
-        name="colors"
-        control={control}
-        render={({ field }) => (
-          <ColorPicker
-            colors={colors}
-            selected={field.value}
-            onSelectColor={(color) => field.onChange(color as string)}
-            limit={4}
-          />
-        )}
-      />
-    </Stack>
-  );
-
-  const renderSizeOptions = (
-    <Stack direction="row">
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Size
-      </Typography>
-
-      <RHFSelect
-        name="size"
-        size="small"
-        helperText={
-          <Link underline="always" color="textPrimary">
-            Size Chart
-          </Link>
-        }
-        sx={{
-          maxWidth: 88,
-          [`& .${formHelperTextClasses.root}`]: {
-            mx: 0,
-            mt: 1,
-            textAlign: 'right',
-          },
-        }}
-      >
-        {sizes.map((size) => (
-          <MenuItem key={size} value={size}>
-            {size}
-          </MenuItem>
-        ))}
-      </RHFSelect>
-    </Stack>
-  );
-
   const renderQuantity = (
     <Stack direction="row">
       <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
@@ -246,13 +164,13 @@ export default function ProductDetailsSummary({
           name="quantity"
           quantity={values.quantity}
           disabledDecrease={values.quantity <= 1}
-          disabledIncrease={values.quantity >= available}
+          disabledIncrease={values.quantity >= quantity}
           onIncrease={() => setValue('quantity', values.quantity + 1)}
           onDecrease={() => setValue('quantity', values.quantity - 1)}
         />
 
         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
-          Available: {available}
+          Available: {quantity}
         </Typography>
       </Stack>
     </Stack>
@@ -267,7 +185,7 @@ export default function ProductDetailsSummary({
         color="warning"
         variant="contained"
         startIcon={<Iconify icon="solar:cart-plus-bold" width={24} />}
-        onClick={handleAddCart}
+        // onClick={handleAddCart}
         sx={{ whiteSpace: 'nowrap' }}
       >
         Add to Cart
@@ -281,7 +199,7 @@ export default function ProductDetailsSummary({
 
   const renderSubDescription = (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {subDescription}
+      There is no subtitle...
     </Typography>
   );
 
@@ -294,31 +212,32 @@ export default function ProductDetailsSummary({
         typography: 'body2',
       }}
     >
-      <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${fShortenNumber(totalReviews)} reviews)`}
+      {/* <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
+      {`(${fShortenNumber(totalReviews)} reviews)`} */}
     </Stack>
   );
 
-  const renderLabels = (newLabel.enabled || saleLabel.enabled) && (
+  const renderLabels = (
     <Stack direction="row" alignItems="center" spacing={1}>
-      {newLabel.enabled && <Label color="info">{newLabel.content}</Label>}
-      {saleLabel.enabled && <Label color="error">{saleLabel.content}</Label>}
+      <Label color="info">New</Label>
+      <Label color="error">Sale</Label>
     </Stack>
   );
 
   const renderInventoryType = (
-    <Box
-      component="span"
-      sx={{
-        typography: 'overline',
-        color:
-          (inventoryType === 'out of stock' && 'error.main') ||
-          (inventoryType === 'low stock' && 'warning.main') ||
-          'success.main',
-      }}
-    >
-      {inventoryType}
-    </Box>
+    // <Box
+    //   component="span"
+    //   sx={{
+    //     typography: 'overline',
+    //     color:
+    //       (inventoryType === 'out of stock' && 'error.main') ||
+    //       (inventoryType === 'low stock' && 'warning.main') ||
+    //       'success.main',
+    //   }}
+    // >
+    //   {inventoryType}
+    // </Box>
+    <Typography>Inventory Type here</Typography>
   );
 
   return (
@@ -329,7 +248,7 @@ export default function ProductDetailsSummary({
 
           {renderInventoryType}
 
-          <Typography variant="h5">{name}</Typography>
+          <Typography variant="h5">{title}</Typography>
 
           {renderRating}
 
@@ -339,10 +258,6 @@ export default function ProductDetailsSummary({
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
-
-        {renderColorOptions}
-
-        {renderSizeOptions}
 
         {renderQuantity}
 

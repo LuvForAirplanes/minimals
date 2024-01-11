@@ -18,7 +18,7 @@ import {
   QuickListingQuery,
   QuickListingEditFragment,
   UpdateQuickListingMutation,
-  QuickListingEditQueryVariables,
+  QuickListingQueryVariables,
   UpdateQuickListingMutationVariables,
 } from 'src/graphql/types/graphql';
 
@@ -63,7 +63,7 @@ export default function ListingQuickEditForm({ id, open, onClose }: Props) {
     },
   });
 
-  useQuery<QuickListingQuery, QuickListingEditQueryVariables>(getQuickListingQuery, {
+  useQuery<QuickListingQuery, QuickListingQueryVariables>(getQuickListingQuery, {
     variables: {
       id,
     },

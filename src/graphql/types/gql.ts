@@ -17,6 +17,7 @@ const documents = {
     "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.AccountProfileEditorFragmentDoc,
     "\n  fragment Listing on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    images {\n      id\n    }\n    category {\n      name\n    }\n  }\n": types.ListingFragmentDoc,
     "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n": types.ListingCategoryEditFragmentDoc,
+    "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n": types.ListingDetailsFragmentDoc,
     "\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n": types.ListingEditFragmentDoc,
     "\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n": types.ListingListEditFragmentDoc,
     "\n  fragment ListingType on ListingType {\n    id\n    name\n  }\n": types.ListingTypeFragmentDoc,
@@ -53,6 +54,7 @@ const documents = {
     "\n  query churchGroups {\n    churchGroups {\n      id\n      name\n    }\n  }\n": types.ChurchGroupsDocument,
     "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
     "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n": types.CurrentAccountProfileDocument,
+    "\n  query listingDetails($id: UUID!) {\n    listings(first: 1, where: { id: { eq: $id } }) {\n      nodes {\n        ...ListingDetails\n      }\n    }\n  }\n  \n": types.ListingDetailsDocument,
     "\n  query listingCategories(\n    $first: Int = 50\n    $after: String\n    $order: [ListingCategorySortInput!]\n    $where: ListingCategoryFilterInput\n  ) {\n    data: listingCategories(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        id\n        name\n        parentId\n        listable\n      }\n    }\n  }\n": types.ListingCategoriesDocument,
     "\n  query listingEdit($id: UUID!) {\n    listingEdit(id: $id) {\n      ...ListingEdit\n    }\n  }\n  \n": types.ListingEditDocument,
     "\n  query listingStatistics {\n    listingStatistics {\n      all\n      published\n      draft\n    }\n  }\n": types.ListingStatisticsDocument,
@@ -98,6 +100,10 @@ export function graphql(source: "\n  fragment Listing on Listing {\n    __typena
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n"): (typeof documents)["\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n"): (typeof documents)["\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -242,6 +248,10 @@ export function graphql(source: "\n  query currentAccountNotifications {\n    cu
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"): (typeof documents)["\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query listingDetails($id: UUID!) {\n    listings(first: 1, where: { id: { eq: $id } }) {\n      nodes {\n        ...ListingDetails\n      }\n    }\n  }\n  \n"): (typeof documents)["\n  query listingDetails($id: UUID!) {\n    listings(first: 1, where: { id: { eq: $id } }) {\n      nodes {\n        ...ListingDetails\n      }\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

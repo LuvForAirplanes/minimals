@@ -5,12 +5,11 @@ import Avatar from '@mui/material/Avatar';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 
 import { bgGradient } from 'src/theme/css';
+import { ListingDetailsFragment } from 'src/graphql/types/graphql';
 
 import Image from 'src/components/image';
 import Lightbox, { useLightBox } from 'src/components/lightbox';
 import Carousel, { useCarousel, CarouselArrowIndex } from 'src/components/carousel';
-
-import { IProductItem } from 'src/types/product';
 
 // ----------------------------------------------------------------------
 
@@ -63,14 +62,14 @@ const StyledThumbnailsContainer = styled('div')<{ length: number }>(({ length, t
 // ----------------------------------------------------------------------
 
 type Props = {
-  product: IProductItem;
+  product: ListingDetailsFragment;
 };
 
 export default function ProductDetailsCarousel({ product }: Props) {
   const theme = useTheme();
 
   const slides = product.images.map((img) => ({
-    src: img,
+    src: img.id,
   }));
 
   const lightbox = useLightBox(slides);
@@ -120,7 +119,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
           <Image
             key={slide.src}
             alt={slide.src}
-            src={slide.src}
+            src={`/api/listings/images/${slide.src}`}
             ratio="1/1"
             onClick={() => lightbox.onOpen(slide.src)}
             sx={{ cursor: 'zoom-in' }}
@@ -149,7 +148,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
             <Avatar
               key={item.src}
               alt={item.src}
-              src={item.src}
+              src={`/api/listings/images/${item.src}`}
               variant="rounded"
               sx={{
                 width: THUMB_SIZE,
