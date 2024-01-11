@@ -23,7 +23,11 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import { PRODUCT_CATEGORY_GROUP_OPTIONS } from 'src/_mock';
 import { addListingMutation } from 'src/graphql/mutations/addListing';
-import { AddListingMutation, AddListingMutationVariables } from 'src/graphql/types/graphql';
+import {
+  AddListingMutation,
+  ListingEditFragment,
+  AddListingMutationVariables,
+} from 'src/graphql/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
@@ -35,7 +39,11 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 
-export default function ProductNewEditForm() {
+interface Props {
+  product?: ListingEditFragment;
+}
+
+export default function ProductNewEditForm({ product }: Props) {
   const router = useRouter();
 
   const mdUp = useResponsive('up', 'md');
@@ -58,18 +66,18 @@ export default function ProductNewEditForm() {
   });
 
   const defaultValues = {
-    title: '',
+    title: product?.title ?? '',
     images: [],
-    content: '',
-    serialNumber: null,
-    partNumber: null,
-    quantity: 1,
-    categoryId: 'test',
-    unit: 'ea',
-    price: 0,
-    msrp: null,
-    isPublished: true,
-    acceptsOffers: true,
+    content: product?.content ?? '',
+    serialNumber: product?.serialNumber ?? null,
+    partNumber: product?.partNumber ?? null,
+    quantity: product?.quantity ?? 1,
+    categoryId: product?.categoryId ?? 'test',
+    unit: product?.unit ?? 'ea',
+    price: (product?.price as number | undefined) ?? 0,
+    msrp: (product?.msrp as number | undefined) ?? null,
+    isPublished: product?.isPublished ?? true,
+    acceptsOffers: product?.acceptsOffers ?? true,
   };
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),

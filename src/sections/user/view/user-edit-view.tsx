@@ -9,13 +9,7 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import UserEditForm from '../user-edit-form';
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  id: string;
-};
-
-export default function UserEditView({ id }: Props) {
+export default function UserEditView() {
   const settings = useSettingsContext();
   const [name, setName] = useState<string>('');
 

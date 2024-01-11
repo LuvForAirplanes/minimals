@@ -17,6 +17,7 @@ const documents = {
     "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.AccountProfileEditorFragmentDoc,
     "\n  fragment Listing on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    images {\n      id\n    }\n    category {\n      name\n    }\n  }\n": types.ListingFragmentDoc,
     "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n": types.ListingCategoryEditFragmentDoc,
+    "\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n": types.ListingEditFragmentDoc,
     "\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n": types.ListingListEditFragmentDoc,
     "\n  fragment ListingType on ListingType {\n    id\n    name\n  }\n": types.ListingTypeFragmentDoc,
     "\n  fragment QuickListingEdit on QuickListingEdit {\n    id\n    price\n    isPublished\n    quantity\n    title\n    serialNumber\n    partNumber\n    unit\n    msrp\n    acceptsOffers\n  }\n": types.QuickListingEditFragmentDoc,
@@ -38,6 +39,7 @@ const documents = {
     "\n  mutation listingList($listing: ListingListEditInput!) {\n    listingList(listing: $listing) {\n      ...ListingListEdit\n    }\n  }\n  \n": types.ListingListDocument,
     "\n  mutation quickUser($id: String!, $profileEdit: QuickUserEditInput!) {\n    quickUser(id: $id, profileEdit: $profileEdit) {\n      ...QuickUserEditor\n    }\n  }\n  \n": types.QuickUserDocument,
     "\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n": types.RegisterUserDocument,
+    "\n  mutation updateListing($listing: ListingEditInput!) {\n    listing(listing: $listing) {\n      ...ListingEdit\n    }\n  }\n  \n": types.UpdateListingDocument,
     "\n  mutation updateListingCategory($category: ListingCategoryEditInput!) {\n    updateListingCategory(category: $category) {\n      ...ListingCategoryEdit\n    }\n  }\n  \n": types.UpdateListingCategoryDocument,
     "\n  mutation updateListingType($type: ListingTypeInput!) {\n    updateListingType(type: $type) {\n      ...ListingType\n    }\n  }\n  \n": types.UpdateListingTypeDocument,
     "\n  mutation updateQuickListing($listing: QuickListingEditInput!) {\n    quickListing(listing: $listing) {\n      ...QuickListingEdit\n    }\n  }\n  \n": types.UpdateQuickListingDocument,
@@ -52,6 +54,7 @@ const documents = {
     "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
     "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n": types.CurrentAccountProfileDocument,
     "\n  query listingCategories(\n    $first: Int = 50\n    $after: String\n    $order: [ListingCategorySortInput!]\n    $where: ListingCategoryFilterInput\n  ) {\n    data: listingCategories(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        id\n        name\n        parentId\n        listable\n      }\n    }\n  }\n": types.ListingCategoriesDocument,
+    "\n  query listingEdit($id: UUID!) {\n    listingEdit(id: $id) {\n      ...ListingEdit\n    }\n  }\n  \n": types.ListingEditDocument,
     "\n  query listingStatistics {\n    listingStatistics {\n      all\n      published\n      draft\n    }\n  }\n": types.ListingStatisticsDocument,
     "\n  query listingTypes(\n    $first: Int = 50\n    $after: String\n    $order: [ListingTypeSortInput!]\n    $where: ListingTypeFilterInput\n  ) {\n    data: listingTypes(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...ListingType\n      }\n    }\n  }\n  \n": types.ListingTypesDocument,
     "\n  query listings(\n    $first: Int = 10\n    $after: String\n    $order: [ListingSortInput!]\n    $where: ListingFilterInput\n  ) {\n    data: listings(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...Listing\n      }\n    }\n  }\n  \n": types.ListingsDocument,
@@ -95,6 +98,10 @@ export function graphql(source: "\n  fragment Listing on Listing {\n    __typena
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n"): (typeof documents)["\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n"): (typeof documents)["\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -182,6 +189,10 @@ export function graphql(source: "\n  mutation registerUser($user: RegisterUserEd
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation updateListing($listing: ListingEditInput!) {\n    listing(listing: $listing) {\n      ...ListingEdit\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateListing($listing: ListingEditInput!) {\n    listing(listing: $listing) {\n      ...ListingEdit\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation updateListingCategory($category: ListingCategoryEditInput!) {\n    updateListingCategory(category: $category) {\n      ...ListingCategoryEdit\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateListingCategory($category: ListingCategoryEditInput!) {\n    updateListingCategory(category: $category) {\n      ...ListingCategoryEdit\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -235,6 +246,10 @@ export function graphql(source: "\n  query currentAccountProfile {\n    currentA
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query listingCategories(\n    $first: Int = 50\n    $after: String\n    $order: [ListingCategorySortInput!]\n    $where: ListingCategoryFilterInput\n  ) {\n    data: listingCategories(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        id\n        name\n        parentId\n        listable\n      }\n    }\n  }\n"): (typeof documents)["\n  query listingCategories(\n    $first: Int = 50\n    $after: String\n    $order: [ListingCategorySortInput!]\n    $where: ListingCategoryFilterInput\n  ) {\n    data: listingCategories(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        id\n        name\n        parentId\n        listable\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query listingEdit($id: UUID!) {\n    listingEdit(id: $id) {\n      ...ListingEdit\n    }\n  }\n  \n"): (typeof documents)["\n  query listingEdit($id: UUID!) {\n    listingEdit(id: $id) {\n      ...ListingEdit\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

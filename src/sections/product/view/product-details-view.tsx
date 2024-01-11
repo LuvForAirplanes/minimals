@@ -1,3 +1,5 @@
+import { useParams } from 'react-router';
+import { useQuery } from '@apollo/client';
 import { useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
@@ -13,18 +15,20 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useGetProduct } from 'src/api/product';
 import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
+import { getListingEditQuery } from 'src/graphql/queries/listingEdit';
+import {
+  ListingEditQuery,
+  ListingEditFragment,
+  ListingEditQueryVariables,
+} from 'src/graphql/types/graphql';
 
 import Iconify from 'src/components/iconify';
 import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 
 import { ProductDetailsSkeleton } from '../product-skeleton';
-import ProductDetailsReview from '../product-details-review';
-import ProductDetailsSummary from '../product-details-summary';
 import ProductDetailsToolbar from '../product-details-toolbar';
-import ProductDetailsCarousel from '../product-details-carousel';
 import ProductDetailsDescription from '../product-details-description';
 
 // ----------------------------------------------------------------------
@@ -47,24 +51,29 @@ const SUMMARY = [
   },
 ];
 
-// ----------------------------------------------------------------------
-
-type Props = {
-  id: string;
-};
-
-export default function ProductDetailsView({ id }: Props) {
-  const { product, productLoading, productError } = useGetProduct(id);
-
+export default function ProductDetailsView() {
   const settings = useSettingsContext();
+
+  const params = useParams<{ id: string }>();
 
   const [currentTab, setCurrentTab] = useState('description');
 
   const [publish, setPublish] = useState('');
 
+  const {
+    data: productR,
+    loading,
+    error,
+  } = useQuery<ListingEditQuery, ListingEditQueryVariables>(getListingEditQuery, {
+    variables: {
+      id: params.id ?? '',
+    },
+  });
+  const product = productR?.listingEdit as ListingEditFragment | undefined;
+
   useEffect(() => {
     if (product) {
-      setPublish(product?.publish);
+      setPublish(product.isPublished ? 'published' : '');
     }
   }, [product]);
 
@@ -81,7 +90,7 @@ export default function ProductDetailsView({ id }: Props) {
   const renderError = (
     <EmptyContent
       filled
-      title={`${productError?.message}`}
+      title={`${error?.message}`}
       action={
         <Button
           component={RouterLink}
@@ -109,11 +118,11 @@ export default function ProductDetailsView({ id }: Props) {
 
       <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid xs={12} md={6} lg={7}>
-          <ProductDetailsCarousel product={product} />
+          {/* <ProductDetailsCarousel product={product} /> */}
         </Grid>
 
         <Grid xs={12} md={6} lg={5}>
-          <ProductDetailsSummary disabledActions product={product} />
+          {/* <ProductDetailsSummary disabledActions product={product} /> */}
         </Grid>
       </Grid>
 
@@ -155,26 +164,27 @@ export default function ProductDetailsView({ id }: Props) {
               value: 'description',
               label: 'Description',
             },
-            {
-              value: 'reviews',
-              label: `Reviews (${product.reviews.length})`,
-            },
+            // {
+            //   value: 'reviews',
+            //   label: `Reviews (${product.reviews.length})`,
+            // },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
           ))}
         </Tabs>
 
         {currentTab === 'description' && (
-          <ProductDetailsDescription description={product?.description} />
+          <ProductDetailsDescription description={product?.content} />
         )}
 
         {currentTab === 'reviews' && (
-          <ProductDetailsReview
-            ratings={product.ratings}
-            reviews={product.reviews}
-            totalRatings={product.totalRatings}
-            totalReviews={product.totalReviews}
-          />
+          <Typography>Reviews will go here...</Typography>
+          // <ProductDetailsReview
+          //   ratings={product.ratings}
+          //   reviews={product.reviews}
+          //   totalRatings={product.totalRatings}
+          //   totalReviews={product.totalReviews}
+          // />
         )}
       </Card>
     </>
@@ -182,9 +192,9 @@ export default function ProductDetailsView({ id }: Props) {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      {productLoading && renderSkeleton}
+      {loading && renderSkeleton}
 
-      {productError && renderError}
+      {error && renderError}
 
       {product && renderProduct}
     </Container>

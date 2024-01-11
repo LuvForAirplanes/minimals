@@ -103,8 +103,9 @@ export default function ProductListView() {
               <Link
                 noWrap
                 color="inherit"
+                component={RouterLink}
                 variant="subtitle2"
-                onClick={() => {}}
+                href={paths.dashboard.product.details(d.row.id)}
                 sx={{ cursor: 'pointer' }}
               >
                 {d.row.title}
@@ -201,7 +202,7 @@ export default function ProductListView() {
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton
               color={quickEdit.value ? 'inherit' : 'default'}
-              onClick={() => navigate(`/dashboard/listing/${d.row.id}/edit`)}
+              onClick={() => navigate(`/dashboard/product/${d.row.id}/edit`)}
             >
               <Iconify icon="solar:pen-bold" />
             </IconButton>

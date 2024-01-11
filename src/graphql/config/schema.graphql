@@ -204,6 +204,21 @@ type ListingCategoryEdit {
   listable: Boolean!
 }
 
+type ListingEdit {
+  id: UUID!
+  title: String!
+  content: String!
+  serialNumber: String
+  partNumber: String
+  quantity: Int!
+  categoryId: String
+  unit: String!
+  price: Decimal!
+  msrp: Decimal
+  isPublished: Boolean!
+  acceptsOffers: Boolean!
+}
+
 type ListingImage {
   listing: Listing!
   listingId: UUID!
@@ -308,6 +323,7 @@ type Mutation {
   addListing(listing: ListingAddEditInput!): UUID!
   listingList(listing: ListingListEditInput!): ListingListEdit!
   quickListing(listing: QuickListingEditInput!): QuickListingEdit!
+  listing(listing: ListingEditInput!): ListingEdit!
   deleteListing(id: UUID ids: [UUID!]): Boolean!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
@@ -371,6 +387,7 @@ type Query {
   listingCategories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingCategorySortInput!] where: ListingCategoryFilterInput): ListingCategoriesConnection
   listings("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingSortInput!] where: ListingFilterInput): ListingsConnection
   quickListing(id: UUID!): QuickListingEdit!
+  listingEdit(id: UUID!): ListingEdit!
   listingStatistics: ListingStatistics!
   listingTypes("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingTypeSortInput!] where: ListingTypeFilterInput): ListingTypesConnection
   notices: [Notice!]!
@@ -872,6 +889,21 @@ input ListingCategorySortInput {
   updated: SortEnumType
   name: SortEnumType
   notes: SortEnumType
+}
+
+input ListingEditInput {
+  id: UUID!
+  title: String!
+  content: String!
+  serialNumber: String
+  partNumber: String
+  quantity: Int!
+  categoryId: String
+  unit: String!
+  price: Decimal!
+  msrp: Decimal
+  isPublished: Boolean!
+  acceptsOffers: Boolean!
 }
 
 input ListingFilterInput {
