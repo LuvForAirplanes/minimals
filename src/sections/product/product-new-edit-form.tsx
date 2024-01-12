@@ -23,10 +23,13 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import { PRODUCT_CATEGORY_GROUP_OPTIONS } from 'src/_mock';
 import { addListingMutation } from 'src/graphql/mutations/addListing';
+import { updateListingMutation } from 'src/graphql/mutations/updateListing';
 import {
   AddListingMutation,
   ListingEditFragment,
+  UpdateListingMutation,
   AddListingMutationVariables,
+  UpdateListingMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import { useSnackbar } from 'src/components/snackbar';
@@ -68,13 +71,9 @@ export default function ProductNewEditForm({ product }: Props) {
     title: product?.title ?? '',
     images:
       product?.images.map((i) => ({
-        preview: `/api/listings/images/${i.id}`,
-        path: i.id,
+        preview: `/api/listings/images/${i.id}.jpg`,
+        // path: `/api/listings/images/${i.id}.jpg`,
         name: i.id,
-        lastModified: new Date(),
-        size: 577081,
-        type: 'image/jpeg',
-        webkitRelativePath: '',
       })) ?? [],
     content: product?.content ?? '',
     serialNumber: product?.serialNumber ?? null,
@@ -92,15 +91,6 @@ export default function ProductNewEditForm({ product }: Props) {
     defaultValues,
   });
 
-  // useEffect(() => {
-  //   if (product) {
-  //     const p = product.images[0];
-  //     getFileFromUrl(`/api/listings/images/${p.id}`, p.id, 'image/jpeg').then((d) =>
-  //       methods.setValue('images', [d])
-  //     );
-  //   }
-  // }, [methods, product]);
-
   const {
     reset,
     watch,
@@ -110,31 +100,31 @@ export default function ProductNewEditForm({ product }: Props) {
   } = methods;
 
   const values = watch();
-  console.log(values.images);
-
-  // useEffect(() => {
-  //   if (currentProduct) {
-  //     reset(defaultValues);
-  //   }
-  // }, [currentProduct, defaultValues, reset]);
-
   const [addListing] = useMutation<AddListingMutation, AddListingMutationVariables>(
     addListingMutation
   );
+  const [updateListing] = useMutation<UpdateListingMutation, UpdateListingMutationVariables>(
+    updateListingMutation
+  );
   const uploadFile = async (id: string) => {
-    // Create a new FormData object
     const formData = new FormData();
+    const newImages = values!.images!.filter((i) => !i.preview.includes('api/listings'));
+    const existingImages = values!.images!.filter((i) => i.preview.includes('api/listings'));
 
-    // Append the file to the formData
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < values!.images!.length; i++) {
-      formData.append('files', values!.images![i]);
+    for (let i = 0; i < newImages.length; i++) {
+      formData.append('files', newImages[i]);
     }
+    formData.append('test', JSON.stringify(existingImages));
+    // existingImages.forEach((obj) => {
+    //   formData.append('existingFiles', JSON.stringify(obj));
+    // });
+    // formData.append('existingFiles', JSON.stringify(existingImages));
 
     // Send a POST request to the upload endpoint with the formData
     // and a header that specifies the content type as multipart/form-data
     try {
-      await axios.post(`/api/listings/${id}/upload`, formData, {
+      await axios.post(`/api/listings/${product!.id}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -147,25 +137,48 @@ export default function ProductNewEditForm({ product }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const v = methods.getValues();
-      await addListing({
-        variables: {
-          listing: {
-            acceptsOffers: v.acceptsOffers,
-            categoryId: v.categoryId,
-            isPublished: v.isPublished,
-            price: v.price,
-            quantity: v.quantity,
-            title: v.title,
-            unit: v.unit,
-            content: v.content,
-            msrp: v.msrp,
-            partNumber: v.partNumber,
-            serialNumber: v.serialNumber,
+      if (product) {
+        await updateListing({
+          variables: {
+            listing: {
+              id: product?.id ?? '',
+              acceptsOffers: v.acceptsOffers,
+              categoryId: v.categoryId,
+              isPublished: v.isPublished,
+              price: v.price,
+              quantity: v.quantity,
+              title: v.title,
+              unit: v.unit,
+              content: v.content,
+              msrp: v.msrp,
+              partNumber: v.partNumber,
+              serialNumber: v.serialNumber,
+              images: [],
+            },
           },
-        },
-      }).then((d) => uploadFile(d.data?.addListing));
+        }).then((d) => uploadFile(product!.id));
+        enqueueSnackbar('Listing update success!');
+      } else {
+        await addListing({
+          variables: {
+            listing: {
+              acceptsOffers: v.acceptsOffers,
+              categoryId: v.categoryId,
+              isPublished: v.isPublished,
+              price: v.price,
+              quantity: v.quantity,
+              title: v.title,
+              unit: v.unit,
+              content: v.content,
+              msrp: v.msrp,
+              partNumber: v.partNumber,
+              serialNumber: v.serialNumber,
+            },
+          },
+        }).then((d) => uploadFile(d.data?.addListing));
+        enqueueSnackbar('Listing create success!');
+      }
       reset();
-      enqueueSnackbar('Listing create success!');
       router.push(paths.dashboard.product.root);
       console.info('DATA', data);
     } catch (error) {
