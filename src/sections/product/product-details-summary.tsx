@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useMutation, useApolloClient } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -10,7 +12,12 @@ import Typography from '@mui/material/Typography';
 import { fCurrency } from 'src/utils/format-number';
 import { isDateInPastDay } from 'src/utils/extensions';
 
-import { ListingDetailsFragment } from 'src/graphql/types/graphql';
+import { toggleWatchMutation } from 'src/graphql/mutations/toggleWatch';
+import {
+  ToggleWatchMutation,
+  ListingDetailsFragment,
+  ToggleWatchMutationVariables,
+} from 'src/graphql/types/graphql';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -37,6 +44,7 @@ export default function ProductDetailsSummary({
   ...other
 }: Props) {
   const { id, price, title, quantity, msrp, added } = product;
+  const { enqueueSnackbar } = useSnackbar();
 
   // const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
 
@@ -49,7 +57,7 @@ export default function ProductDetailsSummary({
     title,
     price,
     quantity: quantity < 1 ? 0 : 1,
-    categoryName: product.category.name,
+    categoryName: product.category?.name,
     added,
   };
 
@@ -67,6 +75,33 @@ export default function ProductDetailsSummary({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
+
+  const client = useApolloClient();
+  const [toggleWatched] = useMutation<ToggleWatchMutation, ToggleWatchMutationVariables>(
+    toggleWatchMutation,
+    {
+      variables: {
+        listingId: product.id,
+      },
+      onCompleted: (d) => {
+        if (d.toggleWatch) {
+          enqueueSnackbar('Item placed on your watchlist.');
+        } else {
+          enqueueSnackbar('Item removed from your watchlist.');
+        }
+        console.log(client.cache.identify(product.id));
+        client.cache.modify({
+          id: `Listing:${product.id}`,
+          fields: {
+            watched() {
+              return d.toggleWatch;
+            },
+          },
+          /* broadcast: false // Include this to prevent automatic query refresh */
+        });
+      },
+    }
+  );
 
   const onSubmit = handleSubmit(async (data) => {
     // try {
@@ -124,8 +159,13 @@ export default function ProductDetailsSummary({
           display: 'inline-flex',
           alignItems: 'center',
         }}
+        onClick={() => toggleWatched()}
       >
-        <Iconify icon="solar:heart-bold" width={16} sx={{ mr: 1 }} />
+        <Iconify
+          icon={product.watched ? 'solar:heart-bold' : 'solar:heart-outline'}
+          width={16}
+          sx={{ mr: 1 }}
+        />
         Watch
       </Link>
 
@@ -203,9 +243,11 @@ export default function ProductDetailsSummary({
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
         <Stack spacing={2} alignItems="flex-start">
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {values.categoryName}
-          </Typography>
+          {values.categoryName && (
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {values.categoryName}
+            </Typography>
+          )}
 
           <Stack direction="row" alignItems="center" spacing={1}>
             <Typography variant="h5">{title}</Typography>

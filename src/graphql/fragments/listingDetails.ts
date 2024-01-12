@@ -18,8 +18,12 @@ export const ListingDetailsFragment = gql`
     added
     updated
     content
+    watched
     images {
       id
+    }
+    usersWatching {
+      userId
     }
     category {
       id

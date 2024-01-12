@@ -86,6 +86,7 @@ type ApplicationUser {
   posts: [UserPost!]!
   categories: [UserListingCategory!]!
   reviews: [ListingReview!]!
+  watchedItems: [UserListingWatch!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -157,14 +158,16 @@ type Listing {
   quantity: Int!
   acceptsOffers: Boolean!
   dateSold: DateTime
-  category: ListingCategory!
+  category: ListingCategory
   categoryId: String
   reviews: [ListingReview!]!
+  usersWatching: [UserListingWatch!]!
   id: UUID!
   added: DateTime!
   updated: DateTime!
   mainImageId: UUID
   ratings: [ListingRating!]!
+  watched: Boolean!
 }
 
 "A connection to a list of items."
@@ -356,6 +359,7 @@ type Mutation {
   uploadUserBackgroundImage(file: Upload! id: String!): Boolean!
   changeUserPassword(id: String! existingPassword: String! newPassword: String!): Boolean!
   registerUser(user: RegisterUserEditInput!): String!
+  toggleWatch(listingId: UUID!): Boolean!
 }
 
 type Notice {
@@ -493,6 +497,14 @@ type UserListingCategory {
   userId: String!
   category: ListingCategory!
   categoryId: String!
+}
+
+type UserListingWatch {
+  user: ApplicationUser!
+  userId: String!
+  listing: Listing!
+  listingId: UUID!
+  date: DateTime!
 }
 
 type UserNotificationsEdit {
@@ -647,6 +659,7 @@ input ApplicationUserFilterInput {
   posts: ListFilterInputTypeOfUserPostFilterInput
   categories: ListFilterInputTypeOfUserListingCategoryFilterInput
   reviews: ListFilterInputTypeOfListingReviewFilterInput
+  watchedItems: ListFilterInputTypeOfUserListingWatchFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -853,6 +866,13 @@ input ListFilterInputTypeOfUserListingCategoryFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfUserListingWatchFilterInput {
+  all: UserListingWatchFilterInput
+  none: UserListingWatchFilterInput
+  some: UserListingWatchFilterInput
+  any: Boolean
+}
+
 input ListFilterInputTypeOfUserPostFilterInput {
   all: UserPostFilterInput
   none: UserPostFilterInput
@@ -949,6 +969,7 @@ input ListingFilterInput {
   category: ListingCategoryFilterInput
   categoryId: StringOperationFilterInput
   reviews: ListFilterInputTypeOfListingReviewFilterInput
+  usersWatching: ListFilterInputTypeOfUserListingWatchFilterInput
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
@@ -1165,6 +1186,16 @@ input UserListingCategoryFilterInput {
   userId: StringOperationFilterInput
   category: ListingCategoryFilterInput
   categoryId: StringOperationFilterInput
+}
+
+input UserListingWatchFilterInput {
+  and: [UserListingWatchFilterInput!]
+  or: [UserListingWatchFilterInput!]
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+  listing: ListingFilterInput
+  listingId: UuidOperationFilterInput
+  date: DateTimeOperationFilterInput
 }
 
 input UserNotificationsEditInput {

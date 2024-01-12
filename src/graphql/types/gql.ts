@@ -17,7 +17,7 @@ const documents = {
     "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.AccountProfileEditorFragmentDoc,
     "\n  fragment Listing on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    images {\n      id\n    }\n    category {\n      name\n    }\n  }\n": types.ListingFragmentDoc,
     "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n": types.ListingCategoryEditFragmentDoc,
-    "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n": types.ListingDetailsFragmentDoc,
+    "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    watched\n    images {\n      id\n    }\n    usersWatching {\n      userId\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n": types.ListingDetailsFragmentDoc,
     "\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n": types.ListingEditFragmentDoc,
     "\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n": types.ListingListEditFragmentDoc,
     "\n  fragment ListingRating on ListingRating {\n    count\n    star\n    value\n  }\n": types.ListingRatingFragmentDoc,
@@ -43,6 +43,7 @@ const documents = {
     "\n  mutation listingList($listing: ListingListEditInput!) {\n    listingList(listing: $listing) {\n      ...ListingListEdit\n    }\n  }\n  \n": types.ListingListDocument,
     "\n  mutation quickUser($id: String!, $profileEdit: QuickUserEditInput!) {\n    quickUser(id: $id, profileEdit: $profileEdit) {\n      ...QuickUserEditor\n    }\n  }\n  \n": types.QuickUserDocument,
     "\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n": types.RegisterUserDocument,
+    "\n  mutation toggleWatch($listingId: UUID!) {\n    toggleWatch(listingId: $listingId)\n  }\n": types.ToggleWatchDocument,
     "\n  mutation updateListing($listing: ListingEditInput!) {\n    listing(listing: $listing) {\n      ...ListingEdit\n    }\n  }\n  \n": types.UpdateListingDocument,
     "\n  mutation updateListingCategory($category: ListingCategoryEditInput!) {\n    updateListingCategory(category: $category) {\n      ...ListingCategoryEdit\n    }\n  }\n  \n": types.UpdateListingCategoryDocument,
     "\n  mutation updateListingReview($review: ListingReviewEditInput!) {\n    updateListingReview(review: $review) {\n      ...ListingReviewEdit\n    }\n  }\n  \n": types.UpdateListingReviewDocument,
@@ -108,7 +109,7 @@ export function graphql(source: "\n  fragment ListingCategoryEdit on ListingCate
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"): (typeof documents)["\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"];
+export function graphql(source: "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    watched\n    images {\n      id\n    }\n    usersWatching {\n      userId\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"): (typeof documents)["\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    watched\n    images {\n      id\n    }\n    usersWatching {\n      userId\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -209,6 +210,10 @@ export function graphql(source: "\n  mutation quickUser($id: String!, $profileEd
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n"): (typeof documents)["\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation toggleWatch($listingId: UUID!) {\n    toggleWatch(listingId: $listingId)\n  }\n"): (typeof documents)["\n  mutation toggleWatch($listingId: UUID!) {\n    toggleWatch(listingId: $listingId)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
