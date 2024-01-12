@@ -225,21 +225,28 @@ export default function ProductDetailsSummary({
       </Button>
     </Stack>
   );
-  const renderRating = (
-    <Stack
-      direction="row"
-      alignItems="center"
-      sx={{
-        color: 'text.disabled',
-        typography: 'body2',
-      }}
-    >
-      <Rating size="small" value={product.ratingsAverage} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${product.totalReviews === 0 ? '0' : fShortenNumber(product.totalReviews)} review${
-        product.totalReviews === 1 ? '' : 's'
-      })`}
-    </Stack>
-  );
+  const renderRating =
+    product.ratings.length > 0 ? (
+      <Stack
+        direction="row"
+        alignItems="center"
+        sx={{
+          color: 'text.disabled',
+          typography: 'body2',
+        }}
+      >
+        <Rating
+          size="small"
+          value={product.ratingsAverage}
+          precision={0.1}
+          readOnly
+          sx={{ mr: 1 }}
+        />
+        {`(${product.totalReviews === 0 ? '0' : fShortenNumber(product.totalReviews)} review${
+          product.totalReviews === 1 ? '' : 's'
+        })`}
+      </Stack>
+    ) : null;
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>

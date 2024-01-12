@@ -16,5 +16,10 @@ export const listingEditFragment = gql`
     acceptsOffers
     categoryId
     content
+    images {
+      id
+      order
+      added
+    }
   }
 `;

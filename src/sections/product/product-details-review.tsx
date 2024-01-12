@@ -30,7 +30,7 @@ type Props = {
 export default function ProductDetailsReview({ ratings, reviews, listingId }: Props) {
   const review = useBoolean();
   const rr = ratings.map((r) => r.value);
-  const totalRatings = rr.reduce((a, b) => a + b) / rr.length;
+  const totalRatings = rr.length === 0 ? 0 : rr.reduce((a, b) => a + b) / rr.length;
   const total = sumBy(ratings, (star) => star.count);
 
   const renderSummary = (

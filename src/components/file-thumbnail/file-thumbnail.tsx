@@ -30,10 +30,10 @@ export default function FileThumbnail({
   const format = fileFormat(path || preview);
 
   const renderContent =
-    format === 'image' && imageView ? (
+    (format === 'image' && imageView) || typeof file === 'string' ? (
       <Box
         component="img"
-        src={preview}
+        src={typeof file === 'string' ? file : preview}
         sx={{
           width: 1,
           height: 1,

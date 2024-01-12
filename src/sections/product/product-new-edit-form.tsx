@@ -64,10 +64,18 @@ export default function ProductNewEditForm({ product }: Props) {
     isPublished: Yup.boolean().required('Published is required').default(true),
     acceptsOffers: Yup.boolean().required('Accepts offers is required').default(true),
   });
-
   const defaultValues = {
     title: product?.title ?? '',
-    images: [],
+    images:
+      product?.images.map((i) => ({
+        preview: `/api/listings/images/${i.id}`,
+        path: i.id,
+        name: i.id,
+        lastModified: new Date(),
+        size: 577081,
+        type: 'image/jpeg',
+        webkitRelativePath: '',
+      })) ?? [],
     content: product?.content ?? '',
     serialNumber: product?.serialNumber ?? null,
     partNumber: product?.partNumber ?? null,
@@ -84,6 +92,15 @@ export default function ProductNewEditForm({ product }: Props) {
     defaultValues,
   });
 
+  // useEffect(() => {
+  //   if (product) {
+  //     const p = product.images[0];
+  //     getFileFromUrl(`/api/listings/images/${p.id}`, p.id, 'image/jpeg').then((d) =>
+  //       methods.setValue('images', [d])
+  //     );
+  //   }
+  // }, [methods, product]);
+
   const {
     reset,
     watch,
@@ -93,6 +110,7 @@ export default function ProductNewEditForm({ product }: Props) {
   } = methods;
 
   const values = watch();
+  console.log(values.images);
 
   // useEffect(() => {
   //   if (currentProduct) {
@@ -155,7 +173,7 @@ export default function ProductNewEditForm({ product }: Props) {
     }
   });
   const handleDrop = useCallback(
-    (acceptedFiles: any[]) => {
+    (acceptedFiles: File[]) => {
       const files = values.images || [];
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {

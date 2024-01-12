@@ -26,14 +26,11 @@ type AccountProfileEdit {
 
 type Address {
   attention: String
-  completeAddress: String!
-  completeAddressLine: String!
   line1: String
   line2: String
   mak: String
   postalCode: PostalCode
   postalCodeId: String
-  postalCodeIdResolved: String!
   postalExt: String
   user: ApplicationUser!
   userId: String!
@@ -52,9 +49,7 @@ type ApplicationUser {
   suffix: String
   gender: String
   birthdate: DateTime
-  knownAsResolved: String
   knownAs: String
-  fullName: String!
   registered: DateTime
   lastLogin: DateTime
   updated: DateTime
@@ -104,6 +99,7 @@ type ApplicationUser {
   accessFailedCount: Int!
   following: Long!
   followers: Long!
+  fullName: String!
 }
 
 type Asset {
@@ -168,7 +164,7 @@ type Listing {
   mainImageId: UUID
   ratings: [ListingRating!]!
   totalReviews: Int!
-  ratingsAverage: Decimal!
+  ratingsAverage: Decimal
   watched: Boolean!
 }
 
@@ -223,6 +219,7 @@ type ListingEdit {
   msrp: Decimal
   isPublished: Boolean!
   acceptsOffers: Boolean!
+  images: [ListingImage!]!
 }
 
 type ListingImage {
@@ -599,14 +596,11 @@ input AddressFilterInput {
   and: [AddressFilterInput!]
   or: [AddressFilterInput!]
   attention: StringOperationFilterInput
-  completeAddress: StringOperationFilterInput
-  completeAddressLine: StringOperationFilterInput
   line1: StringOperationFilterInput
   line2: StringOperationFilterInput
   mak: StringOperationFilterInput
   postalCode: PostalCodeFilterInput
   postalCodeId: StringOperationFilterInput
-  postalCodeIdResolved: StringOperationFilterInput
   postalExt: StringOperationFilterInput
   user: ApplicationUserFilterInput
   userId: StringOperationFilterInput
@@ -614,6 +608,22 @@ input AddressFilterInput {
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
+}
+
+input AddressInput {
+  attention: String
+  line1: String
+  line2: String
+  mak: String
+  postalCode: PostalCodeInput
+  postalCodeId: String
+  postalExt: String
+  user: ApplicationUserInput!
+  userId: String!
+  priority: Int!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
 }
 
 input ApplicationUserFilterInput {
@@ -627,9 +637,7 @@ input ApplicationUserFilterInput {
   suffix: StringOperationFilterInput
   gender: StringOperationFilterInput
   birthdate: DateTimeOperationFilterInput
-  knownAsResolved: StringOperationFilterInput
   knownAs: StringOperationFilterInput
-  fullName: StringOperationFilterInput
   registered: DateTimeOperationFilterInput
   lastLogin: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
@@ -679,6 +687,65 @@ input ApplicationUserFilterInput {
   accessFailedCount: IntOperationFilterInput
 }
 
+input ApplicationUserInput {
+  businessName: String
+  prefix: String
+  firstName: String
+  middleName: String
+  lastName: String
+  suffix: String
+  gender: String
+  birthdate: DateTime
+  knownAs: String
+  registered: DateTime
+  lastLogin: DateTime
+  updated: DateTime
+  approved: Boolean
+  approvedById: String
+  approvedBy: ApplicationUserInput
+  sellerApproved: Boolean
+  sellerApprovedById: String
+  sellerApprovedBy: ApplicationUserInput
+  approvedUsers: [ApplicationUserInput!]!
+  sellerApprovedUsers: [ApplicationUserInput!]!
+  profileImage: [Byte!]
+  backgroundImage: [Byte!]
+  about: String!
+  location: String
+  job: String
+  listings: [ListingInput!]!
+  sentMessages: [MessageInput!]!
+  receivedMessages: [MessageInput!]!
+  myFriends: [FriendInput!]!
+  friends: [FriendInput!]!
+  addresses: [AddressInput!]!
+  website: String
+  telegramUsername: String
+  notifyOnMessage: Boolean!
+  churchGroup: String!
+  church: String
+  postResponses: [UserPostResponseInput!]!
+  posts: [UserPostInput!]!
+  categories: [UserListingCategoryInput!]!
+  reviews: [ListingReviewInput!]!
+  watchedItems: [UserListingWatchInput!]!
+  id: String!
+  userName: String
+  normalizedUserName: String
+  email: String
+  normalizedEmail: String
+  emailConfirmed: Boolean!
+  passwordHash: String
+  securityStamp: String
+  concurrencyStamp: String
+  phoneNumber: String
+  phoneNumberConfirmed: Boolean!
+  twoFactorEnabled: Boolean!
+  lockoutEnd: DateTime
+  lockoutEnabled: Boolean!
+  accessFailedCount: Int!
+}
+
 input ApplicationUserSortInput {
   businessName: SortEnumType
   prefix: SortEnumType
@@ -688,9 +755,7 @@ input ApplicationUserSortInput {
   suffix: SortEnumType
   gender: SortEnumType
   birthdate: SortEnumType
-  knownAsResolved: SortEnumType
   knownAs: SortEnumType
-  fullName: SortEnumType
   registered: SortEnumType
   lastLogin: SortEnumType
   updated: SortEnumType
@@ -788,6 +853,14 @@ input FriendFilterInput {
   friendUserId: StringOperationFilterInput
   friendUser: ApplicationUserFilterInput
   befriended: DateTimeOperationFilterInput
+}
+
+input FriendInput {
+  userId: String!
+  user: ApplicationUserInput!
+  friendUserId: String!
+  friendUser: ApplicationUserInput!
+  befriended: DateTime!
 }
 
 input IntOperationFilterInput {
@@ -923,6 +996,17 @@ input ListingCategoryFilterInput {
   notes: StringOperationFilterInput
 }
 
+input ListingCategoryInput {
+  parentId: String
+  parent: ListingCategoryInput
+  listable: Boolean!
+  id: String!
+  added: DateTime!
+  updated: DateTime!
+  name: String!
+  notes: String
+}
+
 input ListingCategorySortInput {
   parentId: SortEnumType
   parent: ListingCategorySortInput
@@ -947,6 +1031,7 @@ input ListingEditInput {
   msrp: Decimal
   isPublished: Boolean!
   acceptsOffers: Boolean!
+  images: [ListingImageInput!]!
 }
 
 input ListingFilterInput {
@@ -989,6 +1074,42 @@ input ListingImageFilterInput {
   updated: DateTimeOperationFilterInput
 }
 
+input ListingImageInput {
+  listing: ListingInput!
+  listingId: UUID!
+  definition: [Byte!]!
+  order: Int!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
+input ListingInput {
+  title: String!
+  content: String!
+  price: Decimal!
+  msrp: Decimal
+  partNumber: String
+  serialNumber: String
+  unit: String!
+  user: ApplicationUserInput
+  userId: String
+  type: ListingTypeInput!
+  typeId: String!
+  images: [ListingImageInput!]!
+  isPublished: Boolean!
+  quantity: Int!
+  acceptsOffers: Boolean!
+  dateSold: DateTime
+  category: ListingCategoryInput
+  categoryId: String
+  reviews: [ListingReviewInput!]!
+  usersWatching: [UserListingWatchInput!]!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
 input ListingListEditInput {
   id: UUID!
   quantity: Int!
@@ -1018,6 +1139,20 @@ input ListingReviewFilterInput {
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
+}
+
+input ListingReviewInput {
+  listing: ListingInput!
+  listingId: UUID!
+  user: ApplicationUserInput!
+  userId: String!
+  title: String
+  content: String!
+  rating: Decimal!
+  verified: Boolean!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
 }
 
 input ListingSortInput {
@@ -1075,6 +1210,19 @@ input MessageFilterInput {
   updated: DateTimeOperationFilterInput
 }
 
+input MessageInput {
+  subject: String!
+  date: DateTime!
+  content: String!
+  fromUserId: String!
+  fromUser: ApplicationUserInput!
+  toUserId: String!
+  toUser: ApplicationUserInput!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
 input PostalCodeFilterInput {
   and: [PostalCodeFilterInput!]
   or: [PostalCodeFilterInput!]
@@ -1082,6 +1230,13 @@ input PostalCodeFilterInput {
   country: StringOperationFilterInput
   id: StringOperationFilterInput
   state: StringOperationFilterInput
+}
+
+input PostalCodeInput {
+  city: String!
+  country: String
+  id: String!
+  state: String!
 }
 
 input QuickListingEditInput {
@@ -1190,6 +1345,13 @@ input UserListingCategoryFilterInput {
   categoryId: StringOperationFilterInput
 }
 
+input UserListingCategoryInput {
+  user: ApplicationUserInput!
+  userId: String!
+  category: ListingCategoryInput!
+  categoryId: String!
+}
+
 input UserListingWatchFilterInput {
   and: [UserListingWatchFilterInput!]
   or: [UserListingWatchFilterInput!]
@@ -1198,6 +1360,14 @@ input UserListingWatchFilterInput {
   listing: ListingFilterInput
   listingId: UuidOperationFilterInput
   date: DateTimeOperationFilterInput
+}
+
+input UserListingWatchInput {
+  user: ApplicationUserInput!
+  userId: String!
+  listing: ListingInput!
+  listingId: UUID!
+  date: DateTime!
 }
 
 input UserNotificationsEditInput {
@@ -1220,6 +1390,19 @@ input UserPostFilterInput {
   updated: DateTimeOperationFilterInput
 }
 
+input UserPostInput {
+  userId: String!
+  user: ApplicationUserInput!
+  content: String!
+  title: String!
+  media: [Byte!]!
+  date: DateTime!
+  responses: [UserPostResponseInput!]!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
+}
+
 input UserPostResponseFilterInput {
   and: [UserPostResponseFilterInput!]
   or: [UserPostResponseFilterInput!]
@@ -1233,6 +1416,19 @@ input UserPostResponseFilterInput {
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
+}
+
+input UserPostResponseInput {
+  postId: UUID!
+  post: UserPostInput!
+  userId: String!
+  user: ApplicationUserInput!
+  content: String!
+  isReaction: Boolean!
+  date: DateTime!
+  id: UUID!
+  added: DateTime!
+  updated: DateTime!
 }
 
 input UuidOperationFilterInput {
