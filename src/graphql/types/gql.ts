@@ -17,9 +17,12 @@ const documents = {
     "\n  fragment AccountProfileEditor on AccountProfileEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.AccountProfileEditorFragmentDoc,
     "\n  fragment Listing on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    images {\n      id\n    }\n    category {\n      name\n    }\n  }\n": types.ListingFragmentDoc,
     "\n  fragment ListingCategoryEdit on ListingCategoryEdit {\n    id\n    name\n    parentId\n    listable\n  }\n": types.ListingCategoryEditFragmentDoc,
-    "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n": types.ListingDetailsFragmentDoc,
+    "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n": types.ListingDetailsFragmentDoc,
     "\n  fragment ListingEdit on ListingEdit {\n    id\n    title\n    content\n    serialNumber\n    partNumber\n    quantity\n    categoryId\n    unit\n    price\n    msrp\n    isPublished\n    acceptsOffers\n    categoryId\n    content\n  }\n": types.ListingEditFragmentDoc,
     "\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n": types.ListingListEditFragmentDoc,
+    "\n  fragment ListingRating on ListingRating {\n    count\n    star\n    value\n  }\n": types.ListingRatingFragmentDoc,
+    "\n  fragment ListingReview on ListingReview {\n    __typename\n    id\n    added\n    content\n    title\n    rating\n    title\n    updated\n    verified\n    user {\n      id\n      userName\n    }\n  }\n": types.ListingReviewFragmentDoc,
+    "\n  fragment ListingReviewEdit on ListingReviewEdit {\n    id\n    listingId\n    title\n    content\n    rating\n  }\n": types.ListingReviewEditFragmentDoc,
     "\n  fragment ListingType on ListingType {\n    id\n    name\n  }\n": types.ListingTypeFragmentDoc,
     "\n  fragment QuickListingEdit on QuickListingEdit {\n    id\n    price\n    isPublished\n    quantity\n    title\n    serialNumber\n    partNumber\n    unit\n    msrp\n    acceptsOffers\n  }\n": types.QuickListingEditFragmentDoc,
     "\n  fragment QuickUserEditor on QuickUserEdit {\n    id\n    about\n    businessName\n    email\n    firstName\n    lastName\n    job\n    location\n    phone\n    telegramUsername\n    username\n    website\n  }\n": types.QuickUserEditorFragmentDoc,
@@ -42,6 +45,7 @@ const documents = {
     "\n  mutation registerUser($user: RegisterUserEditInput!) {\n    registerUser(user: $user)\n  }\n": types.RegisterUserDocument,
     "\n  mutation updateListing($listing: ListingEditInput!) {\n    listing(listing: $listing) {\n      ...ListingEdit\n    }\n  }\n  \n": types.UpdateListingDocument,
     "\n  mutation updateListingCategory($category: ListingCategoryEditInput!) {\n    updateListingCategory(category: $category) {\n      ...ListingCategoryEdit\n    }\n  }\n  \n": types.UpdateListingCategoryDocument,
+    "\n  mutation updateListingReview($review: ListingReviewEditInput!) {\n    updateListingReview(review: $review) {\n      ...ListingReviewEdit\n    }\n  }\n  \n": types.UpdateListingReviewDocument,
     "\n  mutation updateListingType($type: ListingTypeInput!) {\n    updateListingType(type: $type) {\n      ...ListingType\n    }\n  }\n  \n": types.UpdateListingTypeDocument,
     "\n  mutation updateQuickListing($listing: QuickListingEditInput!) {\n    quickListing(listing: $listing) {\n      ...QuickListingEdit\n    }\n  }\n  \n": types.UpdateQuickListingDocument,
     "\n  mutation uploadCurrentBackgroundImage($file: Upload!) {\n    uploadCurrentBackgroundImage(file: $file)\n  }\n": types.UploadCurrentBackgroundImageDocument,
@@ -60,6 +64,7 @@ const documents = {
     "\n  query listingStatistics {\n    listingStatistics {\n      all\n      published\n      draft\n    }\n  }\n": types.ListingStatisticsDocument,
     "\n  query listingTypes(\n    $first: Int = 50\n    $after: String\n    $order: [ListingTypeSortInput!]\n    $where: ListingTypeFilterInput\n  ) {\n    data: listingTypes(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...ListingType\n      }\n    }\n  }\n  \n": types.ListingTypesDocument,
     "\n  query listings(\n    $first: Int = 10\n    $after: String\n    $order: [ListingSortInput!]\n    $where: ListingFilterInput\n  ) {\n    data: listings(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...Listing\n      }\n    }\n  }\n  \n": types.ListingsDocument,
+    "\n  query myListingReview($listingId: UUID!) {\n    myListingReview(listingId: $listingId) {\n      ...ListingReviewEdit\n    }\n  }\n  \n": types.MyListingReviewDocument,
     "\n  query quickListing($id: UUID!) {\n    quickListing(id: $id) {\n      ...QuickListingEdit\n    }\n  }\n  \n": types.QuickListingDocument,
     "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n": types.QuickUserProfileDocument,
     "\n  fragment SocialUser on ApplicationUser {\n    __typename\n    id\n    fullName\n    firstName\n    lastName\n    location\n    telegramUsername\n    email\n    phoneNumber\n    following\n    followers\n    listings\n    userName\n  }\n": types.SocialUserFragmentDoc,
@@ -103,7 +108,7 @@ export function graphql(source: "\n  fragment ListingCategoryEdit on ListingCate
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n"): (typeof documents)["\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      id\n      added\n      updated\n      user {\n        userName\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"): (typeof documents)["\n  fragment ListingDetails on Listing {\n    __typename\n    id\n    title\n    price\n    mainImageId\n    acceptsOffers\n    quantity\n    msrp\n    partNumber\n    isPublished\n    added\n    updated\n    content\n    images {\n      id\n    }\n    category {\n      id\n      name\n    }\n    reviews {\n      ...ListingReview\n    }\n    ratings {\n      ...ListingRating\n    }\n  }\n  \n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -112,6 +117,18 @@ export function graphql(source: "\n  fragment ListingEdit on ListingEdit {\n    
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n"): (typeof documents)["\n  fragment ListingListEdit on ListingListEdit {\n    id\n    price\n    isPublished\n    quantity\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingRating on ListingRating {\n    count\n    star\n    value\n  }\n"): (typeof documents)["\n  fragment ListingRating on ListingRating {\n    count\n    star\n    value\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingReview on ListingReview {\n    __typename\n    id\n    added\n    content\n    title\n    rating\n    title\n    updated\n    verified\n    user {\n      id\n      userName\n    }\n  }\n"): (typeof documents)["\n  fragment ListingReview on ListingReview {\n    __typename\n    id\n    added\n    content\n    title\n    rating\n    title\n    updated\n    verified\n    user {\n      id\n      userName\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment ListingReviewEdit on ListingReviewEdit {\n    id\n    listingId\n    title\n    content\n    rating\n  }\n"): (typeof documents)["\n  fragment ListingReviewEdit on ListingReviewEdit {\n    id\n    listingId\n    title\n    content\n    rating\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -203,6 +220,10 @@ export function graphql(source: "\n  mutation updateListingCategory($category: L
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation updateListingReview($review: ListingReviewEditInput!) {\n    updateListingReview(review: $review) {\n      ...ListingReviewEdit\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateListingReview($review: ListingReviewEditInput!) {\n    updateListingReview(review: $review) {\n      ...ListingReviewEdit\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation updateListingType($type: ListingTypeInput!) {\n    updateListingType(type: $type) {\n      ...ListingType\n    }\n  }\n  \n"): (typeof documents)["\n  mutation updateListingType($type: ListingTypeInput!) {\n    updateListingType(type: $type) {\n      ...ListingType\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -272,6 +293,10 @@ export function graphql(source: "\n  query listingTypes(\n    $first: Int = 50\n
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query listings(\n    $first: Int = 10\n    $after: String\n    $order: [ListingSortInput!]\n    $where: ListingFilterInput\n  ) {\n    data: listings(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...Listing\n      }\n    }\n  }\n  \n"): (typeof documents)["\n  query listings(\n    $first: Int = 10\n    $after: String\n    $order: [ListingSortInput!]\n    $where: ListingFilterInput\n  ) {\n    data: listings(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...Listing\n      }\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query myListingReview($listingId: UUID!) {\n    myListingReview(listingId: $listingId) {\n      ...ListingReviewEdit\n    }\n  }\n  \n"): (typeof documents)["\n  query myListingReview($listingId: UUID!) {\n    myListingReview(listingId: $listingId) {\n      ...ListingReviewEdit\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

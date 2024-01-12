@@ -19,6 +19,8 @@ import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
 import { getListingQuery } from 'src/graphql/queries/listing';
 import {
   ListingDetailsQuery,
+  ListingReviewFragment,
+  ListingRatingFragment,
   ListingDetailsFragment,
   ListingDetailsQueryVariables,
 } from 'src/graphql/types/graphql';
@@ -28,6 +30,7 @@ import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 
 import { ProductDetailsSkeleton } from '../product-skeleton';
+import ProductDetailsReview from '../product-details-review';
 import ProductDetailsToolbar from '../product-details-toolbar';
 import ProductDetailsSummary from '../product-details-summary';
 import ProductDetailsCarousel from '../product-details-carousel';
@@ -182,13 +185,11 @@ export default function ProductDetailsView() {
         )}
 
         {currentTab === 'reviews' && (
-          <Typography>Reviews will go here...</Typography>
-          // <ProductDetailsReview
-          //   ratings={product.ratings}
-          //   reviews={product.reviews}
-          //   totalRatings={product.totalRatings}
-          //   totalReviews={product.totalReviews}
-          // />
+          <ProductDetailsReview
+            listingId={product.id}
+            ratings={product!.ratings! as ListingRatingFragment[]}
+            reviews={product!.reviews! as ListingReviewFragment[]}
+          />
         )}
       </Card>
     </>

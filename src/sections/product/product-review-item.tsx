@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Rating from '@mui/material/Rating';
 import Avatar from '@mui/material/Avatar';
@@ -7,18 +6,18 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { fDate } from 'src/utils/format-time';
 
-import Iconify from 'src/components/iconify';
+import { ListingReviewFragment } from 'src/graphql/types/graphql';
 
-import { IProductReview } from 'src/types/product';
+import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  review: IProductReview;
+  review: ListingReviewFragment;
 };
 
 export default function ProductReviewItem({ review }: Props) {
-  const { name, rating, comment, postedAt, avatarUrl, attachments, isPurchased } = review;
+  const { title, rating, content, added, user, verified } = review;
 
   const renderInfo = (
     <Stack
@@ -34,7 +33,7 @@ export default function ProductReviewItem({ review }: Props) {
       }}
     >
       <Avatar
-        src={avatarUrl}
+        src={`/api/avatars/user/${user.userName}`}
         sx={{
           width: { xs: 48, md: 64 },
           height: { xs: 48, md: 64 },
@@ -42,8 +41,8 @@ export default function ProductReviewItem({ review }: Props) {
       />
 
       <ListItemText
-        primary={name}
-        secondary={fDate(postedAt)}
+        primary={title}
+        secondary={fDate(added)}
         primaryTypographyProps={{
           noWrap: true,
           typography: 'subtitle2',
@@ -62,7 +61,7 @@ export default function ProductReviewItem({ review }: Props) {
     <Stack spacing={1} flexGrow={1}>
       <Rating size="small" value={rating} precision={0.1} readOnly />
 
-      {isPurchased && (
+      {verified && (
         <Stack
           direction="row"
           alignItems="center"
@@ -76,9 +75,9 @@ export default function ProductReviewItem({ review }: Props) {
         </Stack>
       )}
 
-      <Typography variant="body2">{comment}</Typography>
+      <Typography variant="body2">{content}</Typography>
 
-      {!!attachments?.length && (
+      {/* {!!attachments?.length && (
         <Stack direction="row" flexWrap="wrap" spacing={1} sx={{ pt: 1 }}>
           {attachments.map((attachment) => (
             <Box
@@ -90,17 +89,15 @@ export default function ProductReviewItem({ review }: Props) {
             />
           ))}
         </Stack>
-      )}
+      )} */}
 
       <Stack direction="row" spacing={2} sx={{ pt: 1.5 }}>
         <Stack direction="row" alignItems="center" sx={{ typography: 'caption' }}>
-          <Iconify icon="solar:like-outline" width={16} sx={{ mr: 0.5 }} />
-          123
+          <Iconify icon="solar:like-outline" width={16} sx={{ mr: 0.5 }} />1
         </Stack>
 
         <Stack direction="row" alignItems="center" sx={{ typography: 'caption' }}>
-          <Iconify icon="solar:dislike-outline" width={16} sx={{ mr: 0.5 }} />
-          34
+          <Iconify icon="solar:dislike-outline" width={16} sx={{ mr: 0.5 }} />0
         </Stack>
       </Stack>
     </Stack>

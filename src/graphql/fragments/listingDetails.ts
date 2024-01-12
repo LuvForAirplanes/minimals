@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
 
+import { ListingReviewFragment } from './listingReview';
+import { listingRatingFragment } from './listingRating';
+
 export const ListingDetailsFragment = gql`
   fragment ListingDetails on Listing {
     __typename
@@ -23,12 +26,12 @@ export const ListingDetailsFragment = gql`
       name
     }
     reviews {
-      id
-      added
-      updated
-      user {
-        userName
-      }
+      ...ListingReview
+    }
+    ratings {
+      ...ListingRating
     }
   }
+  ${ListingReviewFragment}
+  ${listingRatingFragment}
 `;

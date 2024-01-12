@@ -12,9 +12,9 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { fShortenNumber } from 'src/utils/format-number';
 
-import Iconify from 'src/components/iconify';
+import { ListingRatingFragment, ListingReviewFragment } from 'src/graphql/types/graphql';
 
-import { IProductReview } from 'src/types/product';
+import Iconify from 'src/components/iconify';
 
 import ProductReviewList from './product-review-list';
 import ProductReviewNewForm from './product-review-new-form';
@@ -22,28 +22,19 @@ import ProductReviewNewForm from './product-review-new-form';
 // ----------------------------------------------------------------------
 
 type Props = {
-  totalRatings: number;
-  totalReviews: number;
-  ratings: {
-    name: string;
-    starCount: number;
-    reviewCount: number;
-  }[];
-  reviews: IProductReview[];
+  ratings: ListingRatingFragment[];
+  reviews: ListingReviewFragment[];
+  listingId: string;
 };
 
-export default function ProductDetailsReview({
-  totalRatings,
-  totalReviews,
-  ratings,
-  reviews,
-}: Props) {
+export default function ProductDetailsReview({ ratings, reviews, listingId }: Props) {
   const review = useBoolean();
-
-  const total = sumBy(ratings, (star) => star.starCount);
+  const rr = ratings.map((r) => r.value);
+  const totalRatings = rr.reduce((a, b) => a + b) / rr.length;
+  const total = sumBy(ratings, (star) => star.count);
 
   const renderSummary = (
-    <Stack spacing={1} alignItems="center" justifyContent="center">
+    <Stack spacing={1} alignItems="center" justifyContent="center" sx={{ mt: 3, mb: 3 }}>
       <Typography variant="subtitle2">Average rating</Typography>
 
       <Typography variant="h2">{totalRatings}/5</Typography>
@@ -51,7 +42,7 @@ export default function ProductDetailsReview({
       <Rating readOnly value={totalRatings} precision={0.1} />
 
       <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        ({fShortenNumber(totalReviews)} reviews)
+        ({reviews.length === 0 ? '0' : fShortenNumber(reviews.length)} reviews)
       </Typography>
     </Stack>
   );
@@ -74,15 +65,15 @@ export default function ProductDetailsReview({
         .slice(0)
         .reverse()
         .map((rating) => (
-          <Stack key={rating.name} direction="row" alignItems="center">
+          <Stack key={rating.star} direction="row" alignItems="center">
             <Typography variant="subtitle2" component="span" sx={{ width: 42 }}>
-              {rating.name}
+              {rating.star} Star
             </Typography>
 
             <LinearProgress
               color="inherit"
               variant="determinate"
-              value={(rating.starCount / total) * 100}
+              value={(rating.count / total) * 100}
               sx={{
                 mx: 2,
                 flexGrow: 1,
@@ -97,7 +88,7 @@ export default function ProductDetailsReview({
                 color: 'text.secondary',
               }}
             >
-              {fShortenNumber(rating.reviewCount)}
+              {fShortenNumber(rating.value)}
             </Typography>
           </Stack>
         ))}
@@ -141,7 +132,7 @@ export default function ProductDetailsReview({
 
       <ProductReviewList reviews={reviews} />
 
-      <ProductReviewNewForm open={review.value} onClose={review.onFalse} />
+      <ProductReviewNewForm open={review.value} listingId={listingId} onClose={review.onFalse} />
     </>
   );
 }

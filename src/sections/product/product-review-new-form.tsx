@@ -1,7 +1,8 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useQuery, useMutation } from '@apollo/client';
 
 import Stack from '@mui/material/Stack';
 import Rating from '@mui/material/Rating';
@@ -14,27 +15,35 @@ import DialogContent from '@mui/material/DialogContent';
 import FormHelperText from '@mui/material/FormHelperText';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import { getListingQuery } from 'src/graphql/queries/listing';
+import { myListingReviewQuery } from 'src/graphql/queries/myListingReview';
+import { updateListingReviewMutation } from 'src/graphql/mutations/updateListingReview';
+import {
+  MyListingReviewQuery,
+  ListingReviewEditFragment,
+  UpdateListingReviewMutation,
+  MyListingReviewQueryVariables,
+  UpdateListingReviewMutationVariables,
+} from 'src/graphql/types/graphql';
 
-// ----------------------------------------------------------------------
+import FormProvider, { RHFTextField } from 'src/components/hook-form';
 
 interface Props extends DialogProps {
   onClose: VoidFunction;
+  listingId: string;
 }
 
-export default function ProductReviewNewForm({ onClose, ...other }: Props) {
+export default function ProductReviewNewForm({ onClose, listingId, ...other }: Props) {
   const ReviewSchema = Yup.object().shape({
+    content: Yup.string().required('Review is required'),
+    title: Yup.string().notRequired(),
     rating: Yup.number().min(1, 'Rating must be greater than or equal to 1'),
-    review: Yup.string().required('Review is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
     rating: 0,
-    review: '',
-    name: '',
-    email: '',
+    content: '',
+    title: '',
   };
 
   const methods = useForm({
@@ -42,6 +51,7 @@ export default function ProductReviewNewForm({ onClose, ...other }: Props) {
     defaultValues,
   });
 
+  const [existingId, setExistingId] = useState<string | null>(null);
   const {
     reset,
     control,
@@ -49,9 +59,50 @@ export default function ProductReviewNewForm({ onClose, ...other }: Props) {
     formState: { errors, isSubmitting },
   } = methods;
 
+  useQuery<MyListingReviewQuery, MyListingReviewQueryVariables>(myListingReviewQuery, {
+    variables: {
+      listingId,
+    },
+    onCompleted: (d) => {
+      const data = d.myListingReview as ListingReviewEditFragment;
+      setExistingId(data.id);
+      methods.reset({
+        content: data.content,
+        rating: data.rating,
+        title: data.title,
+      });
+    },
+  });
+
+  const [addReview] = useMutation<
+    UpdateListingReviewMutation,
+    UpdateListingReviewMutationVariables
+  >(updateListingReviewMutation, {
+    refetchQueries: [getListingQuery],
+    onCompleted: (d) => {
+      const data = d.updateListingReview as ListingReviewEditFragment;
+      setExistingId(data.id);
+      methods.reset({
+        content: data.content,
+        rating: data.rating,
+        title: data.title,
+      });
+    },
+  });
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const values = methods.getValues();
+      await addReview({
+        variables: {
+          review: {
+            content: values.content,
+            listingId,
+            rating: values.rating,
+            title: values.title,
+            id: existingId,
+          },
+        },
+      });
       reset();
       onClose();
       console.info('DATA', data);
@@ -92,11 +143,21 @@ export default function ProductReviewNewForm({ onClose, ...other }: Props) {
 
           {!!errors.rating && <FormHelperText error> {errors.rating?.message}</FormHelperText>}
 
-          <RHFTextField name="review" label="Review *" multiline rows={3} sx={{ mt: 3 }} />
+          <RHFTextField
+            name="title"
+            label="Title"
+            placeholder="(title not required)"
+            sx={{ mt: 3 }}
+          />
 
-          <RHFTextField name="name" label="Name *" sx={{ mt: 3 }} />
-
-          <RHFTextField name="email" label="Email *" sx={{ mt: 3 }} />
+          <RHFTextField
+            name="content"
+            label="Review *"
+            multiline
+            rows={3}
+            sx={{ mt: 3 }}
+            placeholder="Your review goes here..."
+          />
         </DialogContent>
 
         <DialogActions>

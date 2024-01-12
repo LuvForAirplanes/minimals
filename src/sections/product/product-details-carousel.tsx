@@ -69,7 +69,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
   const theme = useTheme();
 
   const slides = product.images.map((img) => ({
-    src: img.id,
+    src: `/api/listings/images/${img.id}`,
   }));
 
   const lightbox = useLightBox(slides);
@@ -119,7 +119,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
           <Image
             key={slide.src}
             alt={slide.src}
-            src={`/api/listings/images/${slide.src}`}
+            src={slide.src}
             ratio="1/1"
             onClick={() => lightbox.onOpen(slide.src)}
             sx={{ cursor: 'zoom-in' }}
@@ -148,7 +148,7 @@ export default function ProductDetailsCarousel({ product }: Props) {
             <Avatar
               key={item.src}
               alt={item.src}
-              src={`/api/listings/images/${item.src}`}
+              src={item.src}
               variant="rounded"
               sx={{
                 width: THUMB_SIZE,

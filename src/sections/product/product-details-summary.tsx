@@ -5,10 +5,10 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import { fCurrency } from 'src/utils/format-number';
+import { isDateInPastDay } from 'src/utils/extensions';
 
 import { ListingDetailsFragment } from 'src/graphql/types/graphql';
 
@@ -36,7 +36,7 @@ export default function ProductDetailsSummary({
   disabledActions,
   ...other
 }: Props) {
-  const { id, price, title, quantity, msrp } = product;
+  const { id, price, title, quantity, msrp, added } = product;
 
   // const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
 
@@ -49,6 +49,8 @@ export default function ProductDetailsSummary({
     title,
     price,
     quantity: quantity < 1 ? 0 : 1,
+    categoryName: product.category.name,
+    added,
   };
 
   const methods = useForm({
@@ -123,20 +125,8 @@ export default function ProductDetailsSummary({
           alignItems: 'center',
         }}
       >
-        <Iconify icon="mingcute:add-line" width={16} sx={{ mr: 1 }} />
-        Compare
-      </Link>
-
-      <Link
-        variant="subtitle2"
-        sx={{
-          color: 'text.secondary',
-          display: 'inline-flex',
-          alignItems: 'center',
-        }}
-      >
         <Iconify icon="solar:heart-bold" width={16} sx={{ mr: 1 }} />
-        Favorite
+        Watch
       </Link>
 
       <Link
@@ -168,7 +158,6 @@ export default function ProductDetailsSummary({
           onIncrease={() => setValue('quantity', values.quantity + 1)}
           onDecrease={() => setValue('quantity', values.quantity - 1)}
         />
-
         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
           Available: {quantity}
         </Typography>
@@ -196,13 +185,6 @@ export default function ProductDetailsSummary({
       </Button>
     </Stack>
   );
-
-  const renderSubDescription = (
-    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      There is no subtitle...
-    </Typography>
-  );
-
   const renderRating = (
     <Stack
       direction="row"
@@ -217,51 +199,25 @@ export default function ProductDetailsSummary({
     </Stack>
   );
 
-  const renderLabels = (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      <Label color="info">New</Label>
-      <Label color="error">Sale</Label>
-    </Stack>
-  );
-
-  const renderInventoryType = (
-    // <Box
-    //   component="span"
-    //   sx={{
-    //     typography: 'overline',
-    //     color:
-    //       (inventoryType === 'out of stock' && 'error.main') ||
-    //       (inventoryType === 'low stock' && 'warning.main') ||
-    //       'success.main',
-    //   }}
-    // >
-    //   {inventoryType}
-    // </Box>
-    <Typography>Inventory Type here</Typography>
-  );
-
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
         <Stack spacing={2} alignItems="flex-start">
-          {renderLabels}
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {values.categoryName}
+          </Typography>
 
-          {renderInventoryType}
-
-          <Typography variant="h5">{title}</Typography>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Typography variant="h5">{title}</Typography>
+            {isDateInPastDay(new Date(values.added)) && <Label color="info">New</Label>}
+          </Stack>
 
           {renderRating}
 
           {renderPrice}
-
-          {renderSubDescription}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
         {renderQuantity}
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
 
         {renderActions}
 

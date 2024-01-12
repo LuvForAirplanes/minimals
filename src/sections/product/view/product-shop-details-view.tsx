@@ -22,7 +22,6 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import CartIcon from '../common/cart-icon';
 import { useCheckoutContext } from '../../checkout/context';
-import ProductDetailsReview from '../product-details-review';
 import { ProductDetailsSkeleton } from '../product-skeleton';
 import ProductDetailsDescription from '../product-details-description';
 
@@ -165,14 +164,14 @@ export default function ProductShopDetailsView({ id }: Props) {
           <ProductDetailsDescription description={product?.description} />
         )}
 
-        {currentTab === 'reviews' && (
+        {/* {currentTab === 'reviews' && (
           <ProductDetailsReview
             ratings={product.ratings}
             reviews={product.reviews}
             totalRatings={product.totalRatings}
             totalReviews={product.totalReviews}
           />
-        )}
+        )} */}
       </Card>
     </>
   );

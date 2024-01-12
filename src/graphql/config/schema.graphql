@@ -164,6 +164,7 @@ type Listing {
   added: DateTime!
   updated: DateTime!
   mainImageId: UUID
+  ratings: [ListingRating!]!
 }
 
 "A connection to a list of items."
@@ -236,14 +237,32 @@ type ListingListEdit {
   isPublished: Boolean!
 }
 
+type ListingRating {
+  star: Int!
+  value: Int!
+  count: Int!
+}
+
 type ListingReview {
   listing: Listing!
   listingId: UUID!
   user: ApplicationUser!
   userId: String!
+  title: String
+  content: String!
+  rating: Decimal!
+  verified: Boolean!
   id: UUID!
   added: DateTime!
   updated: DateTime!
+}
+
+type ListingReviewEdit {
+  id: UUID
+  listingId: UUID!
+  title: String
+  content: String!
+  rating: Decimal!
 }
 
 type ListingStatistics {
@@ -325,6 +344,7 @@ type Mutation {
   quickListing(listing: QuickListingEditInput!): QuickListingEdit!
   listing(listing: ListingEditInput!): ListingEdit!
   deleteListing(id: UUID ids: [UUID!]): Boolean!
+  updateListingReview(review: ListingReviewEditInput!): ListingReviewEdit!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
   deleteListingType(id: String!): Boolean!
@@ -389,6 +409,7 @@ type Query {
   quickListing(id: UUID!): QuickListingEdit!
   listingEdit(id: UUID!): ListingEdit!
   listingStatistics: ListingStatistics!
+  myListingReview(listingId: UUID!): ListingReviewEdit
   listingTypes("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String order: [ListingTypeSortInput!] where: ListingTypeFilterInput): ListingTypesConnection
   notices: [Notice!]!
   quickUserProfile(id: String!): QuickUserEdit!
@@ -952,6 +973,14 @@ input ListingListEditInput {
   isPublished: Boolean!
 }
 
+input ListingReviewEditInput {
+  id: UUID
+  listingId: UUID!
+  title: String
+  content: String!
+  rating: Decimal!
+}
+
 input ListingReviewFilterInput {
   and: [ListingReviewFilterInput!]
   or: [ListingReviewFilterInput!]
@@ -959,6 +988,10 @@ input ListingReviewFilterInput {
   listingId: UuidOperationFilterInput
   user: ApplicationUserFilterInput
   userId: StringOperationFilterInput
+  title: StringOperationFilterInput
+  content: StringOperationFilterInput
+  rating: DecimalOperationFilterInput
+  verified: BooleanOperationFilterInput
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
