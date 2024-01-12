@@ -42,7 +42,8 @@ export default function ProductDetailsReview({ ratings, reviews, listingId }: Pr
       <Rating readOnly value={totalRatings} precision={0.1} />
 
       <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        ({reviews.length === 0 ? '0' : fShortenNumber(reviews.length)} reviews)
+        ({reviews.length === 0 ? '0' : fShortenNumber(reviews.length)} review
+        {reviews.length === 1 ? '' : 's'})
       </Typography>
     </Stack>
   );

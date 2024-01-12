@@ -167,6 +167,8 @@ type Listing {
   updated: DateTime!
   mainImageId: UUID
   ratings: [ListingRating!]!
+  totalReviews: Int!
+  ratingsAverage: Decimal!
   watched: Boolean!
 }
 

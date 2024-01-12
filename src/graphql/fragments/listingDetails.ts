@@ -19,6 +19,8 @@ export const ListingDetailsFragment = gql`
     updated
     content
     watched
+    totalReviews
+    ratingsAverage
     images {
       id
     }

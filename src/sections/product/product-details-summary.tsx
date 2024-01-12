@@ -5,12 +5,13 @@ import { useMutation, useApolloClient } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import { Rating } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { fCurrency } from 'src/utils/format-number';
 import { isDateInPastDay } from 'src/utils/extensions';
+import { fCurrency, fShortenNumber } from 'src/utils/format-number';
 
 import { toggleWatchMutation } from 'src/graphql/mutations/toggleWatch';
 import {
@@ -97,7 +98,6 @@ export default function ProductDetailsSummary({
               return d.toggleWatch;
             },
           },
-          /* broadcast: false // Include this to prevent automatic query refresh */
         });
       },
     }
@@ -234,8 +234,10 @@ export default function ProductDetailsSummary({
         typography: 'body2',
       }}
     >
-      {/* <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${fShortenNumber(totalReviews)} reviews)`} */}
+      <Rating size="small" value={product.ratingsAverage} precision={0.1} readOnly sx={{ mr: 1 }} />
+      {`(${product.totalReviews === 0 ? '0' : fShortenNumber(product.totalReviews)} review${
+        product.totalReviews === 1 ? '' : 's'
+      })`}
     </Stack>
   );
 
