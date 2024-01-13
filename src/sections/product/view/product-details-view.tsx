@@ -1,28 +1,30 @@
+import { useSnackbar } from 'notistack';
 import { useParams } from 'react-router';
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
 import { getListingQuery } from 'src/graphql/queries/listing';
+import { toggleListingPublicityMutation } from 'src/graphql/mutations/toggleListingPublicity';
 import {
   ListingDetailsQuery,
   ListingReviewFragment,
   ListingRatingFragment,
   ListingDetailsFragment,
   ListingDetailsQueryVariables,
+  ToggleListingPublicityMutation,
+  ToggleListingPublicityMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import Iconify from 'src/components/iconify';
@@ -38,26 +40,28 @@ import ProductDetailsDescription from '../product-details-description';
 
 // ----------------------------------------------------------------------
 
-const SUMMARY = [
-  {
-    title: '100% Original',
-    description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
-    icon: 'solar:verified-check-bold',
-  },
-  {
-    title: '10 Day Replacement',
-    description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
-    icon: 'solar:clock-circle-bold',
-  },
-  {
-    title: 'Year Warranty',
-    description: 'Cotton candy gingerbread cake I love sugar sweet.',
-    icon: 'solar:shield-check-bold',
-  },
-];
+// const SUMMARY = [
+//   {
+//     title: '100% Original',
+//     description: 'Chocolate bar candy canes ice cream toffee cookie halvah.',
+//     icon: 'solar:verified-check-bold',
+//   },
+//   {
+//     title: '10 Day Replacement',
+//     description: 'Marshmallow biscuit donut dragée fruitcake wafer.',
+//     icon: 'solar:clock-circle-bold',
+//   },
+//   {
+//     title: 'Year Warranty',
+//     description: 'Cotton candy gingerbread cake I love sugar sweet.',
+//     icon: 'solar:shield-check-bold',
+//   },
+// ];
 
 export default function ProductDetailsView() {
   const settings = useSettingsContext();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const params = useParams<{ id: string }>();
 
@@ -80,13 +84,32 @@ export default function ProductDetailsView() {
 
   useEffect(() => {
     if (product) {
-      setPublish(product.isPublished ? 'published' : '');
+      setPublish(product.isPublished ? 'published' : 'draft');
     }
   }, [product]);
 
-  const handleChangePublish = useCallback((newValue: string) => {
-    setPublish(newValue);
-  }, []);
+  const [toggleStatus] = useMutation<
+    ToggleListingPublicityMutation,
+    ToggleListingPublicityMutationVariables
+  >(toggleListingPublicityMutation, {
+    variables: {
+      id: product?.id,
+    },
+    onCompleted: (d) => {
+      if (d.toggleListingPublicity) {
+        enqueueSnackbar('Listing published.', { variant: 'success' });
+      } else {
+        enqueueSnackbar('Listing drafted.', { variant: 'info' });
+      }
+    },
+  });
+  const handleChangePublish = useCallback(
+    (newValue: string) => {
+      setPublish(newValue);
+      toggleStatus();
+    },
+    [toggleStatus]
+  );
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
@@ -133,7 +156,7 @@ export default function ProductDetailsView() {
         </Grid>
       </Grid>
 
-      <Box
+      {/* <Box
         gap={5}
         display="grid"
         gridTemplateColumns={{
@@ -155,9 +178,9 @@ export default function ProductDetailsView() {
             </Typography>
           </Box>
         ))}
-      </Box>
+      </Box> */}
 
-      <Card>
+      <Card style={{ marginTop: 50 }}>
         <Tabs
           value={currentTab}
           onChange={handleChangeTab}

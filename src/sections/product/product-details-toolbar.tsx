@@ -59,7 +59,7 @@ export default function ProductDetailsToolbar({
         <Box sx={{ flexGrow: 1 }} />
 
         {publish === 'published' && (
-          <Tooltip title="Go Live">
+          <Tooltip title="View Live Listing">
             <IconButton component={RouterLink} href={liveLink}>
               <Iconify icon="eva:external-link-fill" />
             </IconButton>

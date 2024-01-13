@@ -1,14 +1,25 @@
-import { useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
 import { useMutation, useApolloClient } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { Rating } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import {
+  Dialog,
+  Rating,
+  Tooltip,
+  TextField,
+  IconButton,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  InputAdornment,
+  DialogContentText,
+} from '@mui/material';
 
 import { isDateInPastDay } from 'src/utils/extensions';
 import { fCurrency, fShortenNumber } from 'src/utils/format-number';
@@ -69,6 +80,7 @@ export default function ProductDetailsSummary({
   const { reset, watch, setValue, handleSubmit } = methods;
 
   const values = watch();
+  const [sharing, setSharing] = useState<boolean>(false);
 
   useEffect(() => {
     if (product) {
@@ -176,6 +188,7 @@ export default function ProductDetailsSummary({
           display: 'inline-flex',
           alignItems: 'center',
         }}
+        onClick={() => setSharing(true)}
       >
         <Iconify icon="solar:share-bold" width={16} sx={{ mr: 1 }} />
         Share
@@ -274,6 +287,44 @@ export default function ProductDetailsSummary({
 
         {renderShare}
       </Stack>
+      <Dialog
+        open={sharing}
+        fullWidth
+        onClose={() => setSharing(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Share Product</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Copy this link to share with your friends:
+          </DialogContentText>
+          <TextField
+            sx={{ mt: 1 }}
+            fullWidth
+            disabled
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="start">
+                  <Tooltip title="Copy to the clipboard.">
+                    <IconButton
+                      onClick={() => navigator.clipboard.writeText(document.location.href)}
+                    >
+                      <Iconify icon="solar:copy-bold-duotone" />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+            value={document.location.href}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSharing(false)} autoFocus>
+            Got It
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormProvider>
   );
 }

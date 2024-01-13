@@ -346,6 +346,7 @@ type Mutation {
   quickListing(listing: QuickListingEditInput!): QuickListingEdit!
   listing(listing: ListingEditInput!): ListingEdit!
   deleteListing(id: UUID ids: [UUID!]): Boolean!
+  toggleListingPublicity(id: UUID!): Boolean!
   updateListingReview(review: ListingReviewEditInput!): ListingReviewEdit!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
