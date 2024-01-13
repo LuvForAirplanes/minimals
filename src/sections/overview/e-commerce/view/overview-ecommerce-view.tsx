@@ -7,22 +7,22 @@ import { useMockedUser } from 'src/hooks/use-mocked-user';
 
 import { MotivationIllustration } from 'src/assets/illustrations';
 import {
-  _ecommerceNewProducts,
+  _ecommerceNewListings,
   _ecommerceBestSalesman,
   _ecommerceSalesOverview,
-  _ecommerceLatestProducts,
+  _ecommerceLatestListings,
 } from 'src/_mock';
 
 import { useSettingsContext } from 'src/components/settings';
 
 import EcommerceWelcome from '../ecommerce-welcome';
-import EcommerceNewProducts from '../ecommerce-new-products';
+import EcommerceNewListings from '../ecommerce-new-listings';
 import EcommerceYearlySales from '../ecommerce-yearly-sales';
 import EcommerceBestSalesman from '../ecommerce-best-salesman';
 import EcommerceSaleByGender from '../ecommerce-sale-by-gender';
 import EcommerceSalesOverview from '../ecommerce-sales-overview';
 import EcommerceWidgetSummary from '../ecommerce-widget-summary';
-import EcommerceLatestProducts from '../ecommerce-latest-products';
+import EcommerceLatestListings from '../ecommerce-latest-listings';
 import EcommerceCurrentBalance from '../ecommerce-current-balance';
 
 // ----------------------------------------------------------------------
@@ -51,12 +51,12 @@ export default function OverviewEcommerceView() {
         </Grid>
 
         <Grid xs={12} md={4}>
-          <EcommerceNewProducts list={_ecommerceNewProducts} />
+          <EcommerceNewListings list={_ecommerceNewListings} />
         </Grid>
 
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
-            title="Product Sold"
+            title="Listing Sold"
             percent={2.6}
             total={765}
             chart={{
@@ -171,7 +171,7 @@ export default function OverviewEcommerceView() {
             tableData={_ecommerceBestSalesman}
             tableLabels={[
               { id: 'name', label: 'Seller' },
-              { id: 'category', label: 'Product' },
+              { id: 'category', label: 'Listing' },
               { id: 'country', label: 'Country', align: 'center' },
               { id: 'totalAmount', label: 'Total', align: 'right' },
               { id: 'rank', label: 'Rank', align: 'right' },
@@ -180,7 +180,7 @@ export default function OverviewEcommerceView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <EcommerceLatestProducts title="Latest Products" list={_ecommerceLatestProducts} />
+          <EcommerceLatestListings title="Latest Listings" list={_ecommerceLatestListings} />
         </Grid>
       </Grid>
     </Container>

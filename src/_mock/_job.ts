@@ -98,9 +98,9 @@ const CONTENT = `
 <h6>Key Responsibilities</h6>
 <br/>
 <ul>
-  <li>Working with agency for design drawing detail, quotation and local production.</li>
+  <li>Working with agency for design drawing detail, quotation and local listingion.</li>
   <li>Produce window displays, signs, interior displays, floor plans and special promotions displays.</li>
-  <li>Change displays to promote new product launches and reflect festive or seasonal themes.</li>
+  <li>Change displays to promote new listing launches and reflect festive or seasonal themes.</li>
   <li>Planning and executing the open/renovation/ closing store procedure.</li>
   <li>Follow‐up store maintenance procedure and keep updating SKU In &amp; Out.</li>
   <li>Monitor costs and work within budget.</li>
@@ -113,9 +113,9 @@ const CONTENT = `
 <h6>Why You'll Love Working Here</h6>
 <br/>
 <ul>
-  <li>Working with agency for design drawing detail, quotation and local production.</li>
+  <li>Working with agency for design drawing detail, quotation and local listingion.</li>
   <li>Produce window displays, signs, interior displays, floor plans and special promotions displays.</li>
-  <li>Change displays to promote new product launches and reflect festive or seasonal themes.</li>
+  <li>Change displays to promote new listing launches and reflect festive or seasonal themes.</li>
   <li>Planning and executing the open/renovation/ closing store procedure.</li>
   <li>Follow‐up store maintenance procedure and keep updating SKU In &amp; Out.</li>
   <li>Monitor costs and work within budget.</li>

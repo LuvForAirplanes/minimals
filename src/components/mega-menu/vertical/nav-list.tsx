@@ -11,7 +11,7 @@ import NavItem from './nav-item';
 import { NavListProps } from '../types';
 import MenuTags from '../common/menu-tags';
 import NavSubList from '../common/nav-sub-list';
-import MenuProducts from '../common/menu-products';
+import MenuListings from '../common/menu-listings';
 import MenuMoreLink from '../common/menu-more-link';
 
 // ----------------------------------------------------------------------
@@ -97,11 +97,11 @@ export default function NavList({ data, slotProps }: NavListProps) {
               <MenuMoreLink path={data.moreLink.path} title={data.moreLink.title} />
             )}
 
-            {!!data.products && (
+            {!!data.listings && (
               <>
                 <Divider sx={{ borderStyle: 'dashed' }} />
 
-                <MenuProducts products={data.products} displayProduct={slotProps?.displayProduct} />
+                <MenuListings listings={data.listings} displayListing={slotProps?.displayListing} />
               </>
             )}
 

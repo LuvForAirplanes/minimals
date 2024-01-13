@@ -20,10 +20,10 @@ const PricingPage = lazy(() => import('src/pages/pricing'));
 const PaymentPage = lazy(() => import('src/pages/payment'));
 const ComingSoonPage = lazy(() => import('src/pages/coming-soon'));
 const MaintenancePage = lazy(() => import('src/pages/maintenance'));
-// PRODUCT
-const ProductListPage = lazy(() => import('src/pages/product/list'));
-const ProductDetailsPage = lazy(() => import('src/pages/product/details'));
-const ProductCheckoutPage = lazy(() => import('src/pages/product/checkout'));
+// LISTING
+const ListingListPage = lazy(() => import('src/pages/listing/list'));
+const ListingDetailsPage = lazy(() => import('src/pages/listing/details'));
+const ListingCheckoutPage = lazy(() => import('src/pages/listing/checkout'));
 // BLOG
 const PostListPage = lazy(() => import('src/pages/post/list'));
 const PostDetailsPage = lazy(() => import('src/pages/post/details'));
@@ -44,12 +44,12 @@ export const mainRoutes = [
       { path: 'contact-us', element: <ContactPage /> },
       { path: 'faqs', element: <FaqsPage /> },
       {
-        path: 'product',
+        path: 'listing',
         children: [
-          { element: <ProductListPage />, index: true },
-          { path: 'list', element: <ProductListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'checkout', element: <ProductCheckoutPage /> },
+          { element: <ListingListPage />, index: true },
+          { path: 'list', element: <ListingListPage /> },
+          { path: ':id', element: <ListingDetailsPage /> },
+          { path: 'checkout', element: <ListingCheckoutPage /> },
         ],
       },
       {

@@ -22,7 +22,7 @@ export default function MenuTags({ tags, ...other }: Props) {
           fontWeight: 'fontWeightBold',
         }}
       >
-        Hot Products:
+        Hot Listings:
       </Typography>
 
       {tags.map((tag, index) => (

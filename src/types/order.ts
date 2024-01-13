@@ -46,7 +46,7 @@ export type IOrderCustomer = {
   ipAddress: string;
 };
 
-export type IOrderProductItem = {
+export type IOrderListingItem = {
   id: string;
   sku: string;
   name: string;
@@ -68,6 +68,6 @@ export type IOrderItem = {
   history: IOrderHistory;
   customer: IOrderCustomer;
   delivery: IOrderDelivery;
-  items: IOrderProductItem[];
+  items: IOrderListingItem[];
   createdAt: Date;
 };

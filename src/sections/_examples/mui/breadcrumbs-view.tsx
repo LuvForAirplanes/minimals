@@ -140,7 +140,7 @@ export default function BreadcrumbsView() {
               ]}
               action={
                 <Button variant="contained" startIcon={<Iconify icon="mingcute:add-line" />}>
-                  New Product
+                  New Listing
                 </Button>
               }
             />

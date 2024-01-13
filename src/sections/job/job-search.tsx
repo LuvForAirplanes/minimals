@@ -33,9 +33,9 @@ export default function JobSearch({ query, results, onSearch, hrefItem }: Props)
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (query) {
       if (event.key === 'Enter') {
-        const selectProduct = results.filter((job) => job.title === query)[0];
+        const selectListing = results.filter((job) => job.title === query)[0];
 
-        handleClick(selectProduct.id);
+        handleClick(selectListing.id);
       }
     }
   };

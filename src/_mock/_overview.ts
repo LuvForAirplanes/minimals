@@ -157,7 +157,7 @@ export const _ecommerceBestSalesman = [...Array(5)].map((_, index) => {
   };
 });
 
-export const _ecommerceLatestProducts = [...Array(5)].map((_, index) => {
+export const _ecommerceLatestListings = [...Array(5)].map((_, index) => {
   const colors = (index === 0 && ['#2EC4B6', '#E71D36', '#FF9F1C', '#011627']) ||
     (index === 1 && ['#92140C', '#FFCF99']) ||
     (index === 2 && ['#0CECDD', '#FFF338', '#FF67E7', '#C400FF', '#52006A', '#046582']) ||
@@ -166,17 +166,17 @@ export const _ecommerceLatestProducts = [...Array(5)].map((_, index) => {
   return {
     id: _mock.id(index),
     colors,
-    name: _mock.productName(index),
+    name: _mock.listingName(index),
     price: _mock.number.price(index),
-    coverUrl: _mock.image.product(index),
+    coverUrl: _mock.image.listing(index),
     priceSale: [1, 3].includes(index) ? _mock.number.price(index) : 0,
   };
 });
 
-export const _ecommerceNewProducts = [...Array(5)].map((_, index) => ({
+export const _ecommerceNewListings = [...Array(5)].map((_, index) => ({
   id: _mock.id(index),
-  name: _mock.productName(index),
-  coverUrl: _mock.image.product(index),
+  name: _mock.listingName(index),
+  coverUrl: _mock.image.listing(index),
 }));
 
 // BANKING

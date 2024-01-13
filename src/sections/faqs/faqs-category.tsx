@@ -36,7 +36,7 @@ const CATEGORIES = [
     href: '#',
   },
   {
-    label: 'Problem with the Product',
+    label: 'Problem with the Listing',
     icon: '/assets/icons/faqs/ic_package.svg',
     href: '#',
   },

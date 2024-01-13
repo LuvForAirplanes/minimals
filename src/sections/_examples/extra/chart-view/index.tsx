@@ -111,10 +111,10 @@ export default function ChartView() {
             <CardContent>
               <ChartColumnStacked
                 series={[
-                  { name: 'Product A', data: [44, 55, 41, 67, 22, 43] },
-                  { name: 'Product B', data: [13, 23, 20, 8, 13, 27] },
-                  { name: 'Product C', data: [11, 17, 15, 15, 21, 14] },
-                  { name: 'Product D', data: [21, 7, 25, 13, 22, 8] },
+                  { name: 'Listing A', data: [44, 55, 41, 67, 22, 43] },
+                  { name: 'Listing B', data: [13, 23, 20, 8, 13, 27] },
+                  { name: 'Listing C', data: [11, 17, 15, 15, 21, 14] },
+                  { name: 'Listing D', data: [21, 7, 25, 13, 22, 8] },
                 ]}
               />
             </CardContent>

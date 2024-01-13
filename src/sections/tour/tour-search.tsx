@@ -34,9 +34,9 @@ export default function TourSearch({ query, results, onSearch, hrefItem }: Props
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (query) {
       if (event.key === 'Enter') {
-        const selectProduct = results.filter((tour) => tour.name === query)[0];
+        const selectListing = results.filter((tour) => tour.name === query)[0];
 
-        handleClick(selectProduct.id);
+        handleClick(selectListing.id);
       }
     }
   };

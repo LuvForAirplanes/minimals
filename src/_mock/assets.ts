@@ -269,7 +269,7 @@ export const _roles = [
 
 export const _postTitles = [
   '10 Essential Tips for Healthy Living',
-  'The Ultimate Guide to Productivity Hacks',
+  'The Ultimate Guide to Listingivity Hacks',
   'Exploring the Hidden Gems of [Destination]',
   'How to Master the Art of Public Speaking',
   'The Future of Artificial Intelligence: Trends and Insights',
@@ -296,7 +296,7 @@ export const _postTitles = [
 
 // ----------------------------------------------------------------------
 
-export const _productNames = [
+export const _listingNames = [
   'Nike Air Force 1 NDESTRUKT',
   'Foundations Matte Flip Flop',
   'Nike Air Zoom Pegasus 37 A.I.R. Chaz Bear',
@@ -366,7 +366,7 @@ export const _jobTitles = [
   'Accountant',
   'Customer Service Representative',
   'Nurse',
-  'Product Manager',
+  'Listing Manager',
   'Operations Manager',
   'Social Media Specialist',
   'Business Development Executive',

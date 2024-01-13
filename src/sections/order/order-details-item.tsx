@@ -11,7 +11,7 @@ import { fCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import { IOrderProductItem } from 'src/types/order';
+import { IOrderListingItem } from 'src/types/order';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ type Props = {
   discount: number;
   subTotal: number;
   totalAmount: number;
-  items: IOrderProductItem[];
+  items: IOrderListingItem[];
 };
 
 export default function OrderDetailsItems({

@@ -35,7 +35,7 @@ const ICONS = {
   banking: icon('ic_banking'),
   booking: icon('ic_booking'),
   invoice: icon('ic_invoice'),
-  product: icon('ic_product'),
+  listing: icon('ic_listing'),
   calendar: icon('ic_calendar'),
   disabled: icon('ic_disabled'),
   external: icon('ic_external'),
@@ -118,11 +118,11 @@ export function useNavData() {
             path: paths.dashboard.listingCategories.root,
           },
 
-          // PRODUCT
+          // LISTING
           {
-            title: t('products'),
-            path: paths.dashboard.product.root,
-            icon: ICONS.product,
+            title: t('listings'),
+            path: paths.dashboard.listing.root,
+            icon: ICONS.listing,
           },
 
           // ORDER

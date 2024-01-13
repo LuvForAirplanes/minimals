@@ -24,7 +24,7 @@ const ITEMS = [...Array(3)].map((__, index) => {
   return {
     id: _mock.id(index),
     total,
-    title: _mock.productName(index),
+    title: _mock.listingName(index),
     description: _mock.sentence(index),
     price: INVOICE_SERVICE_OPTIONS[index].price,
     service: INVOICE_SERVICE_OPTIONS[index].name,

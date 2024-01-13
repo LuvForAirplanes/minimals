@@ -151,7 +151,7 @@ export const _socials = [
 
 export const _homePlans = [...Array(3)].map((_, index) => ({
   license: ['Standard', 'Standard Plus', 'Extended'][index],
-  commons: ['One end products', '12 months updates', '6 months of support'],
+  commons: ['One end listings', '12 months updates', '6 months of support'],
   options: [
     'JavaScript version',
     'TypeScript version',
@@ -220,7 +220,7 @@ export const _testimonials = [
     postedDate: _mock.time(2),
     ratingNumber: _mock.number.rating(2),
     avatarUrl: _mock.image.avatar(2),
-    content: `It's a very good dashboard and we are really liking the product . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the product is one of the best in terms of design and application architecture. The team did a really good job.`,
+    content: `It's a very good dashboard and we are really liking the listing . We've done some things, like migrate to TS and implementing a react useContext api, to fit our job methodology but the listing is one of the best in terms of design and application architecture. The team did a really good job.`,
   },
   {
     name: _mock.fullName(3),
@@ -241,7 +241,7 @@ export const _testimonials = [
     postedDate: _mock.time(5),
     ratingNumber: _mock.number.rating(5),
     avatarUrl: _mock.image.avatar(5),
-    content: `Got a few questions after purchasing the product. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`,
+    content: `Got a few questions after purchasing the listing. The owner responded very fast and very helpfull. Overall the code is excellent and works very good. 5/5 stars!`,
   },
   {
     name: _mock.fullName(6),

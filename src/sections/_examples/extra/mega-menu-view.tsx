@@ -141,9 +141,9 @@ const NAV_ITEMS = [
     title: 'Item 1',
     path: '#',
     icon: <Iconify icon="carbon:accessibility-alt" sx={{ width: 1, height: 1 }} />,
-    products: [...Array(10)].map((_, index) => ({
-      name: _mock.productName(index),
-      coverUrl: _mock.image.product(index),
+    listings: [...Array(10)].map((_, index) => ({
+      name: _mock.listingName(index),
+      coverUrl: _mock.image.listing(index),
       path: '#',
     })),
     moreLink: {

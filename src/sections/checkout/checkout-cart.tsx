@@ -12,7 +12,7 @@ import EmptyContent from 'src/components/empty-content';
 
 import { useCheckoutContext } from './context';
 import CheckoutSummary from './checkout-summary';
-import CheckoutCartProductList from './checkout-cart-product-list';
+import CheckoutCartListingList from './checkout-cart-listing-list';
 
 // ----------------------------------------------------------------------
 
@@ -45,8 +45,8 @@ export default function CheckoutCart() {
               sx={{ pt: 5, pb: 10 }}
             />
           ) : (
-            <CheckoutCartProductList
-              products={checkout.items}
+            <CheckoutCartListingList
+              listings={checkout.items}
               onDelete={checkout.onDeleteCart}
               onIncreaseQuantity={checkout.onIncreaseQuantity}
               onDecreaseQuantity={checkout.onDecreaseQuantity}
@@ -56,7 +56,7 @@ export default function CheckoutCart() {
 
         <Button
           component={RouterLink}
-          href={paths.product.root}
+          href={paths.listing.root}
           color="inherit"
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" />}
         >

@@ -68,10 +68,10 @@ const SIMPLE_DATA = {
   ...createData('tasha mcneill', 'root', 'ceo, co-founder', _mock.image.avatar(1)),
   children: [
     {
-      ...createData('john stone', 'product design', 'lead', _mock.image.avatar(2)),
+      ...createData('john stone', 'listing design', 'lead', _mock.image.avatar(2)),
       children: [
         {
-          ...createData('rimsha wynn', 'product design', 'senior', _mock.image.avatar(3)),
+          ...createData('rimsha wynn', 'listing design', 'senior', _mock.image.avatar(3)),
           children: null,
         },
       ],
@@ -129,13 +129,13 @@ const DATA = {
   ...createData('tasha mcneill', 'root', 'ceo, co-founder', _mock.image.avatar(1)),
   children: [
     {
-      ...createData('product design', 'product design', null, null),
+      ...createData('listing design', 'listing design', null, null),
       children: [
         {
-          ...createData('john stone', 'product design', 'lead', _mock.image.avatar(2)),
+          ...createData('john stone', 'listing design', 'lead', _mock.image.avatar(2)),
           children: [
             {
-              ...createData('rimsha wynn', 'product design', 'senior', _mock.image.avatar(3)),
+              ...createData('rimsha wynn', 'listing design', 'senior', _mock.image.avatar(3)),
               children: null,
             },
           ],

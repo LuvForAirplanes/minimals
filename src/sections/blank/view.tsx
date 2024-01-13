@@ -70,7 +70,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import ListingQuickEditForm from '../product/view/listing-quick-edit-form';
+import ListingQuickEditForm from '../listing/view/listing-quick-edit-form';
 
 export default function BlankView() {
   const settings = useSettingsContext();
@@ -264,14 +264,14 @@ export default function BlankView() {
         heading="Listings"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Listing', href: paths.dashboard.product.root },
+          { name: 'Listing', href: paths.dashboard.listing.root },
           { name: 'List' },
         ]}
         action={
           <Box>
             <Button
               component={RouterLink}
-              href={paths.dashboard.product.new}
+              href={paths.dashboard.listing.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >

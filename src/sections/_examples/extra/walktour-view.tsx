@@ -17,10 +17,10 @@ import { paths } from 'src/routes/paths';
 import { MotivationIllustration } from 'src/assets/illustrations';
 import {
   _mock,
-  _ecommerceNewProducts,
+  _ecommerceNewListings,
   _ecommerceBestSalesman,
   _ecommerceSalesOverview,
-  _ecommerceLatestProducts,
+  _ecommerceLatestListings,
 } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
@@ -29,13 +29,13 @@ import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
 import ComponentHero from 'src/sections/_examples/component-hero';
 import EcommerceWelcome from 'src/sections/overview/e-commerce/ecommerce-welcome';
-import EcommerceNewProducts from 'src/sections/overview/e-commerce/ecommerce-new-products';
+import EcommerceNewListings from 'src/sections/overview/e-commerce/ecommerce-new-listings';
 import EcommerceYearlySales from 'src/sections/overview/e-commerce/ecommerce-yearly-sales';
 import EcommerceBestSalesman from 'src/sections/overview/e-commerce/ecommerce-best-salesman';
 import EcommerceSaleByGender from 'src/sections/overview/e-commerce/ecommerce-sale-by-gender';
 import EcommerceSalesOverview from 'src/sections/overview/e-commerce/ecommerce-sales-overview';
 import EcommerceWidgetSummary from 'src/sections/overview/e-commerce/ecommerce-widget-summary';
-import EcommerceLatestProducts from 'src/sections/overview/e-commerce/ecommerce-latest-products';
+import EcommerceLatestListings from 'src/sections/overview/e-commerce/ecommerce-latest-listings';
 import EcommerceCurrentBalance from 'src/sections/overview/e-commerce/ecommerce-current-balance';
 
 // ----------------------------------------------------------------------
@@ -255,12 +255,12 @@ export default function WalktourView() {
           </Grid>
 
           <Grid xs={12} md={4}>
-            <EcommerceNewProducts id="demo__2" list={_ecommerceNewProducts} />
+            <EcommerceNewListings id="demo__2" list={_ecommerceNewListings} />
           </Grid>
 
           <Grid xs={12} md={4}>
             <EcommerceWidgetSummary
-              title="Product Sold"
+              title="Listing Sold"
               percent={2.6}
               total={765}
               chart={{
@@ -377,7 +377,7 @@ export default function WalktourView() {
               tableData={_ecommerceBestSalesman}
               tableLabels={[
                 { id: 'name', label: 'Seller' },
-                { id: 'category', label: 'Product' },
+                { id: 'category', label: 'Listing' },
                 { id: 'country', label: 'Country', align: 'center' },
                 { id: 'totalAmount', label: 'Total', align: 'right' },
                 { id: 'rank', label: 'Rank', align: 'right' },
@@ -386,10 +386,10 @@ export default function WalktourView() {
           </Grid>
 
           <Grid xs={12} md={6} lg={4}>
-            <EcommerceLatestProducts
+            <EcommerceLatestListings
               id="demo__5"
-              title="Latest Products"
-              list={_ecommerceLatestProducts}
+              title="Latest Listings"
+              list={_ecommerceLatestListings}
             />
           </Grid>
         </Grid>

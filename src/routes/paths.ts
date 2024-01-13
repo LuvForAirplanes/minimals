@@ -35,12 +35,12 @@ export const paths = {
   freeUI: 'https://mui.com/store/items/minimal-dashboard-free/',
   figma:
     'https://www.figma.com/file/hjxMnGUJCjY7pX8lQbS7kn/%5BPreview%5D-Minimal-Web.v5.4.0?type=design&node-id=0-1&mode=design&t=2fxnS70DuiTLGzND-0',
-  product: {
-    root: `/product`,
-    checkout: `/product/checkout`,
-    details: (id: string) => `/product/${id}`,
+  listing: {
+    root: `/listing`,
+    checkout: `/listing/checkout`,
+    details: (id: string) => `/listing/${id}`,
     demo: {
-      details: `/product/${MOCK_ID}`,
+      details: `/listing/${MOCK_ID}`,
     },
   },
   post: {
@@ -97,14 +97,14 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
-    product: {
-      root: `${ROOTS.DASHBOARD}/product`,
-      new: `${ROOTS.DASHBOARD}/product/new`,
-      details: (id: string) => `${ROOTS.DASHBOARD}/product/${id}`,
-      edit: (id: string) => `${ROOTS.DASHBOARD}/product/${id}/edit`,
+    listing: {
+      root: `${ROOTS.DASHBOARD}/listing`,
+      new: `${ROOTS.DASHBOARD}/listing/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/listing/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/listing/${id}/edit`,
       demo: {
-        details: `${ROOTS.DASHBOARD}/product/${MOCK_ID}`,
-        edit: `${ROOTS.DASHBOARD}/product/${MOCK_ID}/edit`,
+        details: `${ROOTS.DASHBOARD}/listing/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/listing/${MOCK_ID}/edit`,
       },
     },
     invoice: {

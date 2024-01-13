@@ -20,11 +20,11 @@ const OverviewBookingPage = lazy(() => import('src/pages/dashboard/booking'));
 const OverviewFilePage = lazy(() => import('src/pages/dashboard/file'));
 // LISTING TYPES
 const ListingTypesPage = lazy(() => import('src/pages/dashboard/listing-types'));
-// PRODUCT
-const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/details'));
-const ProductListPage = lazy(() => import('src/pages/dashboard/product/list'));
-const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
-const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
+// LISTING
+const ListingDetailsPage = lazy(() => import('src/pages/dashboard/listing/details'));
+const ListingListPage = lazy(() => import('src/pages/dashboard/listing/list'));
+const ListingCreatePage = lazy(() => import('src/pages/dashboard/listing/new'));
+const ListingEditPage = lazy(() => import('src/pages/dashboard/listing/edit'));
 // ORDER
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
@@ -105,13 +105,13 @@ export const dashboardRoutes = [
         ],
       },
       {
-        path: 'product',
+        path: 'listing',
         children: [
-          { element: <ProductListPage />, index: true },
-          { path: 'list', element: <ProductListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'new', element: <ProductCreatePage /> },
-          { path: ':id/edit', element: <ProductEditPage /> },
+          { element: <ListingListPage />, index: true },
+          { path: 'list', element: <ListingListPage /> },
+          { path: ':id', element: <ListingDetailsPage /> },
+          { path: 'new', element: <ListingCreatePage /> },
+          { path: ':id/edit', element: <ListingEditPage /> },
         ],
       },
       {

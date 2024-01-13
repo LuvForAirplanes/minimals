@@ -6,7 +6,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { getStorage, useLocalStorage } from 'src/hooks/use-local-storage';
 
-import { PRODUCT_CHECKOUT_STEPS } from 'src/_mock/_product';
+import { LISTING_CHECKOUT_STEPS } from 'src/_mock/_listing';
 
 import { IAddressItem } from 'src/types/address';
 import { ICheckoutItem } from 'src/types/checkout';
@@ -175,13 +175,13 @@ export function CheckoutProvider({ children }: Props) {
     [update]
   );
 
-  const completed = state.activeStep === PRODUCT_CHECKOUT_STEPS.length;
+  const completed = state.activeStep === LISTING_CHECKOUT_STEPS.length;
 
   // Reset
   const onReset = useCallback(() => {
     if (completed) {
       reset();
-      router.replace(paths.product.root);
+      router.replace(paths.listing.root);
     }
   }, [completed, reset, router]);
 

@@ -8,10 +8,10 @@ export type SlotProps = {
   rootItem?: SxProps<Theme>;
   subItem?: SxProps<Theme>;
   subheader?: SxProps<Theme>;
-  displayProduct?: number;
+  displayListing?: number;
 };
 
-export type NavProducts = {
+export type NavListings = {
   name: string;
   path: string;
   coverUrl: string;
@@ -35,7 +35,7 @@ export type NavItemBaseProps = {
   icon?: React.ReactElement;
   tags?: NavLink[];
   moreLink?: NavLink;
-  products?: NavProducts[];
+  listings?: NavListings[];
   children?: {
     subheader: string;
     items: {

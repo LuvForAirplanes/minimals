@@ -34,7 +34,7 @@ export default function GroupNode({ node, depth, length, sx }: Props) {
 
   const isGrRoot = node.group === 'root';
 
-  const isGrProduct = node.group === 'product design';
+  const isGrListing = node.group === 'listing design';
 
   const isGrDevelopment = node.group === 'development';
 
@@ -65,7 +65,7 @@ export default function GroupNode({ node, depth, length, sx }: Props) {
           borderRadius: 1.5,
           textTransform: 'capitalize',
           ...(isLabel && { py: 2 }),
-          ...(isLabel && isGrProduct && styles('primary')),
+          ...(isLabel && isGrListing && styles('primary')),
           ...(isLabel && isGrDevelopment && styles('info')),
           ...(isLabel && isGrMarketing && styles('warning')),
           ...sx,
@@ -80,7 +80,7 @@ export default function GroupNode({ node, depth, length, sx }: Props) {
               height: 4,
               position: 'absolute',
               borderRadius: 1.5,
-              ...(isGrProduct && {
+              ...(isGrListing && {
                 bgcolor: 'primary.light',
               }),
               ...(isGrDevelopment && {
