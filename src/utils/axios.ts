@@ -46,8 +46,8 @@ export const endpoints = {
     search: '/api/post/search',
   },
   listing: {
-    list: '/api/listing/list',
-    details: '/api/listing/details',
-    search: '/api/listing/search',
+    list: '/api/product/list',
+    details: '/api/product/details',
+    search: '/api/product/search',
   },
 };

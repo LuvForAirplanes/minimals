@@ -2,15 +2,11 @@ import { m, MotionProps } from 'framer-motion';
 
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
 import Box, { BoxProps } from '@mui/material/Box';
 import { alpha, useTheme } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 import { bgGradient } from 'src/theme/css';
 
-import Iconify from 'src/components/iconify';
 import { varFade, MotionContainer } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
@@ -40,10 +36,11 @@ export default function FaqsHero() {
           }}
         >
           <div>
-            <TextAnimate text="How" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
+            <TextAnimate text="Hello" sx={{ color: 'primary.main' }} variants={varFade().inRight} />
             <br />
 
             <Stack spacing={2} display="inline-flex" direction="row" sx={{ color: 'common.white' }}>
+              <TextAnimate text="How" />
               <TextAnimate text="can" />
               <TextAnimate text="we" />
               <TextAnimate text="help" />
@@ -51,7 +48,7 @@ export default function FaqsHero() {
             </Stack>
           </div>
 
-          <m.div variants={varFade().in}>
+          {/* <m.div variants={varFade().in}>
             <TextField
               fullWidth
               placeholder="Search support..."
@@ -73,7 +70,7 @@ export default function FaqsHero() {
                 },
               }}
             />
-          </m.div>
+          </m.div> */}
         </Box>
       </Container>
     </Box>

@@ -14,13 +14,13 @@ export function useGetListings() {
 
   const memoizedValue = useMemo(
     () => ({
-      listings: (data?.listings as IListingItem[]) || [],
+      listings: (data?.products as IListingItem[]) || [],
       listingsLoading: isLoading,
       listingsError: error,
       listingsValidating: isValidating,
-      listingsEmpty: !isLoading && !data?.listings.length,
+      listingsEmpty: !isLoading && !data?.products.length,
     }),
-    [data?.listings, error, isLoading, isValidating]
+    [data?.products, error, isLoading, isValidating]
   );
 
   return memoizedValue;

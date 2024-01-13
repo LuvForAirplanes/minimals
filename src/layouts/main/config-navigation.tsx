@@ -18,6 +18,11 @@ export const navConfig = [
     path: paths.components,
   },
   {
+    title: 'Browse',
+    icon: <Iconify icon="solar:notebook-bold-duotone" />,
+    path: paths.shopAll,
+  },
+  {
     title: 'Pages',
     path: '/pages',
     icon: <Iconify icon="solar:file-bold-duotone" />,
@@ -59,8 +64,8 @@ export const navConfig = [
     ],
   },
   {
-    title: 'Docs',
+    title: 'Shop',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
-    path: paths.docs,
+    path: paths.listing.root,
   },
 ];

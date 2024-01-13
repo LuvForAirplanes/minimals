@@ -27,10 +27,8 @@ import { IListingItem, IListingFilters, IListingFilterValue } from 'src/types/li
 
 import ListingList from '../listing-list';
 import ListingSort from '../listing-sort';
-import CartIcon from '../common/cart-icon';
 import ListingSearch from '../listing-search';
 import ListingFilters from '../listing-filters';
-import { useCheckoutContext } from '../../checkout/context';
 import ListingFiltersResult from '../listing-filters-result';
 
 // ----------------------------------------------------------------------
@@ -48,7 +46,7 @@ const defaultFilters: IListingFilters = {
 export default function ListingShopView() {
   const settings = useSettingsContext();
 
-  const checkout = useCheckoutContext();
+  // const checkout = useCheckoutContext();
 
   const openFilters = useBoolean();
 
@@ -152,7 +150,7 @@ export default function ListingShopView() {
         mb: 15,
       }}
     >
-      <CartIcon totalItems={checkout.totalItems} />
+      {/* <CartIcon totalItems={checkout.totalItems} /> */}
 
       <Typography
         variant="h4"

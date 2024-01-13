@@ -24,31 +24,37 @@ const CATEGORIES = [
     label: 'Managing your account',
     icon: '/assets/icons/faqs/ic_account.svg',
     href: '#',
+    disabled: false,
   },
   {
     label: 'Payment',
     icon: '/assets/icons/faqs/ic_payment.svg',
     href: '#',
+    disabled: true,
   },
   {
     label: 'Delivery',
     icon: '/assets/icons/faqs/ic_delivery.svg',
     href: '#',
+    disabled: false,
   },
   {
     label: 'Problem with the Listing',
     icon: '/assets/icons/faqs/ic_package.svg',
     href: '#',
+    disabled: false,
   },
   {
     label: 'Return & Refund',
     icon: '/assets/icons/faqs/ic_refund.svg',
     href: '#',
+    disabled: true,
   },
   {
     label: 'Guarantees and assurances',
     icon: '/assets/icons/faqs/ic_assurances.svg',
     href: '#',
+    disabled: false,
   },
 ];
 
@@ -107,11 +113,13 @@ type CardDesktopProps = {
   category: {
     label: string;
     icon: string;
+    href: string;
+    disabled: boolean;
   };
 };
 
 function CardDesktop({ category }: CardDesktopProps) {
-  const { label, icon } = category;
+  const { label, icon, disabled } = category;
 
   return (
     <Paper
@@ -126,6 +134,8 @@ function CardDesktop({ category }: CardDesktopProps) {
           bgcolor: 'background.paper',
           boxShadow: (theme) => theme.customShadows.z20,
         },
+        pointerEvents: disabled ? 'none' : 'inherit',
+        opacity: disabled ? 0.4 : 'inherit',
       }}
     >
       <Image

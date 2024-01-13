@@ -1,7 +1,10 @@
 import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
 
 import MainLayout from 'src/layouts/main';
+import { client } from 'src/graphql/config';
+import ShopAllPage from 'src/pages/shop-all';
 import SimpleLayout from 'src/layouts/simple';
 import CompactLayout from 'src/layouts/compact';
 
@@ -45,6 +48,11 @@ export const mainRoutes = [
       { path: 'faqs', element: <FaqsPage /> },
       {
         path: 'listing',
+        element: (
+          <ApolloProvider client={client}>
+            <Outlet />
+          </ApolloProvider>
+        ),
         children: [
           { element: <ListingListPage />, index: true },
           { path: 'list', element: <ListingListPage /> },
@@ -52,6 +60,7 @@ export const mainRoutes = [
           { path: 'checkout', element: <ListingCheckoutPage /> },
         ],
       },
+      { path: 'shop-all', element: <ShopAllPage /> },
       {
         path: 'post',
         children: [
