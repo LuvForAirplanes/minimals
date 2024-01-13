@@ -13,11 +13,6 @@ export const navConfig = [
     path: '/',
   },
   {
-    title: 'Components',
-    icon: <Iconify icon="solar:atom-bold-duotone" />,
-    path: paths.components,
-  },
-  {
     title: 'Browse',
     icon: <Iconify icon="solar:notebook-bold-duotone" />,
     path: paths.shopAll,

@@ -189,8 +189,8 @@ export default function HomeHero() {
             textAlign: 'center',
           }}
         >
-          Start a <br />
-          New Project with
+          Anabaptist <br />
+          marketplace at
         </Typography>
       </m.div>
 
@@ -204,7 +204,7 @@ export default function HomeHero() {
             repeat: Infinity,
           }}
         >
-          Minimal
+          Galilea
         </StyledTextGradient>
       </m.div>
 
@@ -282,7 +282,7 @@ export default function HomeHero() {
       <Stack spacing={3} sx={{ textAlign: 'center' }}>
         <m.div variants={varFade().in}>
           <Typography variant="overline" sx={{ opacity: 0.48 }}>
-            Available For
+            Available On
           </Typography>
         </m.div>
 

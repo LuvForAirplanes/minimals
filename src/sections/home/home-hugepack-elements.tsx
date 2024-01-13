@@ -32,8 +32,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import { paths } from 'src/routes/paths';
-
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { _mock } from 'src/_mock';
@@ -74,7 +72,7 @@ export default function HomeHugePackElements() {
         variant="outlined"
         target="_blank"
         rel="noopener"
-        href={paths.components}
+        href="https://minimals.cc/components"
         endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
       >
         View All Components

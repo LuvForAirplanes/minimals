@@ -6,7 +6,6 @@ import MainLayout from 'src/layouts/main';
 import { authRoutes } from './auth';
 import { HomePage, mainRoutes } from './main';
 import { dashboardRoutes } from './dashboard';
-import { componentsRoutes } from './components';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +39,7 @@ export default function Router() {
     ...mainRoutes,
 
     // Components routes
-    ...componentsRoutes,
+    // ...componentsRoutes,
 
     // No match 404
     { path: '*', element: <Navigate to="/404" replace /> },
