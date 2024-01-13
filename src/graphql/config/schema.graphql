@@ -348,6 +348,7 @@ type Mutation {
   deleteListing(id: UUID ids: [UUID!]): Boolean!
   toggleListingPublicity(id: UUID!): Boolean!
   updateListingReview(review: ListingReviewEditInput!): ListingReviewEdit!
+  deleteListingReview(listingId: UUID!): Boolean!
   addListingType(type: ListingTypeInput!): ListingType!
   updateListingType(type: ListingTypeInput!): ListingType!
   deleteListingType(id: String!): Boolean!

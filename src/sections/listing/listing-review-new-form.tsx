@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 import { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,12 +19,15 @@ import Dialog, { DialogProps } from '@mui/material/Dialog';
 import { getListingQuery } from 'src/graphql/queries/listing';
 import { myListingReviewQuery } from 'src/graphql/queries/myListingReview';
 import { updateListingReviewMutation } from 'src/graphql/mutations/updateListingReview';
+import { deleteListingReviewMutation } from 'src/graphql/mutations/deleteListingReview';
 import {
   MyListingReviewQuery,
   ListingReviewEditFragment,
   UpdateListingReviewMutation,
+  DeleteListingReviewMutation,
   MyListingReviewQueryVariables,
   UpdateListingReviewMutationVariables,
+  DeleteListingReviewMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
@@ -34,6 +38,8 @@ interface Props extends DialogProps {
 }
 
 export default function ListingReviewNewForm({ onClose, listingId, ...other }: Props) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const ReviewSchema = Yup.object().shape({
     content: Yup.string().required('Review is required'),
     title: Yup.string().notRequired(),
@@ -59,27 +65,46 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
     formState: { errors, isSubmitting },
   } = methods;
 
-  useQuery<MyListingReviewQuery, MyListingReviewQueryVariables>(myListingReviewQuery, {
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [deleteReview, { loading: deleting }] = useMutation<
+    DeleteListingReviewMutation,
+    DeleteListingReviewMutationVariables
+  >(deleteListingReviewMutation, {
     variables: {
       listingId,
     },
-    onCompleted: (d) => {
-      const data = d.myListingReview as ListingReviewEditFragment;
-      setExistingId(data.id);
-      methods.reset({
-        content: data.content,
-        rating: data.rating,
-        title: data.title,
-      });
+    refetchQueries: [getListingQuery],
+    onCompleted: () => {
+      enqueueSnackbar('Deleted review successfully.', { variant: 'success' });
+      onCancel();
+      setExistingId(null);
+      setIsDeleting(false);
     },
   });
+  const { data: existingReview } = useQuery<MyListingReviewQuery, MyListingReviewQueryVariables>(
+    myListingReviewQuery,
+    {
+      variables: {
+        listingId,
+      },
+      onCompleted: (d: MyListingReviewQuery) => {
+        const data = d.myListingReview as ListingReviewEditFragment;
+        setExistingId(data.id);
+        methods.reset({
+          content: data.content,
+          rating: data.rating,
+          title: data.title,
+        });
+      },
+    }
+  );
 
   const [addReview] = useMutation<
     UpdateListingReviewMutation,
     UpdateListingReviewMutationVariables
   >(updateListingReviewMutation, {
     refetchQueries: [getListingQuery],
-    onCompleted: (d) => {
+    onCompleted: (d: UpdateListingReviewMutation) => {
       const data = d.updateListingReview as ListingReviewEditFragment;
       setExistingId(data.id);
       methods.reset({
@@ -89,7 +114,7 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
       });
     },
   });
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data: any) => {
     try {
       const values = methods.getValues();
       await addReview({
@@ -105,7 +130,6 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
       });
       reset();
       onClose();
-      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
@@ -116,10 +140,18 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
     reset();
   }, [onClose, reset]);
 
+  const deleteConfirm = () => {
+    if (isDeleting) {
+      deleteReview();
+    } else {
+      setIsDeleting(true);
+    }
+  };
+
   return (
     <Dialog onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle> Add Review </DialogTitle>
+        <DialogTitle>Add Review</DialogTitle>
 
         <DialogContent>
           <Stack direction="row" flexWrap="wrap" alignItems="center" spacing={1.5}>
@@ -128,7 +160,7 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
             <Controller
               name="rating"
               control={control}
-              render={({ field }) => (
+              render={({ field }: any) => (
                 <Rating
                   {...field}
                   size="small"
@@ -161,6 +193,17 @@ export default function ListingReviewNewForm({ onClose, listingId, ...other }: P
         </DialogContent>
 
         <DialogActions>
+          {existingReview && (
+            <LoadingButton
+              color="error"
+              variant="outlined"
+              onClick={deleteConfirm}
+              loading={deleting}
+            >
+              {isDeleting ? 'Confirm Delete' : 'Delete'}
+            </LoadingButton>
+          )}
+
           <Button color="inherit" variant="outlined" onClick={onCancel}>
             Cancel
           </Button>
