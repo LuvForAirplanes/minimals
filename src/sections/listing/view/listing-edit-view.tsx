@@ -25,6 +25,7 @@ export default function ListingEditView() {
       id: params.id,
     },
     skip: params.id === undefined,
+    fetchPolicy: 'network-only',
   });
   const listing = data?.listingEdit as ListingEditFragment | undefined;
 

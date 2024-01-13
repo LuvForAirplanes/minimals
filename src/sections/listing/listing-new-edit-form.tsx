@@ -22,6 +22,7 @@ import { useRouter } from 'src/routes/hooks';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { LISTING_CATEGORY_GROUP_OPTIONS } from 'src/_mock';
+import { getListingsQuery } from 'src/graphql/queries/listings';
 import { addListingMutation } from 'src/graphql/mutations/addListing';
 import { updateListingMutation } from 'src/graphql/mutations/updateListing';
 import {
@@ -72,7 +73,6 @@ export default function ListingNewEditForm({ listing }: Props) {
     images:
       listing?.images.map((i) => ({
         preview: `/api/listings/images/${i.id}.jpg`,
-        // path: `/api/listings/images/${i.id}.jpg`,
         name: i.id,
       })) ?? [],
     content: listing?.content ?? '',
@@ -101,10 +101,16 @@ export default function ListingNewEditForm({ listing }: Props) {
 
   const values = watch();
   const [addListing] = useMutation<AddListingMutation, AddListingMutationVariables>(
-    addListingMutation
+    addListingMutation,
+    {
+      refetchQueries: [getListingsQuery],
+    }
   );
   const [updateListing] = useMutation<UpdateListingMutation, UpdateListingMutationVariables>(
-    updateListingMutation
+    updateListingMutation,
+    {
+      refetchQueries: [getListingsQuery],
+    }
   );
   const uploadFile = async (id: string) => {
     const formData = new FormData();
@@ -116,15 +122,9 @@ export default function ListingNewEditForm({ listing }: Props) {
       formData.append('files', newImages[i]);
     }
     formData.append('test', JSON.stringify(existingImages));
-    // existingImages.forEach((obj) => {
-    //   formData.append('existingFiles', JSON.stringify(obj));
-    // });
-    // formData.append('existingFiles', JSON.stringify(existingImages));
 
-    // Send a POST request to the upload endpoint with the formData
-    // and a header that specifies the content type as multipart/form-data
     try {
-      await axios.post(`/api/listings/${listing!.id}/upload`, formData, {
+      await axios.post(`/api/listings/${listing?.id ?? id}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

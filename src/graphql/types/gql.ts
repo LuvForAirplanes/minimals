@@ -76,6 +76,7 @@ const documents = {
     "\n  query userProfile($id: String!) {\n    userProfile(id: $id) {\n      ...UserEditor\n    }\n  }\n  \n": types.UserProfileDocument,
     "\n  query userStatistics {\n    userStatistics {\n      all\n      approved\n      pending\n      rejected\n    }\n  }\n": types.UserStatisticsDocument,
     "\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n": types.UsersDocument,
+    "\n  query watchedListings {\n    watchedListings(order: { date: DESC }) {\n      date\n      listing {\n        id\n        title\n      }\n    }\n  }\n": types.WatchedListingsDocument,
 };
 
 /**
@@ -344,6 +345,10 @@ export function graphql(source: "\n  query userStatistics {\n    userStatistics 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n"): (typeof documents)["\n  query users(\n    $first: Int = 50\n    $after: String\n    $order: [ApplicationUserSortInput!]\n    $where: ApplicationUserFilterInput\n  ) {\n    data: users(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        ...User\n      }\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query watchedListings {\n    watchedListings(order: { date: DESC }) {\n      date\n      listing {\n        id\n        title\n      }\n    }\n  }\n"): (typeof documents)["\n  query watchedListings {\n    watchedListings(order: { date: DESC }) {\n      date\n      listing {\n        id\n        title\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

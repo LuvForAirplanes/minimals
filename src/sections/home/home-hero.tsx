@@ -204,7 +204,7 @@ export default function HomeHero() {
             repeat: Infinity,
           }}
         >
-          Galilea
+          Galilee
         </StyledTextGradient>
       </m.div>
 

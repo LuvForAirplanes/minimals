@@ -426,6 +426,7 @@ type Query {
   userSearch(skip: Int take: Int search: String): UserSearchCollectionSegment
   userProfileImage(id: String!): [Byte!]
   userStatistics: UserStatistics!
+  watchedListings(order: [UserListingWatchSortInput!]): [UserListingWatch!]!
 }
 
 type QuickListingEdit {
@@ -1370,6 +1371,14 @@ input UserListingWatchInput {
   listing: ListingInput!
   listingId: UUID!
   date: DateTime!
+}
+
+input UserListingWatchSortInput {
+  user: ApplicationUserSortInput
+  userId: SortEnumType
+  listing: ListingSortInput
+  listingId: SortEnumType
+  date: SortEnumType
 }
 
 input UserNotificationsEditInput {
