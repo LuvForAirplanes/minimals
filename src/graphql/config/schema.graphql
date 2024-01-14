@@ -354,6 +354,7 @@ type Mutation {
   addListingCategory(category: ListingCategoryEditInput!): ListingCategoryEdit!
   updateListingCategory(category: ListingCategoryEditInput!): ListingCategoryEdit!
   deleteListingCategory(id: String!): Boolean!
+  listingLoaded(listingId: UUID!): Boolean!
   addListing(listing: ListingAddEditInput!): UUID!
   listingList(listing: ListingListEditInput!): ListingListEdit!
   quickListing(listing: QuickListingEditInput!): QuickListingEdit!

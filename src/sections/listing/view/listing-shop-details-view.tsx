@@ -1,6 +1,6 @@
 import { useParams } from 'react-router';
-import { useQuery } from '@apollo/client';
-import { useState, useCallback } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import { useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -14,12 +14,15 @@ import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { getListingQuery } from 'src/graphql/queries/listing';
+import { listingLoadedMutation } from 'src/graphql/mutations/listingLoaded';
 import {
   ListingDetailsQuery,
   ListingReviewFragment,
   ListingRatingFragment,
+  ListingLoadedMutation,
   ListingDetailsFragment,
   ListingDetailsQueryVariables,
+  ListingLoadedMutationVariables,
 } from 'src/graphql/types/graphql';
 
 import Iconify from 'src/components/iconify';
@@ -68,6 +71,18 @@ export default function ListingShopDetailsView() {
       },
     }
   );
+
+  const [logListingLoaded] = useMutation<ListingLoadedMutation, ListingLoadedMutationVariables>(
+    listingLoadedMutation,
+    {
+      variables: {
+        listingId: params.id,
+      },
+    }
+  );
+  useEffect(() => {
+    logListingLoaded();
+  }, [logListingLoaded]);
 
   const listing = listingR?.listings
     ? (listingR.listings.nodes![0] as ListingDetailsFragment)

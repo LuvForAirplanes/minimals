@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -39,6 +40,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { usePaging } from 'src/hooks/grids/use-paging';
 import { useSorting } from 'src/hooks/grids/use-sorting';
 import { useFiltering } from 'src/hooks/grids/use-filtering';
+
+import { endpoints } from 'src/utils/axios';
 
 import { getUsersQuery } from 'src/graphql/queries/users';
 import { deleteUserMutation } from 'src/graphql/mutations/deleteUser';
@@ -381,6 +384,18 @@ export default function UserListView() {
         >
           <Iconify icon="solar:pen-bold" />
           Quick Edit
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            axios
+              .post(`${endpoints.auth.impersonate}/${openedMenuId}`)
+              // eslint-disable-next-line no-restricted-globals
+              .then((a) => location.reload());
+          }}
+        >
+          <Iconify icon="solar:shield-cross-bold-duotone" />
+          Impersonate
         </MenuItem>
       </CustomPopover>
 

@@ -1,3 +1,5 @@
+import { useQuery } from '@apollo/client';
+
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
@@ -7,7 +9,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useUser } from 'src/hooks/use-user';
 
 import { SeoIllustration } from 'src/assets/illustrations';
+import { dashboardStatisticsQuery } from 'src/graphql/queries/dashboardStatistics';
 import { _appAuthors, _appRelated, _appFeatured, _appInvoices, _appInstalled } from 'src/_mock';
+import {
+  DashboardStatisticsQuery,
+  DashboardStatisticsQueryVariables,
+} from 'src/graphql/types/graphql';
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -29,6 +36,10 @@ export default function OverviewAppView() {
   const theme = useTheme();
 
   const settings = useSettingsContext();
+
+  const { data } = useQuery<DashboardStatisticsQuery, DashboardStatisticsQueryVariables>(
+    dashboardStatisticsQuery
+  );
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -52,9 +63,9 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Active Users"
+            title="Total  Users"
             percent={2.6}
-            total={18765}
+            total={data?.dashboardStatistics?.users ?? 0}
             chart={{
               series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
             }}
@@ -63,9 +74,9 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Installed"
+            title="Total Listings"
             percent={0.2}
-            total={4876}
+            total={data?.dashboardStatistics?.listings ?? 0}
             chart={{
               colors: [theme.palette.info.light, theme.palette.info.main],
               series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
@@ -75,9 +86,9 @@ export default function OverviewAppView() {
 
         <Grid xs={12} md={4}>
           <AppWidgetSummary
-            title="Total Downloads"
+            title="Listing Loads"
             percent={-0.1}
-            total={678}
+            total={data?.dashboardStatistics?.listingLoads ?? 0}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
               series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],

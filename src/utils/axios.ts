@@ -33,6 +33,7 @@ export const endpoints = {
     me: '/api/auth/me',
     login: '/api/auth/login',
     register: '/api/auth/register',
+    impersonate: '/api/auth/impersonate',
   },
   mail: {
     list: '/api/mail/list',
