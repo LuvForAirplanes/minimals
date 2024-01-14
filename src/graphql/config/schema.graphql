@@ -82,6 +82,7 @@ type ApplicationUser {
   categories: [UserListingCategory!]!
   reviews: [ListingReview!]!
   watchedItems: [UserListingWatch!]!
+  listingLoads: [ListingLoad!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -127,6 +128,8 @@ type CollectionSegmentInfo {
 
 type DashboardStats {
   users: Int!
+  listings: Int!
+  listingLoads: Int!
 }
 
 type Friend {
@@ -158,6 +161,7 @@ type Listing {
   categoryId: String
   reviews: [ListingReview!]!
   usersWatching: [UserListingWatch!]!
+  loads: [ListingLoad!]!
   id: UUID!
   added: DateTime!
   updated: DateTime!
@@ -237,6 +241,15 @@ type ListingListEdit {
   quantity: Int!
   price: Decimal!
   isPublished: Boolean!
+}
+
+type ListingLoad {
+  id: UUID!
+  listing: Listing
+  listingId: UUID!
+  date: DateTime!
+  user: ApplicationUser
+  userId: String
 }
 
 type ListingRating {
@@ -406,6 +419,7 @@ type Query {
   currentAccountProfile: AccountProfileEdit!
   currentAccountNotifications: AccountNotificationsEdit!
   currentAccountProfileImage: [Byte!]
+  currentUser: ApplicationUser!
   assets: [Asset!]!
   churchGroups(order: [ChurchGroupSortInput!]): [ChurchGroup!]!
   dashboardStatistics: DashboardStats
@@ -673,6 +687,7 @@ input ApplicationUserFilterInput {
   categories: ListFilterInputTypeOfUserListingCategoryFilterInput
   reviews: ListFilterInputTypeOfListingReviewFilterInput
   watchedItems: ListFilterInputTypeOfUserListingWatchFilterInput
+  listingLoads: ListFilterInputTypeOfListingLoadFilterInput
   id: StringOperationFilterInput
   userName: StringOperationFilterInput
   normalizedUserName: StringOperationFilterInput
@@ -732,6 +747,7 @@ input ApplicationUserInput {
   categories: [UserListingCategoryInput!]!
   reviews: [ListingReviewInput!]!
   watchedItems: [UserListingWatchInput!]!
+  listingLoads: [ListingLoadInput!]!
   id: String!
   userName: String
   normalizedUserName: String
@@ -923,6 +939,13 @@ input ListFilterInputTypeOfListingImageFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfListingLoadFilterInput {
+  all: ListingLoadFilterInput
+  none: ListingLoadFilterInput
+  some: ListingLoadFilterInput
+  any: Boolean
+}
+
 input ListFilterInputTypeOfListingReviewFilterInput {
   all: ListingReviewFilterInput
   none: ListingReviewFilterInput
@@ -1060,6 +1083,7 @@ input ListingFilterInput {
   categoryId: StringOperationFilterInput
   reviews: ListFilterInputTypeOfListingReviewFilterInput
   usersWatching: ListFilterInputTypeOfUserListingWatchFilterInput
+  loads: ListFilterInputTypeOfListingLoadFilterInput
   id: UuidOperationFilterInput
   added: DateTimeOperationFilterInput
   updated: DateTimeOperationFilterInput
@@ -1108,6 +1132,7 @@ input ListingInput {
   categoryId: String
   reviews: [ListingReviewInput!]!
   usersWatching: [UserListingWatchInput!]!
+  loads: [ListingLoadInput!]!
   id: UUID!
   added: DateTime!
   updated: DateTime!
@@ -1118,6 +1143,26 @@ input ListingListEditInput {
   quantity: Int!
   price: Decimal!
   isPublished: Boolean!
+}
+
+input ListingLoadFilterInput {
+  and: [ListingLoadFilterInput!]
+  or: [ListingLoadFilterInput!]
+  id: UuidOperationFilterInput
+  listing: ListingFilterInput
+  listingId: UuidOperationFilterInput
+  date: DateTimeOperationFilterInput
+  user: ApplicationUserFilterInput
+  userId: StringOperationFilterInput
+}
+
+input ListingLoadInput {
+  id: UUID!
+  listing: ListingInput
+  listingId: UUID!
+  date: DateTime!
+  user: ApplicationUserInput
+  userId: String
 }
 
 input ListingReviewEditInput {

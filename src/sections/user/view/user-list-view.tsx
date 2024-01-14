@@ -105,7 +105,7 @@ export default function UserListView() {
       ),
     },
     {
-      field: 'phone',
+      field: 'phoneNumber',
       headerName: 'Phone Number',
       editable: true,
       width: 160,

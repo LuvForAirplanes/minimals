@@ -96,6 +96,7 @@ export default function UserCard({ user }: Props) {
                 },
               }}
               href={`https://t.me/${telegramUsername}`}
+              onClick={(e) => e.stopPropagation()}
             >
               <Iconify icon="ic:outline-telegram" />
             </IconButton>
@@ -110,6 +111,7 @@ export default function UserCard({ user }: Props) {
                 },
               }}
               href={`mailto:${email}`}
+              onClick={(e) => e.stopPropagation()}
             >
               <Iconify icon="ic:baseline-email" />
             </IconButton>
@@ -124,6 +126,7 @@ export default function UserCard({ user }: Props) {
                 },
               }}
               href={`tel:${phoneNumber}`}
+              onClick={(e) => e.stopPropagation()}
             >
               <Iconify icon="ic:baseline-local-phone" />
             </IconButton>

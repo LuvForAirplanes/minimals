@@ -61,6 +61,7 @@ const documents = {
     "\n  query churchGroups {\n    churchGroups {\n      id\n      name\n    }\n  }\n": types.ChurchGroupsDocument,
     "\n  query currentAccountNotifications {\n    currentAccountNotifications {\n      ...AccountNotificationEditor\n    }\n  }\n  \n": types.CurrentAccountNotificationsDocument,
     "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n": types.CurrentAccountProfileDocument,
+    "\n  query currentUser {\n    currentUser {\n      id\n      firstName\n      fullName\n      middleName\n      lastName\n      businessName\n      telegramUsername\n      location\n      phoneNumber\n      userName\n      following\n      followers\n    }\n  }\n": types.CurrentUserDocument,
     "\n  query listingDetails($id: UUID!) {\n    listings(first: 1, where: { id: { eq: $id } }) {\n      nodes {\n        ...ListingDetails\n      }\n    }\n  }\n  \n": types.ListingDetailsDocument,
     "\n  query listingCategories(\n    $first: Int = 50\n    $after: String\n    $order: [ListingCategorySortInput!]\n    $where: ListingCategoryFilterInput\n  ) {\n    data: listingCategories(first: $first, after: $after, order: $order, where: $where) {\n      count: totalCount\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        id\n        name\n        parentId\n        listable\n      }\n    }\n  }\n": types.ListingCategoriesDocument,
     "\n  query listingEdit($id: UUID!) {\n    listingEdit(id: $id) {\n      ...ListingEdit\n    }\n  }\n  \n": types.ListingEditDocument,
@@ -285,6 +286,10 @@ export function graphql(source: "\n  query currentAccountNotifications {\n    cu
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"): (typeof documents)["\n  query currentAccountProfile {\n    currentAccountProfile {\n      ...AccountProfileEditor\n    }\n    currentAccountProfileImage\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query currentUser {\n    currentUser {\n      id\n      firstName\n      fullName\n      middleName\n      lastName\n      businessName\n      telegramUsername\n      location\n      phoneNumber\n      userName\n      following\n      followers\n    }\n  }\n"): (typeof documents)["\n  query currentUser {\n    currentUser {\n      id\n      firstName\n      fullName\n      middleName\n      lastName\n      businessName\n      telegramUsername\n      location\n      phoneNumber\n      userName\n      following\n      followers\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

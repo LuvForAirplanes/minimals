@@ -149,6 +149,7 @@ export type ApplicationUser = {
   knownAs?: Maybe<Scalars['String']['output']>;
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
   lastName?: Maybe<Scalars['String']['output']>;
+  listingLoads: Array<ListingLoad>;
   listings: Scalars['Long']['output'];
   location?: Maybe<Scalars['String']['output']>;
   lockoutEnabled: Scalars['Boolean']['output'];
@@ -209,6 +210,7 @@ export type ApplicationUserFilterInput = {
   knownAs?: InputMaybe<StringOperationFilterInput>;
   lastLogin?: InputMaybe<DateTimeOperationFilterInput>;
   lastName?: InputMaybe<StringOperationFilterInput>;
+  listingLoads?: InputMaybe<ListFilterInputTypeOfListingLoadFilterInput>;
   listings?: InputMaybe<ListFilterInputTypeOfListingFilterInput>;
   location?: InputMaybe<StringOperationFilterInput>;
   lockoutEnabled?: InputMaybe<BooleanOperationFilterInput>;
@@ -269,6 +271,7 @@ export type ApplicationUserInput = {
   knownAs?: InputMaybe<Scalars['String']['input']>;
   lastLogin?: InputMaybe<Scalars['DateTime']['input']>;
   lastName?: InputMaybe<Scalars['String']['input']>;
+  listingLoads: Array<ListingLoadInput>;
   listings: Array<ListingInput>;
   location?: InputMaybe<Scalars['String']['input']>;
   lockoutEnabled: Scalars['Boolean']['input'];
@@ -400,6 +403,8 @@ export type CollectionSegmentInfo = {
 
 export type DashboardStats = {
   __typename?: 'DashboardStats';
+  listingLoads: Scalars['Int']['output'];
+  listings: Scalars['Int']['output'];
   users: Scalars['Int']['output'];
 };
 
@@ -517,6 +522,13 @@ export type ListFilterInputTypeOfListingImageFilterInput = {
   some?: InputMaybe<ListingImageFilterInput>;
 };
 
+export type ListFilterInputTypeOfListingLoadFilterInput = {
+  all?: InputMaybe<ListingLoadFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<ListingLoadFilterInput>;
+  some?: InputMaybe<ListingLoadFilterInput>;
+};
+
 export type ListFilterInputTypeOfListingReviewFilterInput = {
   all?: InputMaybe<ListingReviewFilterInput>;
   any?: InputMaybe<Scalars['Boolean']['input']>;
@@ -570,6 +582,7 @@ export type Listing = {
   id: Scalars['UUID']['output'];
   images: Array<ListingImage>;
   isPublished: Scalars['Boolean']['output'];
+  loads: Array<ListingLoad>;
   mainImageId?: Maybe<Scalars['UUID']['output']>;
   msrp?: Maybe<Scalars['Decimal']['output']>;
   partNumber?: Maybe<Scalars['String']['output']>;
@@ -733,6 +746,7 @@ export type ListingFilterInput = {
   id?: InputMaybe<UuidOperationFilterInput>;
   images?: InputMaybe<ListFilterInputTypeOfListingImageFilterInput>;
   isPublished?: InputMaybe<BooleanOperationFilterInput>;
+  loads?: InputMaybe<ListFilterInputTypeOfListingLoadFilterInput>;
   msrp?: InputMaybe<DecimalOperationFilterInput>;
   or?: InputMaybe<Array<ListingFilterInput>>;
   partNumber?: InputMaybe<StringOperationFilterInput>;
@@ -793,6 +807,7 @@ export type ListingInput = {
   id: Scalars['UUID']['input'];
   images: Array<ListingImageInput>;
   isPublished: Scalars['Boolean']['input'];
+  loads: Array<ListingLoadInput>;
   msrp?: InputMaybe<Scalars['Decimal']['input']>;
   partNumber?: InputMaybe<Scalars['String']['input']>;
   price: Scalars['Decimal']['input'];
@@ -822,6 +837,36 @@ export type ListingListEditInput = {
   isPublished: Scalars['Boolean']['input'];
   price: Scalars['Decimal']['input'];
   quantity: Scalars['Int']['input'];
+};
+
+export type ListingLoad = {
+  __typename?: 'ListingLoad';
+  date: Scalars['DateTime']['output'];
+  id: Scalars['UUID']['output'];
+  listing?: Maybe<Listing>;
+  listingId: Scalars['UUID']['output'];
+  user?: Maybe<ApplicationUser>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type ListingLoadFilterInput = {
+  and?: InputMaybe<Array<ListingLoadFilterInput>>;
+  date?: InputMaybe<DateTimeOperationFilterInput>;
+  id?: InputMaybe<UuidOperationFilterInput>;
+  listing?: InputMaybe<ListingFilterInput>;
+  listingId?: InputMaybe<UuidOperationFilterInput>;
+  or?: InputMaybe<Array<ListingLoadFilterInput>>;
+  user?: InputMaybe<ApplicationUserFilterInput>;
+  userId?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type ListingLoadInput = {
+  date: Scalars['DateTime']['input'];
+  id: Scalars['UUID']['input'];
+  listing?: InputMaybe<ListingInput>;
+  listingId: Scalars['UUID']['input'];
+  user?: InputMaybe<ApplicationUserInput>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ListingRating = {
@@ -1287,6 +1332,7 @@ export type Query = {
   currentAccountNotifications: AccountNotificationsEdit;
   currentAccountProfile: AccountProfileEdit;
   currentAccountProfileImage?: Maybe<Array<Scalars['Byte']['output']>>;
+  currentUser: ApplicationUser;
   dashboardStatistics?: Maybe<DashboardStats>;
   listingCategories?: Maybe<ListingCategoriesConnection>;
   listingEdit: ListingEdit;
@@ -2100,6 +2146,11 @@ export type CurrentAccountProfileQuery = { __typename?: 'Query', currentAccountP
     & { ' $fragmentRefs'?: { 'AccountProfileEditorFragment': AccountProfileEditorFragment } }
   ) };
 
+export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentUserQuery = { __typename?: 'Query', currentUser: { __typename?: 'ApplicationUser', id: string, firstName?: string | null, fullName: string, middleName?: string | null, lastName?: string | null, businessName?: string | null, telegramUsername?: string | null, location?: string | null, phoneNumber?: string | null, userName?: string | null, following: any, followers: any } };
+
 export type ListingDetailsQueryVariables = Exact<{
   id: Scalars['UUID']['input'];
 }>;
@@ -2296,6 +2347,7 @@ export const UserDocument = {"kind":"Document","definitions":[{"kind":"Operation
 export const ChurchGroupsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"churchGroups"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"churchGroups"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<ChurchGroupsQuery, ChurchGroupsQueryVariables>;
 export const CurrentAccountNotificationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountNotifications"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountNotificationEditor"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountNotificationEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountNotificationsEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"notifyOnMessage"}}]}}]} as unknown as DocumentNode<CurrentAccountNotificationsQuery, CurrentAccountNotificationsQueryVariables>;
 export const CurrentAccountProfileDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfile"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"AccountProfileEditor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"currentAccountProfileImage"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"AccountProfileEditor"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AccountProfileEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"about"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"job"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"website"}}]}}]} as unknown as DocumentNode<CurrentAccountProfileQuery, CurrentAccountProfileQueryVariables>;
+export const CurrentUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"firstName"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"middleName"}},{"kind":"Field","name":{"kind":"Name","value":"lastName"}},{"kind":"Field","name":{"kind":"Name","value":"businessName"}},{"kind":"Field","name":{"kind":"Name","value":"telegramUsername"}},{"kind":"Field","name":{"kind":"Name","value":"location"}},{"kind":"Field","name":{"kind":"Name","value":"phoneNumber"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}},{"kind":"Field","name":{"kind":"Name","value":"following"}},{"kind":"Field","name":{"kind":"Name","value":"followers"}}]}}]}}]} as unknown as DocumentNode<CurrentUserQuery, CurrentUserQueryVariables>;
 export const ListingDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"listingDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listings"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingDetails"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingReview"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingReview"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"added"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"rating"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"updated"}},{"kind":"Field","name":{"kind":"Name","value":"verified"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userName"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingRating"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingRating"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"star"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingDetails"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Listing"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"mainImageId"}},{"kind":"Field","name":{"kind":"Name","value":"acceptsOffers"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"msrp"}},{"kind":"Field","name":{"kind":"Name","value":"partNumber"}},{"kind":"Field","name":{"kind":"Name","value":"isPublished"}},{"kind":"Field","name":{"kind":"Name","value":"added"}},{"kind":"Field","name":{"kind":"Name","value":"updated"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"watched"}},{"kind":"Field","name":{"kind":"Name","value":"totalReviews"}},{"kind":"Field","name":{"kind":"Name","value":"ratingsAverage"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"usersWatching"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"reviews"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingReview"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ratings"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingRating"}}]}}]}}]} as unknown as DocumentNode<ListingDetailsQuery, ListingDetailsQueryVariables>;
 export const ListingCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"listingCategories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"first"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"50"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ListingCategorySortInput"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ListingCategoryFilterInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"data"},"name":{"kind":"Name","value":"listingCategories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"first"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"order"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"count"},"name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}},{"kind":"Field","name":{"kind":"Name","value":"endCursor"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"listable"}}]}}]}}]}}]} as unknown as DocumentNode<ListingCategoriesQuery, ListingCategoriesQueryVariables>;
 export const ListingEditDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"listingEdit"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listingEdit"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ListingEdit"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ListingEdit"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ListingEdit"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"serialNumber"}},{"kind":"Field","name":{"kind":"Name","value":"partNumber"}},{"kind":"Field","name":{"kind":"Name","value":"quantity"}},{"kind":"Field","name":{"kind":"Name","value":"categoryId"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"msrp"}},{"kind":"Field","name":{"kind":"Name","value":"isPublished"}},{"kind":"Field","name":{"kind":"Name","value":"acceptsOffers"}},{"kind":"Field","name":{"kind":"Name","value":"categoryId"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"order"}},{"kind":"Field","name":{"kind":"Name","value":"added"}}]}}]}}]} as unknown as DocumentNode<ListingEditQuery, ListingEditQueryVariables>;

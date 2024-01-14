@@ -7,9 +7,9 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 
 import { paths } from 'src/routes/paths';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useUser } from 'src/hooks/use-user';
 
-import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } from 'src/_mock';
+import { _userFriends, _userGallery, _userFollowers } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
@@ -51,7 +51,7 @@ const TABS = [
 export default function UserProfileView() {
   const settings = useSettingsContext();
 
-  const { user } = useMockedUser();
+  const user = useUser();
 
   const [searchFriends, setSearchFriends] = useState('');
 
@@ -72,7 +72,7 @@ export default function UserProfileView() {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'User', href: paths.dashboard.user.root },
-          { name: user?.displayName },
+          { name: user?.fullName },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -85,12 +85,7 @@ export default function UserProfileView() {
           height: 290,
         }}
       >
-        <ProfileCover
-          role={_userAbout.role}
-          name={user?.displayName}
-          avatarUrl={user?.photoURL}
-          coverUrl={_userAbout.coverUrl}
-        />
+        {user && <ProfileCover {...user} />}
 
         <Tabs
           value={currentTab}
@@ -116,7 +111,7 @@ export default function UserProfileView() {
         </Tabs>
       </Card>
 
-      {currentTab === 'profile' && <ProfileHome info={_userAbout} posts={_userFeeds} />}
+      {currentTab === 'profile' && <ProfileHome {...user!} />}
 
       {currentTab === 'followers' && <ProfileFollowers followers={_userFollowers} />}
 
