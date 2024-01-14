@@ -1,5 +1,7 @@
 import { LogoutOptions, PopupLoginOptions, RedirectLoginOptions } from '@auth0/auth0-react';
 
+import { ApplicationUser } from 'src/graphql/types/graphql';
+
 // ----------------------------------------------------------------------
 
 export type ActionMapType<M extends { [index: string]: any }> = {
@@ -108,7 +110,7 @@ export type Auth0ContextType = CanRemove & {
 };
 
 export type SupabaseContextType = CanRemove & {
-  user: AuthUserType;
+  user: ApplicationUser;
   method: string;
   loading: boolean;
   authenticated: boolean;

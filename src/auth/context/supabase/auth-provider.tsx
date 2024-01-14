@@ -192,8 +192,6 @@ export function AuthProvider({ children }: Props) {
     () => ({
       user: {
         ...state.user,
-        role: 'admin',
-        displayName: `${state.user?.userName}`,
       },
       method: 'supabase',
       loading: status === 'loading',
@@ -209,5 +207,5 @@ export function AuthProvider({ children }: Props) {
     [forgotPassword, login, logout, updatePassword, register, state.user, status]
   );
 
-  return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={memoizedValue as any}>{children}</AuthContext.Provider>;
 }

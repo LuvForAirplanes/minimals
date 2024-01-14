@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+import { useUser } from 'src/hooks/use-user';
 
 import { SeoIllustration } from 'src/assets/illustrations';
 import { _appAuthors, _appRelated, _appFeatured, _appInvoices, _appInstalled } from 'src/_mock';
@@ -25,8 +25,7 @@ import AppTopInstalledCountries from '../app-top-installed-countries';
 // ----------------------------------------------------------------------
 
 export default function OverviewAppView() {
-  const { user } = useMockedUser();
-
+  const user = useUser();
   const theme = useTheme();
 
   const settings = useSettingsContext();
@@ -36,7 +35,7 @@ export default function OverviewAppView() {
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
           <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
+            title={`Welcome back 👋 \n ${user.fullName}`}
             description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
             img={<SeoIllustration />}
             action={

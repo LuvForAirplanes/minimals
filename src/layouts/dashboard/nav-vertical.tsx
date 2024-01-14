@@ -8,8 +8,6 @@ import { usePathname } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
-import { useAuthContext } from 'src/auth/hooks';
-
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 import { NavSectionVertical } from 'src/components/nav-section';
@@ -27,8 +25,6 @@ type Props = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }: Props) {
-  const { user } = useAuthContext();
-
   const pathname = usePathname();
 
   const lgUp = useResponsive('up', 'lg');
@@ -58,7 +54,8 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
       <NavSectionVertical
         data={navData}
         slotProps={{
-          currentRole: user?.role,
+          // currentRole: user?.role,
+          currentRole: 'admin',
         }}
       />
 
