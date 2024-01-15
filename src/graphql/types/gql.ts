@@ -73,6 +73,7 @@ const documents = {
     "\n  query myListingReview($listingId: UUID!) {\n    myListingReview(listingId: $listingId) {\n      ...ListingReviewEdit\n    }\n  }\n  \n": types.MyListingReviewDocument,
     "\n  query quickListing($id: UUID!) {\n    quickListing(id: $id) {\n      ...QuickListingEdit\n    }\n  }\n  \n": types.QuickListingDocument,
     "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n": types.QuickUserProfileDocument,
+    "\n  query rawListingCategories {\n    rawListingCategories {\n      id\n      name\n    }\n  }\n": types.RawListingCategoriesDocument,
     "\n  fragment SocialUser on ApplicationUser {\n    __typename\n    id\n    fullName\n    firstName\n    lastName\n    location\n    telegramUsername\n    email\n    phoneNumber\n    following\n    followers\n    listings\n    userName\n  }\n": types.SocialUserFragmentDoc,
     "\n  query socialUsers($skip: Int = 0, $take: Int = 21) {\n    totalUsers\n    offsetUsers(skip: $skip, take: $take) {\n      items {\n        ...SocialUser\n      }\n    }\n  }\n  \n": types.SocialUsersDocument,
     "\n  query userNotifications($id: String!) {\n    userNotifications(id: $id) {\n      ...UserNotificationsEditor\n    }\n  }\n  \n": types.UserNotificationsDocument,
@@ -336,6 +337,10 @@ export function graphql(source: "\n  query quickListing($id: UUID!) {\n    quick
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n"): (typeof documents)["\n  query quickUserProfile($id: String!) {\n    quickUserProfile(id: $id) {\n      ...QuickUserEditor\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query rawListingCategories {\n    rawListingCategories {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query rawListingCategories {\n    rawListingCategories {\n      id\n      name\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

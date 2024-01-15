@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import { LoadingButton } from '@mui/lab';
@@ -37,18 +37,22 @@ import { useSorting } from 'src/hooks/grids/use-sorting';
 import { useFiltering } from 'src/hooks/grids/use-filtering';
 
 import { listingCategoriesQuery } from 'src/graphql/queries/listingCategories';
+import { rawListingCategoriesQuery } from 'src/graphql/queries/rawListingCategories';
 import { addListingCategoryMutation } from 'src/graphql/mutations/addListingCategory';
 import { updateListingCategoryMutation } from 'src/graphql/mutations/updateListingCategory';
 import { deleteListingCategoryMutation } from 'src/graphql/mutations/deleteListingCategory';
 import {
+  ListingCategory,
   ListingCategoriesQuery,
   ListingCategorySortInput,
+  RawListingCategoriesQuery,
   ListingCategoryFilterInput,
   AddListingCategoryMutation,
   ListingCategoryEditFragment,
   DeleteListingCategoryMutation,
   UpdateListingCategoryMutation,
   ListingCategoriesQueryVariables,
+  RawListingCategoriesQueryVariables,
   AddListingCategoryMutationVariables,
   DeleteListingCategoryMutationVariables,
   UpdateListingCategoryMutationVariables,
@@ -59,6 +63,8 @@ import { useSettingsContext } from 'src/components/settings';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
+import { SelectCell } from './category-select';
+
 export default function ListingCategoriesView() {
   const settings = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -66,6 +72,11 @@ export default function ListingCategoriesView() {
   const [adding, setAdding] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [id, setId] = useState<string | null>(null);
+
+  const { data: categories } = useQuery<
+    RawListingCategoriesQuery,
+    RawListingCategoriesQueryVariables
+  >(rawListingCategoriesQuery);
 
   const columns: GridColDef[] = [
     {
@@ -79,6 +90,7 @@ export default function ListingCategoriesView() {
       headerName: 'Parent',
       editable: true,
       width: 100,
+      renderEditCell: (d) => SelectCell(d, categories?.rawListingCategories as ListingCategory[]),
     },
     {
       field: 'listable',
